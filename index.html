@@ -3,11 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Kulan Analytics — private traffic dashboard">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src fonts.gstatic.com; connect-src *.supabase.co; img-src 'self' data:;">
 <title>Kulan Analytics</title>
+<!-- Favicon -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230B2545'/><circle cx='16' cy='16' r='7' fill='none' stroke='%230D9488' stroke-width='2.5'/><circle cx='16' cy='16' r='3' fill='%230D9488'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" crossorigin="anonymous"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -224,17 +229,7 @@ footer a{color:var(--teal);text-decoration:none}
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo"><div class="dot"></div><span>Kulan Analytics</span></div>
-    <h2>Dashboard Access</h2>
-    <p>Enter your password to continue</p>
-    <div class="input-group"><input type="password" id="pw-input" placeholder="Password"></div>
-    <button class="btn-primary" onclick="doLogin()">Sign In</button>
-    <p id="login-error"></p>
-  </div>
-</div>
+<!-- LOGIN REMOVED -->
 
 <!-- LOADING -->
 <div id="loading" style="display:none"><div class="spinner"></div></div>
@@ -288,7 +283,7 @@ footer a{color:var(--teal);text-decoration:none}
 </div>
 
 <!-- APP -->
-<div id="app" style="display:none">
+<div id="app">
   <header>
     <div class="header-brand">
       <div class="brand-pulse"></div>
@@ -323,6 +318,7 @@ footer a{color:var(--teal);text-decoration:none}
     <button class="tab-btn"        data-tab="campaigns"  onclick="switchTab('campaigns')">Campaigns</button>
     <button class="tab-btn"        data-tab="goals"      onclick="switchTab('goals')">Goals</button>
     <button class="tab-btn"        data-tab="heatmap"    onclick="switchTab('heatmap')">Heatmap</button>
+    <button class="tab-btn"        data-tab="snippet"    onclick="switchTab('snippet')">Snippet</button>
   </nav>
 
   <!-- OVERVIEW -->
@@ -534,6 +530,40 @@ footer a{color:var(--teal);text-decoration:none}
     </main>
   </div>
 
+
+  <!-- SNIPPET MANAGER -->
+  <div id="tab-snippet" class="tab-panel">
+    <main>
+      <div class="chart-card" style="margin-bottom:14px">
+        <div class="chart-header"><div class="chart-title">Tracking Snippet Generator</div></div>
+        <p style="font-size:12px;color:var(--text2);margin-bottom:16px">Choose a site ID and copy the script tag into your site before &lt;/body&gt;.</p>
+        <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:flex-end">
+          <div>
+            <label style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);display:block;margin-bottom:6px">Site ID</label>
+            <input id="snip-site" type="text" placeholder="e.g. portfolio" oninput="updateSnippet()"
+              style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 14px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;width:220px">
+          </div>
+          <button class="btn-teal" onclick="copySnippet()">Copy Snippet</button>
+        </div>
+        <pre id="snip-preview" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:12px;color:var(--teal);font-family:'JetBrains Mono',monospace;overflow-x:auto;white-space:pre-wrap"></pre>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Goal Tracking Examples</div></div>
+        <pre style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:12px;color:var(--text2);font-family:'JetBrains Mono',monospace;overflow-x:auto;white-space:pre-wrap">&lt;!-- Track button clicks as goals --&gt;
+&lt;button data-kl-goal="cta_click"&gt;Get Started&lt;/button&gt;
+
+&lt;!-- Track link clicks --&gt;
+&lt;a href="/contact" data-kl-goal="contact_click"&gt;Contact Me&lt;/a&gt;
+
+&lt;!-- Track form submits --&gt;
+&lt;form data-kl-goal="contact_form_submit"&gt;...&lt;/form&gt;
+
+&lt;!-- Track file downloads --&gt;
+&lt;a href="resume.pdf" data-kl-goal="resume_download"&gt;Download Resume&lt;/a&gt;</pre>
+      </div>
+    </main>
+  </div>
+
   <footer>Kulan Analytics v3 &mdash; <a href="https://mmohamud.me" target="_blank">mmohamud.me</a></footer>
 </div>
 
@@ -623,11 +653,13 @@ function doLogin(){
     document.getElementById('pw-input').focus();
   }
 }
-document.getElementById('pw-input').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.addEventListener('DOMContentLoaded', initApp);
 
 /* ── Tab ──────────────────────────────────────────────────────────── */
 function switchTab(tab){
   state.tab=tab;
+  const titles={overview:'Overview',status:'Status',realtime:'Realtime',flow:'Flow',comparison:'Comparison',campaigns:'Campaigns',goals:'Goals',heatmap:'Heatmap',snippet:'Snippet Manager'};
+  document.title=(titles[tab]||tab)+' — Kulan Analytics';
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tab));
   if(!state.events.length)return;
@@ -669,13 +701,14 @@ async function loadData(){
     let q=sb.from('analytics_events').select('*').gte('created_at',since).lte('created_at',until)
       .order('created_at',{ascending:true}).limit(50000);
     if(state.siteId)q=q.eq('site_id',state.siteId);
-    const[{data:events,error},{data:anns}]=await Promise.all([
-      q,
-      sb.from('analytics_annotations').select('*').order('date',{ascending:true}),
-    ]);
+    const{data:events,error}=await q;
     if(error)throw error;
     state.events=events||[];
-    state.annotations=anns||[];
+    // Annotations - fail silently if migration v3 not run yet
+    try{
+      const{data:anns}=await sb.from('analytics_annotations').select('*').order('date',{ascending:true});
+      state.annotations=anns||[];
+    }catch(_){ state.annotations=[]; }
     renderOverview();
     checkAlerts();
     if(state.tab==='status')     renderStatus();
@@ -685,8 +718,9 @@ async function loadData(){
     if(state.tab==='goals')      renderGoals();
     if(state.tab==='heatmap')    {populateHeatmapUrls();renderHeatmap();}
   }catch(e){
-    console.error('loadData:',e);
-    alert('Error: '+(e.message||JSON.stringify(e)));
+    console.error('loadData full error:', JSON.stringify(e), e);
+    const msg=[e.message,e.details,e.hint,e.code].filter(Boolean).join(' | ')||JSON.stringify(e);
+    alert('loadData error:\n\n'+msg+'\n\nCheck browser Console (F12) for full details.');
   }finally{document.getElementById('loading').style.display='none';}
 }
 
@@ -1330,6 +1364,22 @@ th{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#999;font-we
 function closeEmailModal(){document.getElementById('email-modal').style.display='none';}
 function copyReport(){navigator.clipboard.writeText(_rHtml).then(()=>alert('HTML copied!'));}
 function downloadReport(){const a=document.createElement('a');a.href='data:text/html;charset=utf-8,'+encodeURIComponent(_rHtml);a.download='kulan-analytics-report-'+new Date().toISOString().slice(0,10)+'.html';a.click();}
+
+/* ── Snippet Manager ─────────────────────────────────────────────── */
+function updateSnippet(){
+  const site=document.getElementById('snip-site').value.trim()||'my-site';
+  document.getElementById('snip-preview').textContent=`<!-- Kulan Analytics Tracker -->
+<scr` + `ipt
+  src="https://analytics.kulaninstitute.org/tracker.js"
+  data-site="${site}"
+  defer>
+</scr` + `ipt>`;
+}
+function copySnippet(){
+  const text=document.getElementById('snip-preview').textContent;
+  navigator.clipboard.writeText(text).then(()=>alert('Snippet copied!'));
+}
+document.addEventListener('DOMContentLoaded',()=>{ updateSnippet(); });
 
 /* ── Live ─────────────────────────────────────────────────────────── */
 async function updateLive(){
