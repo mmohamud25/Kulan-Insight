@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kulan Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#040C18;--bg2:#081220;--card:#0B1A2E;--card2:#0E2040;
+  --border:rgba(13,148,136,.18);--teal:#0D9488;--teal-dim:rgba(13,148,136,.13);
+  --amber:#D97706;--amber-dim:rgba(217,119,6,.1);
+  --text:#E8F0FE;--text2:#8BA3C7;--text3:#4A6080;
+  --green:#10B981;--red:#EF4444;--purple:#8B5CF6;
+  --radius:12px;--radius-sm:7px;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);
+  font-family:'Syne',sans-serif;font-size:14px;line-height:1.5;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(13,148,136,.04) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(13,148,136,.04) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;z-index:0}
+
+/* LOGIN */
+#login-screen{position:fixed;inset:0;display:flex;align-items:center;
+  justify-content:center;z-index:100;background:var(--bg)}
+.login-box{width:360px;background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:40px 36px;position:relative}
+.login-box::before{content:'';position:absolute;top:-1px;left:-1px;right:-1px;
+  height:3px;background:linear-gradient(90deg,var(--teal),var(--amber));border-radius:16px 16px 0 0}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+.login-logo .dot{width:10px;height:10px;background:var(--teal);border-radius:50%;
+  box-shadow:0 0 10px var(--teal)}
+.login-logo span{font-size:18px;font-weight:700}
+.login-box h2{font-size:22px;font-weight:800;margin-bottom:6px}
+.login-box p{color:var(--text2);margin-bottom:28px;font-size:13px}
+.input-group{margin-bottom:16px}
+.input-group input{width:100%;background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:12px 16px;color:var(--text);
+  font-family:'JetBrains Mono',monospace;font-size:14px;outline:none;transition:border-color .2s}
+.input-group input:focus{border-color:var(--teal)}
+.btn-primary{width:100%;background:var(--teal);color:#fff;border:none;
+  border-radius:var(--radius-sm);padding:13px;font-family:'Syne',sans-serif;
+  font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px;transition:opacity .2s,transform .1s}
+.btn-primary:hover{opacity:.9}.btn-primary:active{transform:scale(.98)}
+#login-error{color:var(--red);font-size:12px;margin-top:10px;text-align:center;min-height:16px}
+
+/* LOADING */
+#loading{position:fixed;inset:0;background:rgba(4,12,24,.85);display:flex;
+  align-items:center;justify-content:center;z-index:90;backdrop-filter:blur(4px)}
+.spinner{width:36px;height:36px;border:3px solid var(--border);
+  border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 8px var(--teal);opacity:1}50%{box-shadow:0 0 16px var(--teal);opacity:.7}}
+
+/* MODAL */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.7);
+  z-index:80;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:28px;width:700px;max-width:95vw;max-height:85vh;overflow-y:auto;position:relative}
+.modal-title{font-size:16px;font-weight:800;margin-bottom:20px;display:flex;
+  align-items:center;justify-content:space-between}
+.modal-close{background:none;border:none;color:var(--text2);cursor:pointer;
+  font-size:20px;padding:0 4px;line-height:1}
+.modal-close:hover{color:var(--text)}
+#email-preview{background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:20px;font-size:12px;color:var(--text2);white-space:pre-wrap;
+  font-family:'JetBrains Mono',monospace;max-height:340px;overflow-y:auto;margin-bottom:16px}
+.modal-actions{display:flex;gap:10px}
+.btn-secondary{background:var(--card2);border:1px solid var(--border);color:var(--text);
+  border-radius:var(--radius-sm);padding:9px 16px;font-family:'Syne',sans-serif;
+  font-size:13px;font-weight:600;cursor:pointer;transition:border-color .2s}
+.btn-secondary:hover{border-color:var(--teal);color:var(--teal)}
+
+/* APP */
+#app{position:relative;z-index:1;min-height:100vh}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:50;background:rgba(4,12,24,.92);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
+  padding:0 20px;height:60px;display:flex;align-items:center;
+  justify-content:space-between;gap:12px}
+.header-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.brand-pulse{width:8px;height:8px;background:var(--teal);border-radius:50%;
+  box-shadow:0 0 8px var(--teal);animation:pulse 2s infinite}
+.brand-name{font-size:15px;font-weight:700;letter-spacing:.5px}
+.brand-name span{color:var(--teal)}
+.header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+select,.btn-ctrl{background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--text);font-family:'Syne',sans-serif;
+  font-size:12px;padding:6px 10px;cursor:pointer;outline:none;transition:border-color .2s}
+select:hover,.btn-ctrl:hover{border-color:var(--teal)}
+.btn-ctrl{display:flex;align-items:center;gap:5px;font-weight:600}
+.live-badge{display:flex;align-items:center;gap:6px;background:var(--teal-dim);
+  border:1px solid rgba(13,148,136,.3);border-radius:20px;padding:5px 12px;
+  font-size:11px;font-weight:600;color:var(--teal)}
+.live-dot{width:7px;height:7px;background:var(--teal);border-radius:50%;animation:pulse 1.5s infinite}
+
+/* TABS */
+.tab-nav{display:flex;gap:2px;padding:0 20px;background:rgba(4,12,24,.7);
+  border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:60px;z-index:40}
+.tab-btn{background:none;border:none;color:var(--text2);font-family:'Syne',sans-serif;
+  font-size:12px;font-weight:700;padding:12px 18px;cursor:pointer;letter-spacing:.8px;
+  text-transform:uppercase;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--teal);border-bottom-color:var(--teal)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* MAIN CONTENT */
+main{padding:20px;max-width:1400px;margin:0 auto}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px 18px;position:relative;overflow:hidden;transition:border-color .2s}
+.kpi-card:hover{border-color:rgba(13,148,136,.4)}
+.kpi-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--teal),transparent);opacity:0;transition:opacity .2s}
+.kpi-card:hover::after{opacity:1}
+.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+  color:var(--text2);margin-bottom:6px}
+.kpi-value{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;
+  color:var(--text);line-height:1}
+.kpi-sub{font-size:10px;color:var(--text3);margin-top:4px}
+.kpi-card.teal .kpi-value{color:var(--teal)}
+.kpi-card.amber .kpi-value{color:var(--amber)}
+.kpi-card.green .kpi-value{color:var(--green)}
+.kpi-card.purple .kpi-value{color:var(--purple)}
+
+/* CARDS & CHARTS */
+.chart-card{background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:18px 20px;overflow:hidden}
+.chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.chart-title{font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--text2)}
+.chart-badge{font-family:'JetBrains Mono',monospace;font-size:10px;
+  background:var(--teal-dim);color:var(--teal);border-radius:4px;padding:2px 7px}
+.chart-wrap{position:relative}
+
+/* GRID LAYOUTS */
+.grid-2-1{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
+.grid-1-1{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
+.grid-1-3{display:grid;grid-template-columns:1fr 2fr;gap:14px;margin-bottom:14px}
+@media(max-width:900px){.grid-2-1,.grid-1-1,.grid-3,.grid-1-3{grid-template-columns:1fr}}
+
+/* TABLES */
+.table-card{background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden}
+.table-head{padding:14px 18px;border-bottom:1px solid var(--border);
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2)}
+.table-body{padding:6px 0}
+.table-row{display:flex;align-items:center;justify-content:space-between;
+  padding:8px 18px;transition:background .15s}
+.table-row:hover{background:rgba(13,148,136,.06)}
+.table-lbl{font-size:12px;color:var(--text);overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+.table-bar{flex:1;height:3px;background:var(--bg2);border-radius:2px;margin:0 10px}
+.table-bar-fill{height:100%;background:var(--teal);border-radius:2px;transition:width .5s ease}
+.table-cnt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2);flex-shrink:0}
+.empty{text-align:center;padding:28px;color:var(--text3);font-size:12px}
+
+/* COMPARISON TABLE */
+.comp-table{width:100%;border-collapse:collapse;font-size:12px}
+.comp-table th{padding:10px 16px;text-align:left;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.8px;color:var(--text2);
+  border-bottom:1px solid var(--border)}
+.comp-table td{padding:10px 16px;border-bottom:1px solid rgba(13,148,136,.08)}
+.comp-table tr:hover td{background:rgba(13,148,136,.05)}
+.comp-table .num{font-family:'JetBrains Mono',monospace;color:var(--teal)}
+.site-pill{display:inline-block;padding:2px 10px;border-radius:20px;
+  font-size:11px;font-weight:600;background:var(--teal-dim);color:var(--teal)}
+
+/* HEATMAP */
+#heatmap-canvas{width:100%;max-width:500px;border-radius:8px;
+  border:1px solid var(--border);background:var(--bg2);display:block;margin:0 auto}
+.heatmap-controls{display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
+.heatmap-stat{background:var(--card2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:10px 16px;font-size:11px}
+.heatmap-stat span{font-family:'JetBrains Mono',monospace;color:var(--teal);font-size:18px;
+  display:block;margin-bottom:2px}
+
+/* GOAL FUNNEL */
+.funnel-bar{background:var(--card2);border-radius:6px;padding:12px 16px;
+  margin-bottom:8px;display:flex;align-items:center;gap:14px}
+.funnel-name{font-size:12px;font-weight:600;min-width:180px;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.funnel-track{flex:1;height:8px;background:var(--bg2);border-radius:4px}
+.funnel-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--green));
+  border-radius:4px;transition:width .6s ease}
+.funnel-num{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--teal);
+  min-width:60px;text-align:right}
+.funnel-rate{font-size:11px;color:var(--text3);min-width:55px;text-align:right}
+
+/* SECTION LABEL */
+.section-label{font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:1px;color:var(--text3);margin-bottom:10px;padding-bottom:6px;
+  border-bottom:1px solid var(--border)}
+
+footer{text-align:center;padding:16px;color:var(--text3);font-size:11px;
+  letter-spacing:.5px;border-top:1px solid var(--border)}
+footer a{color:var(--teal);text-decoration:none}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo"><div class="dot"></div><span>Kulan Analytics</span></div>
+    <h2>Dashboard Access</h2>
+    <p>Enter your password to continue</p>
+    <div class="input-group">
+      <input type="password" id="pw-input" placeholder="Password" autocomplete="current-password">
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Sign In</button>
+    <p id="login-error"></p>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div id="loading" style="display:none"><div class="spinner"></div></div>
+
+<!-- EMAIL MODAL -->
+<div id="email-modal" style="display:none">
+  <div class="modal-backdrop" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-title">
+        Weekly Analytics Report
+        <button class="modal-close" onclick="closeModal()">&#x2715;</button>
+      </div>
+      <pre id="email-preview"></pre>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="copyReport()">Copy HTML</button>
+        <button class="btn-secondary" onclick="downloadReport()">Download .html</button>
+        <button class="btn-secondary" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+
+  <header>
+    <div class="header-brand">
+      <div class="brand-pulse"></div>
+      <div class="brand-name">Kulan <span>Analytics</span></div>
+    </div>
+    <div class="header-right">
+      <select id="site-select"><option value="">All Sites</option></select>
+      <select id="range-select" onchange="loadData()">
+        <option value="7">Last 7 Days</option>
+        <option value="30" selected>Last 30 Days</option>
+        <option value="90">Last 90 Days</option>
+        <option value="365">Last Year</option>
+      </select>
+      <button class="btn-ctrl" onclick="loadData()">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+        Refresh
+      </button>
+      <button class="btn-ctrl" onclick="exportCSV()">&#x2193; CSV</button>
+      <button class="btn-ctrl" onclick="openEmailReport()">&#x2709; Report</button>
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        <span id="live-count">0</span> live
+      </div>
+    </div>
+  </header>
+
+  <!-- TABS -->
+  <nav class="tab-nav">
+    <button class="tab-btn active" data-tab="overview"   onclick="switchTab('overview')">Overview</button>
+    <button class="tab-btn"         data-tab="comparison" onclick="switchTab('comparison')">Comparison</button>
+    <button class="tab-btn"         data-tab="campaigns"  onclick="switchTab('campaigns')">Campaigns</button>
+    <button class="tab-btn"         data-tab="goals"      onclick="switchTab('goals')">Goals</button>
+    <button class="tab-btn"         data-tab="heatmap"    onclick="switchTab('heatmap')">Heatmap</button>
+  </nav>
+
+  <!-- OVERVIEW TAB -->
+  <div id="tab-overview" class="tab-panel active">
+    <main>
+      <div class="kpi-grid">
+        <div class="kpi-card teal">
+          <div class="kpi-label">Page Views</div>
+          <div class="kpi-value" id="kpi-pv">—</div>
+          <div class="kpi-sub" id="kpi-pv-sub">loading...</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Unique Visitors</div>
+          <div class="kpi-value" id="kpi-vis">—</div>
+          <div class="kpi-sub">distinct IDs</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Sessions</div>
+          <div class="kpi-value" id="kpi-sess">—</div>
+          <div class="kpi-sub">distinct sessions</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label">Bounce Rate</div>
+          <div class="kpi-value" id="kpi-bounce">—</div>
+          <div class="kpi-sub">1-page sessions</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Avg Duration</div>
+          <div class="kpi-value" id="kpi-dur">—</div>
+          <div class="kpi-sub">per session</div>
+        </div>
+        <div class="kpi-card purple">
+          <div class="kpi-label">Conversions</div>
+          <div class="kpi-value" id="kpi-goals">—</div>
+          <div class="kpi-sub">goal events</div>
+        </div>
+      </div>
+
+      <div class="grid-2-1">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">Pageviews Over Time</div>
+            <div class="chart-badge" id="time-badge">—</div>
+          </div>
+          <div class="chart-wrap" style="height:200px"><canvas id="chart-timeline"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">Devices</div></div>
+          <div class="chart-wrap" style="height:200px"><canvas id="chart-devices"></canvas></div>
+        </div>
+      </div>
+
+      <div class="grid-1-1">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">Top Pages</div>
+            <div class="chart-badge" id="pages-badge">—</div>
+          </div>
+          <div class="chart-wrap" style="height:220px"><canvas id="chart-pages"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">Browsers</div></div>
+          <div class="chart-wrap" style="height:220px"><canvas id="chart-browsers"></canvas></div>
+        </div>
+      </div>
+
+      <div class="grid-1-3">
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">OS Breakdown</div></div>
+          <div class="chart-wrap" style="height:220px"><canvas id="chart-os"></canvas></div>
+        </div>
+        <div class="table-card">
+          <div class="table-head">Top Referrers</div>
+          <div class="table-body" id="table-referrers"><div class="empty">Loading...</div></div>
+        </div>
+      </div>
+
+      <div class="grid-1-1" style="margin-bottom:20px">
+        <div class="table-card">
+          <div class="table-head">Countries</div>
+          <div class="table-body" id="table-countries"><div class="empty">Loading...</div></div>
+        </div>
+        <div class="table-card">
+          <div class="table-head">Cities</div>
+          <div class="table-body" id="table-cities"><div class="empty">Loading...</div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- COMPARISON TAB -->
+  <div id="tab-comparison" class="tab-panel">
+    <main>
+      <div class="section-label" style="margin-bottom:16px">Site-by-Site Performance</div>
+      <div class="chart-card" style="margin-bottom:14px;overflow-x:auto">
+        <table class="comp-table" id="comp-table">
+          <thead>
+            <tr>
+              <th>Site</th><th>Page Views</th><th>Visitors</th>
+              <th>Sessions</th><th>Bounce Rate</th><th>Avg Duration</th><th>Goals</th>
+            </tr>
+          </thead>
+          <tbody id="comp-tbody"><tr><td colspan="7" class="empty">Loading...</td></tr></tbody>
+        </table>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">Pageviews Over Time by Site</div>
+        </div>
+        <div class="chart-wrap" style="height:260px"><canvas id="chart-comp-timeline"></canvas></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- CAMPAIGNS TAB -->
+  <div id="tab-campaigns" class="tab-panel">
+    <main>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
+        <div class="kpi-card teal">
+          <div class="kpi-label">UTM Sessions</div>
+          <div class="kpi-value" id="utmk-sessions">—</div>
+          <div class="kpi-sub">from campaigns</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Organic</div>
+          <div class="kpi-value" id="utmk-organic">—</div>
+          <div class="kpi-sub">no UTM params</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label">Top Source</div>
+          <div class="kpi-value" id="utmk-top-src" style="font-size:14px">—</div>
+          <div class="kpi-sub">most traffic</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Top Campaign</div>
+          <div class="kpi-value" id="utmk-top-camp" style="font-size:14px">—</div>
+          <div class="kpi-sub">most traffic</div>
+        </div>
+      </div>
+
+      <div class="grid-1-1">
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">Traffic by Source</div></div>
+          <div class="chart-wrap" style="height:240px"><canvas id="chart-utm-source"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">Traffic by Medium</div></div>
+          <div class="chart-wrap" style="height:240px"><canvas id="chart-utm-medium"></canvas></div>
+        </div>
+      </div>
+
+      <div class="table-card" style="margin-bottom:20px">
+        <div class="table-head">Campaign Performance</div>
+        <div class="table-body" id="table-campaigns"><div class="empty">No campaign data yet. Add <code>?utm_campaign=name</code> to your links.</div></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- GOALS TAB -->
+  <div id="tab-goals" class="tab-panel">
+    <main>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
+        <div class="kpi-card purple">
+          <div class="kpi-label">Total Conversions</div>
+          <div class="kpi-value" id="goalsk-total">—</div>
+          <div class="kpi-sub">all goal events</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Conversion Rate</div>
+          <div class="kpi-value" id="goalsk-rate">—</div>
+          <div class="kpi-sub">goals / sessions</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Unique Goals</div>
+          <div class="kpi-value" id="goalsk-unique">—</div>
+          <div class="kpi-sub">distinct goal names</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label">Top Goal</div>
+          <div class="kpi-value" id="goalsk-top" style="font-size:13px">—</div>
+          <div class="kpi-sub">most conversions</div>
+        </div>
+      </div>
+
+      <div class="grid-2-1">
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">Conversions Over Time</div></div>
+          <div class="chart-wrap" style="height:200px"><canvas id="chart-goals-timeline"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">Goal Distribution</div></div>
+          <div class="chart-wrap" style="height:200px"><canvas id="chart-goals-dist"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card" style="margin-bottom:20px">
+        <div class="chart-header"><div class="chart-title">Goal Funnel</div></div>
+        <div id="goals-funnel"><div class="empty">No goal events yet. Add <code>data-kl-goal="goal_name"</code> to elements you want to track.</div></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- HEATMAP TAB -->
+  <div id="tab-heatmap" class="tab-panel">
+    <main>
+      <div class="heatmap-controls">
+        <select id="heatmap-url-select" onchange="renderHeatmap()" style="min-width:280px">
+          <option value="">All Pages</option>
+        </select>
+        <div class="heatmap-stat"><span id="hm-total-clicks">0</span>Total Clicks</div>
+        <div class="heatmap-stat"><span id="hm-filtered-clicks">0</span>Shown</div>
+        <div class="heatmap-stat"><span id="hm-top-zone">—</span>Hottest Zone</div>
+      </div>
+      <div class="grid-1-1" style="align-items:start">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">Click Heatmap</div>
+            <div class="chart-badge">X=width% Y=height%</div>
+          </div>
+          <canvas id="heatmap-canvas" width="500" height="700"></canvas>
+        </div>
+        <div>
+          <div class="table-card" style="margin-bottom:14px">
+            <div class="table-head">Click Distribution by Zone</div>
+            <div class="table-body" id="heatmap-zones"><div class="empty">Loading...</div></div>
+          </div>
+          <div class="table-card">
+            <div class="table-head">Most Clicked Elements</div>
+            <div class="table-body" id="table-clicks-hm"><div class="empty">Loading...</div></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer>
+    Kulan Analytics v2 &mdash; <a href="https://mmohamud.me" target="_blank">mmohamud.me</a>
+  </footer>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════════════
+   CONFIG — edit these
+   ══════════════════════════════════════════════════════════════════════════════ */
+const CFG = {
+  SUPABASE_URL: 'https://xkadqvmqxdyqoddiypet.supabase.co',
+  ANON_KEY:     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrYWRxdm1xeGR5cW9kZGl5cGV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNzI5NDMsImV4cCI6MjA4ODk0ODk0M30.FPBEXOx62vaTcLom7IkVRKRLda1xKk09slhQZ9yuRWc',
+  PASSWORD:     'kulanAdmin2025',
+};
+
+/* ── Globals ─────────────────────────────────────────────────────────────────── */
+let sb;
+const charts = {};
+const state = { events: [], days: 30, siteId: '', tab: 'overview' };
+
+/* ── Formatters ──────────────────────────────────────────────────────────────── */
+const fmt = n => n == null ? '—' : n >= 1e6 ? (n/1e6).toFixed(1)+'M' : n >= 1e3 ? (n/1e3).toFixed(1)+'K' : String(n);
+const fmtDur = s => !s ? '—' : s < 60 ? s+'s' : Math.floor(s/60)+'m '+(s%60)+'s';
+const fmtUrl = u => { try { const p = new URL(u); return p.pathname+(p.search||''); } catch { return u; } };
+const fmtRef = r => { if(!r) return '(direct)'; try { return new URL(r).hostname; } catch { return r; } };
+const countBy = (arr, key) => {
+  const m = {};
+  arr.forEach(i => { const v = i[key]||'(unknown)'; m[v]=(m[v]||0)+1; });
+  return Object.entries(m).sort((a,b)=>b[1]-a[1]);
+};
+const groupByDay = (events, days) => {
+  const m = {};
+  events.forEach(e => { const d = e.created_at.slice(0,10); m[d]=(m[d]||0)+1; });
+  const labels=[], values=[];
+  for(let i=days-1;i>=0;i--){
+    const d = new Date(Date.now()-i*86400000).toISOString().slice(0,10);
+    labels.push(d.slice(5)); values.push(m[d]||0);
+  }
+  return {labels, values};
+};
+
+/* ── Chart helpers ───────────────────────────────────────────────────────────── */
+Chart.defaults.color='#8BA3C7'; Chart.defaults.font.family="'Syne',sans-serif"; Chart.defaults.font.size=11;
+const COLORS=['#0D9488','#D97706','#10B981','#3B82F6','#8B5CF6','#F97316','#EC4899','#14B8A6','#F59E0B','#6366F1'];
+const kill = id => { if(charts[id]){charts[id].destroy();delete charts[id];} };
+const gridOpts = { grid:{color:'rgba(255,255,255,.04)'} };
+
+function animCount(el, target) {
+  const steps=40, dur=700;
+  let i=0;
+  const t = setInterval(()=>{ i++; el.textContent=fmt(Math.min(Math.round(target/steps*i),target)); if(i>=steps)clearInterval(t); }, dur/steps);
+}
+
+/* ── Login ───────────────────────────────────────────────────────────────────── */
+function doLogin() {
+  if(document.getElementById('pw-input').value.trim()===CFG.PASSWORD){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='block';
+    initApp();
+  } else {
+    document.getElementById('login-error').textContent='Incorrect password.';
+    document.getElementById('pw-input').value='';
+    document.getElementById('pw-input').focus();
+  }
+}
+document.getElementById('pw-input').addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+
+/* ── Tab switching ───────────────────────────────────────────────────────────── */
+function switchTab(tab) {
+  state.tab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tab));
+  if(state.events.length) {
+    if(tab==='comparison') renderComparison();
+    if(tab==='campaigns')  renderCampaigns();
+    if(tab==='goals')      renderGoals();
+    if(tab==='heatmap')    { populateHeatmapUrls(); renderHeatmap(); }
+  }
+}
+
+/* ── Init ────────────────────────────────────────────────────────────────────── */
+async function initApp() {
+  sb = supabase.createClient(CFG.SUPABASE_URL, CFG.ANON_KEY);
+  await loadSites();
+  await loadData();
+  startLivePoll();
+}
+
+/* ── Load sites ──────────────────────────────────────────────────────────────── */
+async function loadSites() {
+  try {
+    const { data } = await sb.from('analytics_events').select('site_id').limit(10000);
+    if(!data) return;
+    const sites = [...new Set(data.map(r=>r.site_id))].sort();
+    const sel = document.getElementById('site-select');
+    sites.forEach(s=>{ const o=document.createElement('option'); o.value=o.textContent=s; sel.appendChild(o); });
+    sel.addEventListener('change', ()=>{ state.siteId=sel.value; loadData(); });
+  } catch(e) { console.error(e); }
+}
+
+/* ── Main data load ──────────────────────────────────────────────────────────── */
+async function loadData() {
+  document.getElementById('loading').style.display='flex';
+  try {
+    state.days = parseInt(document.getElementById('range-select').value,10);
+    state.siteId = document.getElementById('site-select').value;
+    const since = new Date(Date.now()-state.days*86400000).toISOString();
+    let q = sb.from('analytics_events').select('*').gte('created_at',since)
+      .order('created_at',{ascending:true}).limit(50000);
+    if(state.siteId) q = q.eq('site_id',state.siteId);
+    const { data, error } = await q;
+    if(error) throw error;
+    state.events = data||[];
+    renderOverview();
+    if(state.tab==='comparison') renderComparison();
+    if(state.tab==='campaigns')  renderCampaigns();
+    if(state.tab==='goals')      renderGoals();
+    if(state.tab==='heatmap')    { populateHeatmapUrls(); renderHeatmap(); }
+  } catch(e) {
+    console.error('loadData:',e);
+    alert('Error loading data: '+(e.message||JSON.stringify(e)));
+  } finally { document.getElementById('loading').style.display='none'; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   OVERVIEW
+   ══════════════════════════════════════════════════════════════════════════════ */
+function renderOverview() {
+  const ev = state.events;
+  const pv = ev.filter(e=>e.event_type==='pageview');
+  const cl = ev.filter(e=>e.event_type==='click');
+  const gl = ev.filter(e=>e.event_type==='goal');
+  const se = ev.filter(e=>e.event_type==='session_end'&&e.duration!=null);
+  const visitors = new Set(ev.map(e=>e.visitor_id)).size;
+  const sessions = new Set(ev.map(e=>e.session_id)).size;
+
+  const pvPerSess={};
+  pv.forEach(e=>{ pvPerSess[e.session_id]=(pvPerSess[e.session_id]||0)+1; });
+  const slist=Object.values(pvPerSess);
+  const bounce=slist.length ? Math.round(slist.filter(c=>c===1).length/slist.length*100) : 0;
+  const durs=se.map(e=>e.duration).filter(Boolean);
+  const avgDur=durs.length ? Math.round(durs.reduce((a,b)=>a+b,0)/durs.length) : null;
+
+  animCount(document.getElementById('kpi-pv'), pv.length);
+  animCount(document.getElementById('kpi-vis'), visitors);
+  animCount(document.getElementById('kpi-sess'), sessions);
+  animCount(document.getElementById('kpi-goals'), gl.length);
+  document.getElementById('kpi-bounce').textContent = bounce+'%';
+  document.getElementById('kpi-dur').textContent    = fmtDur(avgDur);
+  document.getElementById('kpi-pv-sub').textContent = 'last '+state.days+' days';
+
+  // Timeline
+  const {labels,values} = groupByDay(pv, state.days);
+  document.getElementById('time-badge').textContent = fmt(pv.length)+' views';
+  kill('timeline');
+  charts.timeline = new Chart(document.getElementById('chart-timeline'),{
+    type:'line',
+    data:{labels,datasets:[{data:values,borderColor:'#0D9488',backgroundColor:'rgba(13,148,136,.1)',
+      borderWidth:2,pointRadius:state.days<=14?3:0,pointHoverRadius:5,fill:true,tension:.35}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
+      scales:{x:{...gridOpts,ticks:{maxTicksLimit:10}},y:{...gridOpts,beginAtZero:true,ticks:{precision:0}}}},
+  });
+
+  // Devices
+  const dc=countBy(pv,'device_type');
+  kill('devices');
+  charts.devices=new Chart(document.getElementById('chart-devices'),{
+    type:'doughnut',
+    data:{labels:dc.map(d=>d[0]),datasets:[{data:dc.map(d=>d[1]),backgroundColor:COLORS,borderWidth:0,hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
+      plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:12,boxWidth:8}}}},
+  });
+
+  // Top pages
+  const pageMap={};
+  pv.forEach(e=>{ const k=fmtUrl(e.url||''); pageMap[k]=(pageMap[k]||0)+1; });
+  const topPages=Object.entries(pageMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  document.getElementById('pages-badge').textContent=topPages.length+' pages';
+  kill('pages');
+  charts.pages=new Chart(document.getElementById('chart-pages'),{
+    type:'bar',
+    data:{labels:topPages.map(p=>p[0].length>26?p[0].slice(0,24)+'…':p[0]),
+      datasets:[{data:topPages.map(p=>p[1]),backgroundColor:'rgba(13,148,136,.7)',borderRadius:4,borderSkipped:false}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{...gridOpts,ticks:{precision:0}},y:{grid:{display:false},ticks:{font:{family:"'JetBrains Mono'"}}}}},
+  });
+
+  // Browsers
+  const bc=countBy(pv,'browser').slice(0,6);
+  kill('browsers');
+  charts.browsers=new Chart(document.getElementById('chart-browsers'),{
+    type:'bar',
+    data:{labels:bc.map(b=>b[0]),datasets:[{data:bc.map(b=>b[1]),backgroundColor:COLORS.map(c=>c+'BB'),borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{display:false}},y:{...gridOpts,beginAtZero:true,ticks:{precision:0}}}},
+  });
+
+  // OS
+  const oc=countBy(pv,'os').slice(0,6);
+  kill('os');
+  charts.os=new Chart(document.getElementById('chart-os'),{
+    type:'doughnut',
+    data:{labels:oc.map(o=>o[0]),datasets:[{data:oc.map(o=>o[1]),backgroundColor:COLORS.slice(2),borderWidth:0,hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+      plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:10,boxWidth:8,font:{size:10}}}}},
+  });
+
+  // Tables
+  renderTable('table-referrers', countBy(pv,'referrer').map(([r,c])=>[fmtRef(r),c]).slice(0,10));
+  renderTable('table-countries', countBy(pv,'country').slice(0,10));
+  renderTable('table-cities',    countBy(pv,'city').slice(0,10));
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   COMPARISON
+   ══════════════════════════════════════════════════════════════════════════════ */
+function renderComparison() {
+  const ev = state.events;
+  const sites = [...new Set(ev.map(e=>e.site_id))].sort();
+
+  const tbody = document.getElementById('comp-tbody');
+  if(!sites.length){ tbody.innerHTML='<tr><td colspan="7" class="empty">No data</td></tr>'; return; }
+
+  const rows = sites.map(site => {
+    const se  = ev.filter(e=>e.site_id===site);
+    const pv  = se.filter(e=>e.event_type==='pageview');
+    const gl  = se.filter(e=>e.event_type==='goal');
+    const vis = new Set(se.map(e=>e.visitor_id)).size;
+    const sess= new Set(se.map(e=>e.session_id)).size;
+    const pvPS={};
+    pv.forEach(e=>{ pvPS[e.session_id]=(pvPS[e.session_id]||0)+1; });
+    const sl=Object.values(pvPS);
+    const bounce=sl.length?Math.round(sl.filter(c=>c===1).length/sl.length*100):0;
+    const durs=se.filter(e=>e.event_type==='session_end'&&e.duration).map(e=>e.duration);
+    const avgD=durs.length?Math.round(durs.reduce((a,b)=>a+b,0)/durs.length):null;
+    return {site,pv:pv.length,vis,sess,bounce,avgD,goals:gl.length};
+  });
+
+  tbody.innerHTML = rows.map(r=>`
+    <tr>
+      <td><span class="site-pill">${r.site}</span></td>
+      <td class="num">${fmt(r.pv)}</td>
+      <td class="num">${fmt(r.vis)}</td>
+      <td class="num">${fmt(r.sess)}</td>
+      <td class="num">${r.bounce}%</td>
+      <td class="num">${fmtDur(r.avgD)}</td>
+      <td class="num">${fmt(r.goals)}</td>
+    </tr>
+  `).join('');
+
+  // Multi-line timeline
+  const datasets = sites.map((site,i) => {
+    const pv = ev.filter(e=>e.site_id===site&&e.event_type==='pageview');
+    const {labels,values}=groupByDay(pv,state.days);
+    return {label:site,data:values,borderColor:COLORS[i%COLORS.length],
+      backgroundColor:'transparent',borderWidth:2,pointRadius:0,pointHoverRadius:4,tension:.3};
+  });
+  const {labels}=groupByDay(ev.filter(e=>e.event_type==='pageview'),state.days);
+  kill('comp-timeline');
+  charts['comp-timeline']=new Chart(document.getElementById('chart-comp-timeline'),{
+    type:'line',data:{labels,datasets},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{usePointStyle:true,padding:14,boxWidth:8}}},
+      scales:{x:{...gridOpts,ticks:{maxTicksLimit:12}},y:{...gridOpts,beginAtZero:true,ticks:{precision:0}}}},
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   CAMPAIGNS
+   ══════════════════════════════════════════════════════════════════════════════ */
+function renderCampaigns() {
+  const ev = state.events;
+  const withUTM = ev.filter(e=>e.utm_source||e.utm_medium||e.utm_campaign);
+  const withoutUTM = ev.filter(e=>!e.utm_source&&!e.utm_medium&&!e.utm_campaign);
+  const utmSessions = new Set(withUTM.map(e=>e.session_id)).size;
+  const orgSessions = new Set(withoutUTM.map(e=>e.session_id)).size;
+
+  const srcCounts = countBy(withUTM.filter(e=>e.utm_source),'utm_source').slice(0,8);
+  const medCounts = countBy(withUTM.filter(e=>e.utm_medium),'utm_medium').slice(0,8);
+  const campCounts= countBy(withUTM.filter(e=>e.utm_campaign),'utm_campaign').slice(0,8);
+
+  document.getElementById('utmk-sessions').textContent = fmt(utmSessions);
+  document.getElementById('utmk-organic').textContent  = fmt(orgSessions);
+  document.getElementById('utmk-top-src').textContent  = srcCounts[0]?srcCounts[0][0]:'—';
+  document.getElementById('utmk-top-camp').textContent = campCounts[0]?campCounts[0][0]:'—';
+
+  // Source chart
+  kill('utm-source');
+  if(srcCounts.length){
+    charts['utm-source']=new Chart(document.getElementById('chart-utm-source'),{
+      type:'bar',
+      data:{labels:srcCounts.map(s=>s[0]),datasets:[{data:srcCounts.map(s=>s[1]),
+        backgroundColor:COLORS.map(c=>c+'AA'),borderRadius:4,borderSkipped:false}]},
+      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false}},scales:{x:{...gridOpts,ticks:{precision:0}},y:{grid:{display:false}}}},
+    });
+  }
+
+  // Medium chart
+  kill('utm-medium');
+  if(medCounts.length){
+    charts['utm-medium']=new Chart(document.getElementById('chart-utm-medium'),{
+      type:'bar',
+      data:{labels:medCounts.map(m=>m[0]),datasets:[{data:medCounts.map(m=>m[1]),
+        backgroundColor:COLORS.slice(2).map(c=>c+'AA'),borderRadius:4,borderSkipped:false}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+        scales:{x:{grid:{display:false}},y:{...gridOpts,beginAtZero:true,ticks:{precision:0}}}},
+    });
+  }
+
+  // Campaign table
+  const tbody=document.getElementById('table-campaigns');
+  if(!campCounts.length){
+    tbody.innerHTML='<div class="empty">No campaign data yet. Add <code>?utm_campaign=name</code> to your marketing links.</div>';
+    return;
+  }
+  const max=campCounts[0][1];
+  tbody.innerHTML=campCounts.map(([name,count])=>`
+    <div class="table-row">
+      <div class="table-lbl">${name}</div>
+      <div class="table-bar"><div class="table-bar-fill" style="width:${Math.round(count/max*100)}%"></div></div>
+      <div class="table-cnt">${fmt(count)}</div>
+    </div>
+  `).join('');
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   GOALS
+   ══════════════════════════════════════════════════════════════════════════════ */
+function renderGoals() {
+  const ev = state.events;
+  const goals = ev.filter(e=>e.event_type==='goal');
+  const sessions = new Set(ev.map(e=>e.session_id)).size;
+  const goalNames = countBy(goals,'goal_name');
+  const rate = sessions ? Math.round(goals.length/sessions*100) : 0;
+
+  document.getElementById('goalsk-total').textContent  = fmt(goals.length);
+  document.getElementById('goalsk-rate').textContent   = rate+'%';
+  document.getElementById('goalsk-unique').textContent = goalNames.length||'0';
+  document.getElementById('goalsk-top').textContent    = goalNames[0]?goalNames[0][0]:'—';
+
+  // Timeline
+  const {labels,values}=groupByDay(goals,state.days);
+  kill('goals-timeline');
+  charts['goals-timeline']=new Chart(document.getElementById('chart-goals-timeline'),{
+    type:'bar',
+    data:{labels,datasets:[{data:values,backgroundColor:'rgba(139,92,246,.7)',borderRadius:3,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{...gridOpts,ticks:{maxTicksLimit:12}},y:{...gridOpts,beginAtZero:true,ticks:{precision:0}}}},
+  });
+
+  // Distribution doughnut
+  kill('goals-dist');
+  if(goalNames.length){
+    charts['goals-dist']=new Chart(document.getElementById('chart-goals-dist'),{
+      type:'doughnut',
+      data:{labels:goalNames.slice(0,6).map(g=>g[0]),
+        datasets:[{data:goalNames.slice(0,6).map(g=>g[1]),backgroundColor:COLORS.slice(4),borderWidth:0,hoverOffset:5}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
+        plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:10,boxWidth:8,font:{size:10}}}}},
+    });
+  }
+
+  // Funnel
+  const funnel=document.getElementById('goals-funnel');
+  if(!goalNames.length){
+    funnel.innerHTML='<div class="empty">No goal events yet. Add <code>data-kl-goal="goal_name"</code> to buttons, links, and forms.</div>';
+    return;
+  }
+  const maxG=goalNames[0][1];
+  funnel.innerHTML=goalNames.slice(0,10).map(([name,count])=>{
+    const sessWithGoal=new Set(goals.filter(g=>g.goal_name===name).map(g=>g.session_id)).size;
+    const convRate=sessions?Math.round(sessWithGoal/sessions*100):0;
+    return `<div class="funnel-bar">
+      <div class="funnel-name">${name}</div>
+      <div class="funnel-track"><div class="funnel-fill" style="width:${Math.round(count/maxG*100)}%"></div></div>
+      <div class="funnel-num">${fmt(count)}</div>
+      <div class="funnel-rate">${convRate}% CVR</div>
+    </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   HEATMAP
+   ══════════════════════════════════════════════════════════════════════════════ */
+function populateHeatmapUrls() {
+  const clicks = state.events.filter(e=>e.event_type==='click'&&e.click_x!=null);
+  const urls = [...new Set(clicks.map(c=>fmtUrl(c.url||'')))].sort();
+  const sel = document.getElementById('heatmap-url-select');
+  sel.innerHTML='<option value="">All Pages</option>';
+  urls.forEach(u=>{ const o=document.createElement('option'); o.value=o.textContent=u; sel.appendChild(o); });
+}
+
+function renderHeatmap() {
+  const urlFilter = document.getElementById('heatmap-url-select').value;
+  const allClicks = state.events.filter(e=>e.event_type==='click');
+  const filtered  = allClicks.filter(c=>c.click_x!=null&&c.click_y!=null&&
+    (!urlFilter||fmtUrl(c.url||'')===urlFilter));
+
+  document.getElementById('hm-total-clicks').textContent  = fmt(allClicks.length);
+  document.getElementById('hm-filtered-clicks').textContent = fmt(filtered.length);
+
+  const canvas = document.getElementById('heatmap-canvas');
+  const ctx = canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height;
+
+  // Background
+  ctx.fillStyle='#08121F';
+  ctx.fillRect(0,0,W,H);
+
+  // Draw webpage skeleton
+  const drawRect=(y,h,color)=>{ ctx.fillStyle=color; ctx.fillRect(0,y,W,h); };
+  drawRect(0,50,'#0B1A2E');    // navbar
+  drawRect(50,180,'#071018');  // hero
+  drawRect(230,3,'#0D9488');   // divider
+  for(let i=0;i<5;i++) drawRect(233+i*90,80,'#081220'); // content sections
+
+  // Heatmap blobs
+  if(filtered.length){
+    // Use globalCompositeOperation to accumulate heat
+    const offscreen = document.createElement('canvas');
+    offscreen.width=W; offscreen.height=H;
+    const octx=offscreen.getContext('2d');
+
+    filtered.forEach(c=>{
+      const x=(c.click_x/100)*W, y=(c.click_y/100)*H;
+      const grd=octx.createRadialGradient(x,y,0,x,y,40);
+      grd.addColorStop(0,'rgba(255,255,255,0.3)');
+      grd.addColorStop(1,'rgba(255,255,255,0)');
+      octx.globalCompositeOperation='lighter';
+      octx.fillStyle=grd;
+      octx.beginPath(); octx.arc(x,y,40,0,Math.PI*2); octx.fill();
+    });
+
+    // Colorize using a gradient lookup
+    const imgData=octx.getImageData(0,0,W,H);
+    const d=imgData.data;
+    for(let i=0;i<d.length;i+=4){
+      const alpha=d[i]/255; // intensity 0-1
+      if(alpha<0.01){d[i]=d[i+1]=d[i+2]=d[i+3]=0;continue;}
+      // Gradient: blue -> cyan -> green -> yellow -> red
+      let r,g,b;
+      if(alpha<0.25){const t=alpha/0.25;r=0;g=Math.round(t*100);b=255;}
+      else if(alpha<0.5){const t=(alpha-0.25)/0.25;r=0;g=Math.round(100+t*155);b=Math.round(255*(1-t));}
+      else if(alpha<0.75){const t=(alpha-0.5)/0.25;r=Math.round(t*255);g=255;b=0;}
+      else{const t=(alpha-0.75)/0.25;r=255;g=Math.round(255*(1-t));b=0;}
+      d[i]=r; d[i+1]=g; d[i+2]=b; d[i+3]=Math.round(alpha*220);
+    }
+    octx.putImageData(imgData,0,0);
+    ctx.drawImage(offscreen,0,0);
+
+    // Click dots
+    filtered.forEach(c=>{
+      const x=(c.click_x/100)*W, y=(c.click_y/100)*H;
+      ctx.beginPath(); ctx.arc(x,y,2,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,0.6)'; ctx.fill();
+    });
+  }
+
+  // Zone labels
+  const zones=[
+    {label:'Navigation (top)',y:0,h:8},
+    {label:'Hero / Above Fold',y:8,h:25},
+    {label:'Upper Content',y:33,h:25},
+    {label:'Mid Content',y:58,h:25},
+    {label:'Lower Content',y:83,h:17},
+  ];
+  const zoneStats=zones.map(z=>{
+    const count=filtered.filter(c=>c.click_y>=z.y&&c.click_y<z.y+z.h).length;
+    return {...z,count};
+  }).sort((a,b)=>b.count-a.count);
+
+  document.getElementById('hm-top-zone').textContent = zoneStats[0]?.label||'—';
+  const maxZ=zoneStats[0]?.count||1;
+  document.getElementById('heatmap-zones').innerHTML=zoneStats.map(z=>`
+    <div class="table-row">
+      <div class="table-lbl">${z.label}</div>
+      <div class="table-bar"><div class="table-bar-fill" style="width:${Math.round(z.count/maxZ*100)}%"></div></div>
+      <div class="table-cnt">${fmt(z.count)}</div>
+    </div>
+  `).join('');
+
+  // Click elements table
+  const elMap={};
+  filtered.forEach(c=>{
+    const k=[c.element_tag,c.element_text].filter(Boolean).join(': ').trim()||'(unnamed)';
+    elMap[k]=(elMap[k]||0)+1;
+  });
+  const topEl=Object.entries(elMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  renderTable('table-clicks-hm', topEl);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   SHARED TABLE RENDERER
+   ══════════════════════════════════════════════════════════════════════════════ */
+function renderTable(id, rows) {
+  const el=document.getElementById(id);
+  if(!rows||!rows.length){el.innerHTML='<div class="empty">No data yet</div>';return;}
+  const max=rows[0][1];
+  el.innerHTML=rows.map(([label,count])=>`
+    <div class="table-row">
+      <div class="table-lbl" title="${label}">${label}</div>
+      <div class="table-bar"><div class="table-bar-fill" style="width:${Math.round(count/max*100)}%"></div></div>
+      <div class="table-cnt">${fmt(count)}</div>
+    </div>
+  `).join('');
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   EXPORT CSV
+   ══════════════════════════════════════════════════════════════════════════════ */
+function exportCSV() {
+  if(!state.events.length){alert('No data loaded yet.');return;}
+  const cols=['id','site_id','event_type','url','page_title','referrer','session_id',
+    'visitor_id','device_type','browser','os','country','city','screen_width','screen_height',
+    'utm_source','utm_medium','utm_campaign','utm_content','utm_term',
+    'click_x','click_y','goal_name','element_tag','element_text','duration','created_at'];
+  const esc=v=>{if(v==null)return'';const s=String(v);return s.includes(',')||s.includes('"')||s.includes('\n')?`"${s.replace(/"/g,'""')}"`:`${s}`;};
+  const csv=[cols.join(','),...state.events.map(e=>cols.map(c=>esc(e[c])).join(','))].join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download=`kulan-analytics-${state.siteId||'all'}-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   EMAIL REPORT
+   ══════════════════════════════════════════════════════════════════════════════ */
+let _reportHtml='';
+function openEmailReport() {
+  const ev=state.events;
+  const pv=ev.filter(e=>e.event_type==='pageview');
+  const gl=ev.filter(e=>e.event_type==='goal');
+  const visitors=new Set(ev.map(e=>e.visitor_id)).size;
+  const sessions=new Set(ev.map(e=>e.session_id)).size;
+  const pvPS={};
+  pv.forEach(e=>{pvPS[e.session_id]=(pvPS[e.session_id]||0)+1;});
+  const sl=Object.values(pvPS);
+  const bounce=sl.length?Math.round(sl.filter(c=>c===1).length/sl.length*100):0;
+  const durs=ev.filter(e=>e.event_type==='session_end'&&e.duration).map(e=>e.duration);
+  const avgDur=durs.length?Math.round(durs.reduce((a,b)=>a+b,0)/durs.length):null;
+
+  const pageMap={};
+  pv.forEach(e=>{const k=fmtUrl(e.url||'');pageMap[k]=(pageMap[k]||0)+1;});
+  const topPages=Object.entries(pageMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const topRefs=countBy(pv,'referrer').map(([r,c])=>[fmtRef(r),c]).slice(0,5);
+  const topCountries=countBy(pv,'country').slice(0,5);
+  const range=`Last ${state.days} Days${state.siteId?' ('+state.siteId+')':''}`;
+  const now=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+
+  _reportHtml=`<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><style>
+body{font-family:Arial,sans-serif;background:#f4f4f4;padding:20px}
+.wrap{max-width:600px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden}
+.hdr{background:#0B2545;padding:28px 32px;color:#fff}
+.hdr h1{font-size:20px;margin:0 0 4px}
+.hdr p{font-size:12px;color:#8BA3C7;margin:0}
+.body{padding:28px 32px}
+h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#666;margin:20px 0 10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.stat{background:#f8f8f8;border-radius:6px;padding:14px;text-align:center}
+.stat .v{font-size:24px;font-weight:700;color:#0B2545;font-family:monospace}
+.stat .l{font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{padding:8px 10px;text-align:left;border-bottom:1px solid #f0f0f0}
+th{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#999;font-weight:600}
+.num{font-family:monospace;color:#0D9488;font-weight:600}
+.ftr{background:#0B2545;padding:16px 32px;text-align:center;font-size:11px;color:#8BA3C7}
+.ftr a{color:#0D9488}
+</style></head><body>
+<div class="wrap">
+  <div class="hdr">
+    <h1>Kulan Analytics Report</h1>
+    <p>${range} &mdash; Generated ${now}</p>
+  </div>
+  <div class="body">
+    <h2>Overview</h2>
+    <div class="stats">
+      <div class="stat"><div class="v">${fmt(pv.length)}</div><div class="l">Page Views</div></div>
+      <div class="stat"><div class="v">${fmt(visitors)}</div><div class="l">Visitors</div></div>
+      <div class="stat"><div class="v">${fmt(sessions)}</div><div class="l">Sessions</div></div>
+      <div class="stat"><div class="v">${bounce}%</div><div class="l">Bounce Rate</div></div>
+      <div class="stat"><div class="v">${fmtDur(avgDur)}</div><div class="l">Avg Duration</div></div>
+      <div class="stat"><div class="v">${fmt(gl.length)}</div><div class="l">Conversions</div></div>
+    </div>
+    <h2>Top Pages</h2>
+    <table><tr><th>Page</th><th>Views</th></tr>
+      ${topPages.map(([p,c])=>`<tr><td>${p}</td><td class="num">${fmt(c)}</td></tr>`).join('')}
+    </table>
+    <h2>Top Referrers</h2>
+    <table><tr><th>Source</th><th>Sessions</th></tr>
+      ${topRefs.map(([r,c])=>`<tr><td>${r}</td><td class="num">${fmt(c)}</td></tr>`).join('')}
+    </table>
+    <h2>Countries</h2>
+    <table><tr><th>Country</th><th>Views</th></tr>
+      ${topCountries.map(([c,n])=>`<tr><td>${c}</td><td class="num">${fmt(n)}</td></tr>`).join('')}
+    </table>
+  </div>
+  <div class="ftr">Kulan Analytics &mdash; <a href="https://mmohamud.me">mmohamud.me</a></div>
+</div>
+</body></html>`;
+
+  document.getElementById('email-preview').textContent=_reportHtml.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,1200)+'...';
+  document.getElementById('email-modal').style.display='flex';
+}
+
+function closeModal()  { document.getElementById('email-modal').style.display='none'; }
+function copyReport()  { navigator.clipboard.writeText(_reportHtml).then(()=>alert('HTML copied to clipboard!')); }
+function downloadReport() {
+  const a=document.createElement('a');
+  a.href='data:text/html;charset=utf-8,'+encodeURIComponent(_reportHtml);
+  a.download='kulan-analytics-report-'+new Date().toISOString().slice(0,10)+'.html';
+  a.click();
+}
+
+/* ── Live users ──────────────────────────────────────────────────────────────── */
+async function updateLive() {
+  try {
+    const since=new Date(Date.now()-5*60000).toISOString();
+    let q=sb.from('analytics_events').select('visitor_id').gte('created_at',since);
+    if(state.siteId) q=q.eq('site_id',state.siteId);
+    const {data}=await q;
+    if(data) document.getElementById('live-count').textContent=new Set(data.map(r=>r.visitor_id)).size;
+  } catch(_){}
+}
+function startLivePoll() { updateLive(); setInterval(updateLive,30000); }
+</script>
+</body>
+</html>
