@@ -107,16 +107,77 @@ select:hover,.btn-ctrl:hover{border-color:var(--teal)}
 .live-badge{display:flex;align-items:center;gap:5px;background:var(--teal-dim);border:1px solid rgba(13,148,136,.3);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--teal)}
 .live-dot{width:6px;height:6px;background:var(--teal);border-radius:50%;animation:pulse 1.5s infinite}
 
-/* ── TABS ──────────────────────────────────────────────────────────────────── */
-.tab-nav{display:flex;gap:0;padding:0 16px;background:rgba(4,12,24,.8);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:60px;z-index:40}
-.tab-btn{background:none;border:none;color:var(--text2);font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:11px 16px;cursor:pointer;letter-spacing:.8px;text-transform:uppercase;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
-.tab-btn:hover{color:var(--text)}
-.tab-btn.active{color:var(--teal);border-bottom-color:var(--teal)}
+/* ── APP BODY LAYOUT ────────────────────────────────────────────────────────── */
+.app-body{display:flex;min-height:calc(100vh - 60px)}
+
+/* ── SIDEBAR ────────────────────────────────────────────────────────────────── */
+.sidebar{width:228px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);
+  position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;overflow-x:hidden;
+  display:flex;flex-direction:column;transition:width .2s;z-index:30}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.sidebar.collapsed{width:52px}
+
+/* Hamburger */
+.sb-toggle{display:flex;align-items:center;justify-content:center;width:100%;padding:12px 0;
+  background:none;border:none;border-bottom:1px solid var(--border);cursor:pointer;
+  color:var(--text2);transition:color .2s;flex-shrink:0}
+.sb-toggle:hover{color:var(--teal)}
+.sb-toggle svg{flex-shrink:0}
+
+/* Section headers */
+.sb-section{margin-top:4px}
+.sb-section-header{display:flex;align-items:center;gap:8px;padding:8px 14px 4px;
+  font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--text3);cursor:pointer;user-select:none;transition:color .2s;white-space:nowrap}
+.sb-section-header:hover{color:var(--text2)}
+.sb-section-header .sb-icon{font-size:13px;flex-shrink:0;width:20px;text-align:center}
+.sb-section-header .sb-chevron{margin-left:auto;font-size:9px;transition:transform .2s;flex-shrink:0}
+.sb-section.collapsed .sb-chevron{transform:rotate(-90deg)}
+.sb-section.collapsed .sb-items{display:none}
+.sb-section.collapsed .sb-section-header{margin-bottom:4px}
+
+/* Nav items */
+.sb-items{display:flex;flex-direction:column;gap:1px;padding:0 8px 4px}
+.sb-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;
+  cursor:pointer;font-size:12px;font-weight:600;color:var(--text2);
+  transition:background .15s,color .15s;white-space:nowrap;border:none;background:none;
+  width:100%;text-align:left;font-family:'Syne',sans-serif}
+.sb-item:hover{background:rgba(13,148,136,.08);color:var(--text)}
+.sb-item.active{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(13,148,136,.2)}
+.sb-item .sb-item-icon{font-size:13px;flex-shrink:0;width:18px;text-align:center;opacity:.7}
+.sb-item.active .sb-item-icon{opacity:1}
+.sb-item-label{overflow:hidden;text-overflow:ellipsis}
+
+/* Sidebar divider */
+.sb-divider{border:none;border-top:1px solid var(--border);margin:8px 0}
+
+/* Collapsed sidebar — icon-only mode */
+.sidebar.collapsed .sb-section-header span:not(.sb-icon){display:none}
+.sidebar.collapsed .sb-section-header .sb-chevron{display:none}
+.sidebar.collapsed .sb-item-label{display:none}
+.sidebar.collapsed .sb-items{padding:0 6px 4px}
+.sidebar.collapsed .sb-item{justify-content:center;padding:8px}
+.sidebar.collapsed .sb-section-header{justify-content:center;padding:8px 0 4px}
+
+/* Content area */
+.content-area{flex:1;min-width:0;overflow-x:hidden}
+
+/* Tab panels */
 .tab-panel{display:none}
 .tab-panel.active{display:block}
 
+/* Mobile */
+@media(max-width:768px){
+  .sidebar{position:fixed;top:60px;left:0;height:calc(100vh - 60px);z-index:35;
+    transform:translateX(-100%);transition:transform .25s}
+  .sidebar.mobile-open{transform:translateX(0)}
+  .sidebar-overlay{display:none;position:fixed;inset:0;top:60px;background:rgba(0,0,0,.5);z-index:34}
+  .sidebar-overlay.active{display:block}
+}
+
 /* ── MAIN ──────────────────────────────────────────────────────────────────── */
-main{padding:16px;max-width:1400px;margin:0 auto}
+main{padding:16px 20px;max-width:1400px;margin:0 auto}
 
 /* ── KPI ───────────────────────────────────────────────────────────────────── */
 .kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px}
@@ -426,34 +487,69 @@ footer a{color:var(--teal);text-decoration:none}
     </div>
   </header>
 
-  <nav class="tab-nav">
-    <button class="tab-btn active" data-tab="overview"   onclick="switchTab('overview')">Overview</button>
-    <button class="tab-btn"        data-tab="status"     onclick="switchTab('status')">Status</button>
-    <button class="tab-btn"        data-tab="realtime"   onclick="switchTab('realtime')">Realtime</button>
-    <button class="tab-btn"        data-tab="flow"       onclick="switchTab('flow')">Flow</button>
-    <button class="tab-btn"        data-tab="comparison" onclick="switchTab('comparison')">Comparison</button>
-    <button class="tab-btn"        data-tab="campaigns"  onclick="switchTab('campaigns')">Campaigns</button>
-    <button class="tab-btn"        data-tab="goals"      onclick="switchTab('goals')">Goals</button>
-    <button class="tab-btn"        data-tab="heatmap"    onclick="switchTab('heatmap')">Heatmap</button>
-    <button class="tab-btn"        data-tab="snippet"    onclick="switchTab('snippet')">Snippet</button>
-    <button class="tab-btn"        data-tab="audience"   onclick="switchTab('audience')">Audience</button>
-    <button class="tab-btn"        data-tab="geo"        onclick="switchTab('geo')">Geographic</button>
-    <button class="tab-btn"        data-tab="scroll"     onclick="switchTab('scroll')">Scroll</button>
-    <button class="tab-btn"        data-tab="search"     onclick="switchTab('search')">Search</button>
-    <button class="tab-btn"        data-tab="funnel"     onclick="switchTab('funnel')">Funnel</button>
-    <button class="tab-btn"        data-tab="cohort"     onclick="switchTab('cohort')">Cohort</button>
-    <button class="tab-btn"        data-tab="channels"   onclick="switchTab('channels')">Channels</button>
-    <button class="tab-btn"        data-tab="landing"    onclick="switchTab('landing')">Landing Pages</button>
-    <button class="tab-btn"        data-tab="visitors"   onclick="switchTab('visitors')">Visitor Explorer</button>
-    <button class="tab-btn"        data-tab="forms"      onclick="switchTab('forms')">Forms</button>
-    <button class="tab-btn"        data-tab="ecommerce"  onclick="switchTab('ecommerce')">Ecommerce</button>
-    <button class="tab-btn"        data-tab="alertsctr"  onclick="switchTab('alertsctr')">Alerts</button>
-    <button class="tab-btn"        data-tab="channels"   onclick="switchTab('channels')">Channels</button>
-    <button class="tab-btn"        data-tab="visitors"   onclick="switchTab('visitors')">Visitors</button>
-    <button class="tab-btn"        data-tab="landing"    onclick="switchTab('landing')">Landing Pages</button>
-    <button class="tab-btn"        data-tab="alerts"     onclick="switchTab('alerts')">Alerts</button>
-    <button class="tab-btn"        data-tab="settings"   onclick="switchTab('settings')">Settings</button>
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
+  <div class="app-body">
+  <nav class="sidebar" id="sidebar">
+    <button class="sb-toggle" onclick="toggleSidebar()" title="Toggle sidebar">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <div class="sb-section" id="sec-dashboard">
+      <div class="sb-section-header" onclick="toggleSection('dashboard')"><span class="sb-icon">🏠</span><span>Dashboard</span><span class="sb-chevron">▾</span></div>
+      <div class="sb-items">
+        <button class="sb-item active" data-tab="overview" onclick="switchTab('overview')"><span class="sb-item-icon">📊</span><span class="sb-item-label">Overview</span></button>
+        <button class="sb-item" data-tab="realtime" onclick="switchTab('realtime')"><span class="sb-item-icon">⚡</span><span class="sb-item-label">Realtime</span></button>
+        <button class="sb-item" data-tab="status" onclick="switchTab('status')"><span class="sb-item-icon">🟢</span><span class="sb-item-label">Site Health</span></button>
+      </div>
+    </div>
+    <div class="sb-section" id="sec-acquisition">
+      <div class="sb-section-header" onclick="toggleSection('acquisition')"><span class="sb-icon">📈</span><span>Acquisition</span><span class="sb-chevron">▾</span></div>
+      <div class="sb-items">
+        <button class="sb-item" data-tab="channels" onclick="switchTab('channels')"><span class="sb-item-icon">📡</span><span class="sb-item-label">Channels</span></button>
+        <button class="sb-item" data-tab="campaigns" onclick="switchTab('campaigns')"><span class="sb-item-icon">🎯</span><span class="sb-item-label">Campaigns</span></button>
+        <button class="sb-item" data-tab="landing" onclick="switchTab('landing')"><span class="sb-item-icon">🛬</span><span class="sb-item-label">Landing Pages</span></button>
+      </div>
+    </div>
+    <div class="sb-section" id="sec-audience">
+      <div class="sb-section-header" onclick="toggleSection('audience')"><span class="sb-icon">👥</span><span>Audience</span><span class="sb-chevron">▾</span></div>
+      <div class="sb-items">
+        <button class="sb-item" data-tab="audience" onclick="switchTab('audience')"><span class="sb-item-icon">👤</span><span class="sb-item-label">Visitors</span></button>
+        <button class="sb-item" data-tab="geo" onclick="switchTab('geo')"><span class="sb-item-icon">🌍</span><span class="sb-item-label">Geographic</span></button>
+        <button class="sb-item" data-tab="visitors" onclick="switchTab('visitors')"><span class="sb-item-icon">🔍</span><span class="sb-item-label">Visitor Explorer</span></button>
+        <button class="sb-item" data-tab="cohort" onclick="switchTab('cohort')"><span class="sb-item-icon">📅</span><span class="sb-item-label">Cohort</span></button>
+      </div>
+    </div>
+    <div class="sb-section" id="sec-behavior">
+      <div class="sb-section-header" onclick="toggleSection('behavior')"><span class="sb-icon">📊</span><span>Behavior</span><span class="sb-chevron">▾</span></div>
+      <div class="sb-items">
+        <button class="sb-item" data-tab="flow" onclick="switchTab('flow')"><span class="sb-item-icon">🗺️</span><span class="sb-item-label">Pages &amp; Flow</span></button>
+        <button class="sb-item" data-tab="scroll" onclick="switchTab('scroll')"><span class="sb-item-icon">📜</span><span class="sb-item-label">Scroll Depth</span></button>
+        <button class="sb-item" data-tab="heatmap" onclick="switchTab('heatmap')"><span class="sb-item-icon">🔥</span><span class="sb-item-label">Heatmap</span></button>
+        <button class="sb-item" data-tab="forms" onclick="switchTab('forms')"><span class="sb-item-icon">📝</span><span class="sb-item-label">Forms</span></button>
+        <button class="sb-item" data-tab="search" onclick="switchTab('search')"><span class="sb-item-icon">🔎</span><span class="sb-item-label">Search</span></button>
+      </div>
+    </div>
+    <div class="sb-section" id="sec-conversions">
+      <div class="sb-section-header" onclick="toggleSection('conversions')"><span class="sb-icon">🎯</span><span>Conversions</span><span class="sb-chevron">▾</span></div>
+      <div class="sb-items">
+        <button class="sb-item" data-tab="goals" onclick="switchTab('goals')"><span class="sb-item-icon">✅</span><span class="sb-item-label">Goals</span></button>
+        <button class="sb-item" data-tab="funnel" onclick="switchTab('funnel')"><span class="sb-item-icon">📉</span><span class="sb-item-label">Funnel Builder</span></button>
+        <button class="sb-item" data-tab="ecommerce" onclick="switchTab('ecommerce')"><span class="sb-item-icon">💰</span><span class="sb-item-label">Ecommerce</span></button>
+        <button class="sb-item" data-tab="comparison" onclick="switchTab('comparison')"><span class="sb-item-icon">⚖️</span><span class="sb-item-label">Comparison</span></button>
+      </div>
+    </div>
+    <hr class="sb-divider">
+    <div class="sb-section" id="sec-settings">
+      <div class="sb-section-header" onclick="toggleSection('settings')"><span class="sb-icon">⚙️</span><span>Settings</span><span class="sb-chevron">▾</span></div>
+      <div class="sb-items">
+        <button class="sb-item" data-tab="snippet" onclick="switchTab('snippet')"><span class="sb-item-icon">🧩</span><span class="sb-item-label">Snippet</span></button>
+        <button class="sb-item" data-tab="alertsctr" onclick="switchTab('alertsctr')"><span class="sb-item-icon">🔔</span><span class="sb-item-label">Alerts</span></button>
+      </div>
+    </div>
   </nav>
+  <div class="content-area">
 
   <!-- OVERVIEW -->
   <div id="tab-overview" class="tab-panel active">
@@ -1245,6 +1341,8 @@ fetch("https://xkadqvmqxdyqoddiypet.supabase.co/rest/v1/analytics_events?event_t
     </div>
   </div>
 
+  </div><!-- /content-area -->
+  </div><!-- /app-body -->
   <footer>Kulan Analytics v4 &mdash; <a href="https://mmohamud.me" target="_blank">mmohamud.me</a></footer>
 </div>
 
@@ -1341,8 +1439,10 @@ function switchTab(tab){
   state.tab=tab;
   const titles={overview:'Overview',status:'Status',realtime:'Realtime',flow:'Flow',comparison:'Comparison',campaigns:'Campaigns',goals:'Goals',heatmap:'Heatmap',snippet:'Snippet',audience:'Audience',geo:'Geographic',scroll:'Scroll Depth',search:'Search',funnel:'Funnel Builder',cohort:'Cohort',channels:'Channels',landing:'Landing Pages',visitors:'Visitor Explorer',forms:'Form Analytics',ecommerce:'Ecommerce',alertsctr:'Alerts Center'};
   document.title=(titles[tab]||tab)+' — Kulan Analytics';
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.querySelectorAll('.sb-item').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tab));
+  // Close mobile sidebar on nav
+  if(window.innerWidth<=768)closeSidebar();
   if(!state.events.length)return;
   if(tab==='status')     renderStatus();
   if(tab==='realtime')   initRealtime();
@@ -1367,6 +1467,7 @@ function switchTab(tab){
 async function initApp(){
   sb=supabase.createClient(CFG.SUPABASE_URL,CFG.ANON_KEY);
   initDates();
+  restoreSidebarState();
   applyShareToken();
   await loadSites();
   await Promise.all([loadGoalValues(), loadAlertRules()]);
@@ -3662,6 +3763,55 @@ function applyShareToken() {
     const params = JSON.parse(atob(hash.slice(7)));
     if (params.site) { state.siteId = params.site; document.getElementById('site-select').value = params.site; }
     if (params.days) setPreset(params.days);
+  } catch(_) {}
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   SIDEBAR NAVIGATION
+   ══════════════════════════════════════════════════════════════════ */
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const overlay = document.getElementById('sb-overlay');
+  if (window.innerWidth <= 768) {
+    sb.classList.toggle('mobile-open');
+    overlay.classList.toggle('active');
+  } else {
+    sb.classList.toggle('collapsed');
+    localStorage.setItem('_kl_sb_collapsed', sb.classList.contains('collapsed') ? '1' : '0');
+  }
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('sb-overlay').classList.remove('active');
+}
+
+function toggleSection(id) {
+  const sec = document.getElementById('sec-' + id);
+  if (!sec) return;
+  sec.classList.toggle('collapsed');
+  const state = {};
+  document.querySelectorAll('.sb-section').forEach(s => {
+    state[s.id] = s.classList.contains('collapsed') ? '1' : '0';
+  });
+  localStorage.setItem('_kl_sb_sections', JSON.stringify(state));
+}
+
+function restoreSidebarState() {
+  // Restore collapsed state
+  const collapsed = localStorage.getItem('_kl_sb_collapsed');
+  if (collapsed === '1') document.getElementById('sidebar').classList.add('collapsed');
+
+  // Restore section states
+  try {
+    const sections = JSON.parse(localStorage.getItem('_kl_sb_sections') || '{}');
+    Object.entries(sections).forEach(([id, val]) => {
+      if (val === '1') {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('collapsed');
+      }
+    });
   } catch(_) {}
 }
 
