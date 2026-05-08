@@ -319,6 +319,12 @@ footer a{color:var(--teal);text-decoration:none}
     <button class="tab-btn"        data-tab="goals"      onclick="switchTab('goals')">Goals</button>
     <button class="tab-btn"        data-tab="heatmap"    onclick="switchTab('heatmap')">Heatmap</button>
     <button class="tab-btn"        data-tab="snippet"    onclick="switchTab('snippet')">Snippet</button>
+    <button class="tab-btn"        data-tab="audience"   onclick="switchTab('audience')">Audience</button>
+    <button class="tab-btn"        data-tab="geo"        onclick="switchTab('geo')">Geographic</button>
+    <button class="tab-btn"        data-tab="scroll"     onclick="switchTab('scroll')">Scroll</button>
+    <button class="tab-btn"        data-tab="search"     onclick="switchTab('search')">Search</button>
+    <button class="tab-btn"        data-tab="funnel"     onclick="switchTab('funnel')">Funnel</button>
+    <button class="tab-btn"        data-tab="cohort"     onclick="switchTab('cohort')">Cohort</button>
   </nav>
 
   <!-- OVERVIEW -->
@@ -564,6 +570,144 @@ footer a{color:var(--teal);text-decoration:none}
     </main>
   </div>
 
+
+  <!-- AUDIENCE TAB -->
+  <div id="tab-audience" class="tab-panel">
+    <main>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+        <div class="kpi-card teal"><div class="kpi-label">New Visitors</div><div class="kpi-value" id="aud-new">—</div><div class="kpi-sub">first-time</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Returning</div><div class="kpi-value" id="aud-ret">—</div><div class="kpi-sub">came back</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Return Rate</div><div class="kpi-value" id="aud-rate">—</div><div class="kpi-sub">of all visitors</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">Languages</div><div class="kpi-value" id="aud-langs">—</div><div class="kpi-sub">distinct</div></div>
+      </div>
+      <div class="g11">
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">New vs Returning</div></div><div style="height:220px"><canvas id="chart-nv-ret"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Device Details</div></div><div style="height:220px"><canvas id="chart-dev-detail"></canvas></div></div>
+      </div>
+      <div class="g3" style="margin-bottom:16px">
+        <div class="table-card"><div class="table-head">Languages</div><div class="table-body" id="table-languages"></div></div>
+        <div class="table-card"><div class="table-head">Timezones</div><div class="table-body" id="table-timezones"></div></div>
+        <div class="table-card"><div class="table-head">Platforms</div><div class="table-body" id="table-platforms"></div></div>
+      </div>
+      <div class="g11" style="margin-bottom:16px">
+        <div class="table-card"><div class="table-head">Screen Resolutions</div><div class="table-body" id="table-resolutions"></div></div>
+        <div class="table-card"><div class="table-head">Connection Types</div><div class="table-body" id="table-connections"></div></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- GEOGRAPHIC TAB -->
+  <div id="tab-geo" class="tab-panel">
+    <main>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+        <div class="kpi-card teal"><div class="kpi-label">Countries</div><div class="kpi-value" id="geo-countries">—</div><div class="kpi-sub">distinct</div></div>
+        <div class="kpi-card"><div class="kpi-label">Regions</div><div class="kpi-value" id="geo-regions">—</div><div class="kpi-sub">states / provinces</div></div>
+        <div class="kpi-card"><div class="kpi-label">Cities</div><div class="kpi-value" id="geo-cities">—</div><div class="kpi-sub">distinct</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Top Country</div><div class="kpi-value" id="geo-top" style="font-size:13px">—</div><div class="kpi-sub">most traffic</div></div>
+      </div>
+      <div class="g11">
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Top Countries</div></div><div style="height:240px"><canvas id="chart-countries-bar"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Top Regions / States</div></div><div style="height:240px"><canvas id="chart-regions-bar"></canvas></div></div>
+      </div>
+      <div class="g3" style="margin-bottom:16px">
+        <div class="table-card"><div class="table-head">Countries</div><div class="table-body" id="geo-table-countries"></div></div>
+        <div class="table-card"><div class="table-head">Regions / States</div><div class="table-body" id="geo-table-regions"></div></div>
+        <div class="table-card"><div class="table-head">Cities</div><div class="table-body" id="geo-table-cities"></div></div>
+      </div>
+      <div class="g11" style="margin-bottom:16px">
+        <div class="table-card"><div class="table-head">Postal Codes</div><div class="table-body" id="geo-table-postal"></div></div>
+        <div class="table-card"><div class="table-head">Coordinate Clusters (lat, lng)</div><div class="table-body" id="geo-table-coords"></div></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- SCROLL DEPTH TAB -->
+  <div id="tab-scroll" class="tab-panel">
+    <main>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+        <div class="kpi-card teal"><div class="kpi-label">Reached 25%</div><div class="kpi-value" id="scr-25">—</div><div class="kpi-sub">of sessions</div></div>
+        <div class="kpi-card"><div class="kpi-label">Reached 50%</div><div class="kpi-value" id="scr-50">—</div><div class="kpi-sub">of sessions</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Reached 75%</div><div class="kpi-value" id="scr-75">—</div><div class="kpi-sub">of sessions</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Reached 100%</div><div class="kpi-value" id="scr-100">—</div><div class="kpi-sub">read to end</div></div>
+      </div>
+      <div class="g21">
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">Scroll Depth Funnel</div></div>
+          <div style="height:220px"><canvas id="chart-scroll-funnel"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><div class="chart-title">Depth by Page</div></div>
+          <div style="height:220px"><canvas id="chart-scroll-by-page"></canvas></div>
+        </div>
+      </div>
+      <div class="table-card" style="margin-bottom:16px">
+        <div class="table-head">Average Scroll Depth per Page</div>
+        <div class="table-body" id="table-scroll-pages"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- SEARCH TAB -->
+  <div id="tab-search" class="tab-panel">
+    <main>
+      <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px">
+        <div class="kpi-card teal"><div class="kpi-label">Total Searches</div><div class="kpi-value" id="srch-total">—</div><div class="kpi-sub">search events</div></div>
+        <div class="kpi-card"><div class="kpi-label">Unique Queries</div><div class="kpi-value" id="srch-unique">—</div><div class="kpi-sub">distinct terms</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Top Query</div><div class="kpi-value" id="srch-top" style="font-size:13px">—</div><div class="kpi-sub">most searched</div></div>
+      </div>
+      <div class="g21">
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Searches Over Time</div></div><div style="height:200px"><canvas id="chart-search-tl"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Top Search Terms</div></div><div style="height:200px"><canvas id="chart-search-top"></canvas></div></div>
+      </div>
+      <div class="g11" style="margin-bottom:16px">
+        <div class="table-card"><div class="table-head">All Search Queries</div><div class="table-body" id="table-queries"></div></div>
+        <div class="table-card"><div class="table-head">Search by Content Group</div><div class="table-body" id="table-search-groups"></div></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- FUNNEL BUILDER TAB -->
+  <div id="tab-funnel" class="tab-panel">
+    <main>
+      <div class="chart-card" style="margin-bottom:14px">
+        <div class="chart-header"><div class="chart-title">Funnel Builder</div><div class="chart-badge">Define steps by URL path or goal name</div></div>
+        <div id="funnel-steps" style="margin-bottom:14px"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn-teal" onclick="addFunnelStep()">+ Add Step</button>
+          <button class="btn-secondary" onclick="runFunnel()">&#x25B6; Run Funnel</button>
+          <button class="btn-secondary" onclick="clearFunnel()">&#x2715; Clear</button>
+        </div>
+      </div>
+      <div class="chart-card" style="margin-bottom:14px">
+        <div class="chart-header"><div class="chart-title">Funnel Results</div><div class="chart-badge" id="funnel-badge">—</div></div>
+        <div style="height:260px"><canvas id="chart-funnel"></canvas></div>
+      </div>
+      <div id="funnel-detail" style="margin-bottom:16px"></div>
+    </main>
+  </div>
+
+  <!-- COHORT TAB -->
+  <div id="tab-cohort" class="tab-panel">
+    <main>
+      <div class="chart-card" style="margin-bottom:14px">
+        <div class="chart-header">
+          <div class="chart-title">Weekly Retention Cohort</div>
+          <div class="chart-badge">% of week-0 visitors who returned</div>
+        </div>
+        <div style="overflow-x:auto">
+          <table id="cohort-table" style="border-collapse:collapse;font-size:11px;min-width:600px;width:100%">
+            <thead id="cohort-thead"></thead>
+            <tbody id="cohort-tbody"><tr><td class="empty" colspan="10">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="g11" style="margin-bottom:16px">
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Retention by Cohort Week</div></div><div style="height:220px"><canvas id="chart-cohort-line"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Cohort Size</div></div><div style="height:220px"><canvas id="chart-cohort-size"></canvas></div></div>
+      </div>
+    </main>
+  </div>
+
   <footer>Kulan Analytics v3 &mdash; <a href="https://mmohamud.me" target="_blank">mmohamud.me</a></footer>
 </div>
 
@@ -658,7 +802,10 @@ document.addEventListener('DOMContentLoaded', initApp);
 /* ── Tab ──────────────────────────────────────────────────────────── */
 function switchTab(tab){
   state.tab=tab;
-  const titles={overview:'Overview',status:'Status',realtime:'Realtime',flow:'Flow',comparison:'Comparison',campaigns:'Campaigns',goals:'Goals',heatmap:'Heatmap',snippet:'Snippet Manager'};
+  const titles={overview:'Overview',status:'Status',realtime:'Realtime',flow:'Flow',
+    comparison:'Comparison',campaigns:'Campaigns',goals:'Goals',heatmap:'Heatmap',
+    snippet:'Snippet',audience:'Audience',geo:'Geographic',scroll:'Scroll Depth',
+    search:'Search',funnel:'Funnel Builder',cohort:'Cohort Analysis'};
   document.title=(titles[tab]||tab)+' — Kulan Analytics';
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tab));
@@ -670,6 +817,11 @@ function switchTab(tab){
   if(tab==='campaigns')  renderCampaigns();
   if(tab==='goals')      renderGoals();
   if(tab==='heatmap')    {populateHeatmapUrls();renderHeatmap();}
+  if(tab==='audience')   renderAudience();
+  if(tab==='geo')        renderGeo();
+  if(tab==='scroll')     renderScroll();
+  if(tab==='search')     renderSearch();
+  if(tab==='cohort')     renderCohort();
 }
 
 /* ── Init ─────────────────────────────────────────────────────────── */
@@ -1381,6 +1533,378 @@ function copySnippet(){
 }
 document.addEventListener('DOMContentLoaded',()=>{ updateSnippet(); });
 
+
+/* ══════════════════════════════════════════════════════════════════
+   AUDIENCE TAB
+   ══════════════════════════════════════════════════════════════════ */
+function renderAudience(){
+  const ev=state.events;
+  const pv=ev.filter(e=>e.event_type==='pageview');
+  const newV=pv.filter(e=>e.is_returning===false).length;
+  const retV=pv.filter(e=>e.is_returning===true).length;
+  const total=newV+retV||1;
+  const langs=new Set(pv.map(e=>e.language).filter(Boolean)).size;
+  document.getElementById('aud-new').textContent=fmt(newV);
+  document.getElementById('aud-ret').textContent=fmt(retV);
+  document.getElementById('aud-rate').textContent=Math.round(retV/total*100)+'%';
+  document.getElementById('aud-langs').textContent=fmt(langs);
+
+  // New vs Returning doughnut
+  kill('nv-ret');
+  charts['nv-ret']=new Chart(document.getElementById('chart-nv-ret'),{
+    type:'doughnut',
+    data:{labels:['New','Returning'],datasets:[{data:[newV,retV],backgroundColor:['#0D9488','#D97706'],borderWidth:0,hoverOffset:5}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:14,boxWidth:8}}}},
+  });
+
+  // Device detail — pixel ratio distribution
+  const prMap={};
+  pv.forEach(e=>{if(e.pixel_ratio){const k=e.pixel_ratio+'x';prMap[k]=(prMap[k]||0)+1;}});
+  const prData=Object.entries(prMap).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  kill('dev-detail');
+  if(prData.length){
+    charts['dev-detail']=new Chart(document.getElementById('chart-dev-detail'),{
+      type:'bar',
+      data:{labels:prData.map(d=>d[0]),datasets:[{data:prData.map(d=>d[1]),backgroundColor:COLORS,borderRadius:4,borderSkipped:false}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:{display:true,text:'Pixel Ratio Distribution',font:{size:10},color:'#8BA3C7'}},
+        scales:{x:{grid:{display:false}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
+    });
+  }
+
+  renderTable('table-languages',  countBy(pv,'language').slice(0,10));
+  renderTable('table-timezones',  countBy(pv,'timezone').slice(0,10));
+  renderTable('table-platforms',  countBy(pv,'platform').slice(0,10));
+  renderTable('table-connections',countBy(pv,'connection_type').slice(0,8));
+
+  // Screen resolutions
+  const resMap={};
+  pv.forEach(e=>{if(e.screen_width&&e.screen_height){const k=e.screen_width+'×'+e.screen_height;resMap[k]=(resMap[k]||0)+1;}});
+  renderTable('table-resolutions',Object.entries(resMap).sort((a,b)=>b[1]-a[1]).slice(0,10));
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   GEOGRAPHIC TAB
+   ══════════════════════════════════════════════════════════════════ */
+function renderGeo(){
+  const pv=state.events.filter(e=>e.event_type==='pageview');
+  const countries=countBy(pv,'country').filter(c=>c[0]!=='(unknown)');
+  const regions=countBy(pv,'region').filter(r=>r[0]!=='(unknown)');
+  const cities=countBy(pv,'city').filter(c=>c[0]!=='(unknown)');
+  const postals=countBy(pv,'postal_code').filter(p=>p[0]!=='(unknown)');
+
+  document.getElementById('geo-countries').textContent=fmt(countries.length);
+  document.getElementById('geo-regions').textContent=fmt(regions.length);
+  document.getElementById('geo-cities').textContent=fmt(cities.length);
+  document.getElementById('geo-top').textContent=countries[0]?countries[0][0]:'—';
+
+  // Countries bar
+  const topC=countries.slice(0,8);
+  kill('countries-bar');
+  if(topC.length){
+    charts['countries-bar']=new Chart(document.getElementById('chart-countries-bar'),{
+      type:'bar',
+      data:{labels:topC.map(c=>c[0]),datasets:[{data:topC.map(c=>c[1]),backgroundColor:'rgba(13,148,136,.75)',borderRadius:4,borderSkipped:false}]},
+      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+        scales:{x:{...G,ticks:{precision:0}},y:{grid:{display:false}}}},
+    });
+  }
+
+  // Regions bar
+  const topR=regions.slice(0,8);
+  kill('regions-bar');
+  if(topR.length){
+    charts['regions-bar']=new Chart(document.getElementById('chart-regions-bar'),{
+      type:'bar',
+      data:{labels:topR.map(r=>r[0]),datasets:[{data:topR.map(r=>r[1]),backgroundColor:'rgba(217,119,6,.75)',borderRadius:4,borderSkipped:false}]},
+      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+        scales:{x:{...G,ticks:{precision:0}},y:{grid:{display:false}}}},
+    });
+  }
+
+  renderTable('geo-table-countries',countries.slice(0,12));
+  renderTable('geo-table-regions',regions.slice(0,12));
+  renderTable('geo-table-cities',cities.slice(0,12));
+  renderTable('geo-table-postal',postals.slice(0,10));
+
+  // Coordinate clusters (round to 1 decimal = ~11km)
+  const coordMap={};
+  pv.forEach(e=>{
+    if(e.latitude&&e.longitude){
+      const k=Number(e.latitude).toFixed(1)+', '+Number(e.longitude).toFixed(1);
+      coordMap[k]=(coordMap[k]||0)+1;
+    }
+  });
+  renderTable('geo-table-coords',Object.entries(coordMap).sort((a,b)=>b[1]-a[1]).slice(0,10));
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SCROLL DEPTH TAB
+   ══════════════════════════════════════════════════════════════════ */
+function renderScroll(){
+  const ev=state.events;
+  const scrolls=ev.filter(e=>e.event_type==='scroll');
+  const sessions=new Set(ev.map(e=>e.session_id)).size||1;
+
+  const atDepth=d=>new Set(scrolls.filter(e=>e.scroll_depth>=d).map(e=>e.session_id)).size;
+  const s25=atDepth(25),s50=atDepth(50),s75=atDepth(75),s100=atDepth(100);
+
+  document.getElementById('scr-25').textContent=Math.round(s25/sessions*100)+'%';
+  document.getElementById('scr-50').textContent=Math.round(s50/sessions*100)+'%';
+  document.getElementById('scr-75').textContent=Math.round(s75/sessions*100)+'%';
+  document.getElementById('scr-100').textContent=Math.round(s100/sessions*100)+'%';
+
+  // Funnel chart
+  kill('scroll-funnel');
+  charts['scroll-funnel']=new Chart(document.getElementById('chart-scroll-funnel'),{
+    type:'bar',
+    data:{labels:['25%','50%','75%','100%'],
+      datasets:[{data:[s25,s50,s75,s100],backgroundColor:['#0D9488','#10B981','#D97706','#8B5CF6'],borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{display:false}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
+  });
+
+  // Average scroll depth per page
+  const pageDepthMap={};
+  scrolls.forEach(e=>{
+    const p=fmtUrl(e.url||'');
+    if(!pageDepthMap[p])pageDepthMap[p]={sum:0,count:0};
+    pageDepthMap[p].sum+=e.scroll_depth||0;
+    pageDepthMap[p].count++;
+  });
+  const pageDepths=Object.entries(pageDepthMap)
+    .map(([p,v])=>[p,Math.round(v.sum/v.count)])
+    .sort((a,b)=>b[1]-a[1]).slice(0,10);
+
+  // By page bar
+  kill('scroll-by-page');
+  if(pageDepths.length){
+    charts['scroll-by-page']=new Chart(document.getElementById('chart-scroll-by-page'),{
+      type:'bar',
+      data:{labels:pageDepths.map(p=>p[0].length>22?p[0].slice(0,20)+'…':p[0]),
+        datasets:[{data:pageDepths.map(p=>p[1]),backgroundColor:'rgba(139,92,246,.7)',borderRadius:4,borderSkipped:false}]},
+      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+        scales:{x:{...G,min:0,max:100,ticks:{callback:v=>v+'%'}},y:{grid:{display:false}}}},
+    });
+  }
+
+  renderTable('table-scroll-pages',pageDepths.map(([p,d])=>[p,d]));
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SEARCH TAB
+   ══════════════════════════════════════════════════════════════════ */
+function renderSearch(){
+  const ev=state.events;
+  const searches=ev.filter(e=>e.event_type==='search');
+  const queries=countBy(searches,'search_query').filter(q=>q[0]!=='(unknown)');
+  document.getElementById('srch-total').textContent=fmt(searches.length);
+  document.getElementById('srch-unique').textContent=fmt(queries.length);
+  document.getElementById('srch-top').textContent=queries[0]?queries[0][0]:'—';
+
+  const{labels,values}=groupByDay(searches,state.days,state.startDate,state.endDate);
+  kill('search-tl');
+  charts['search-tl']=new Chart(document.getElementById('chart-search-tl'),{
+    type:'bar',
+    data:{labels,datasets:[{data:values,backgroundColor:'rgba(59,130,246,.7)',borderRadius:3,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{...G,ticks:{maxTicksLimit:12}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
+  });
+
+  const topQ=queries.slice(0,8);
+  kill('search-top');
+  if(topQ.length){
+    charts['search-top']=new Chart(document.getElementById('chart-search-top'),{
+      type:'bar',
+      data:{labels:topQ.map(q=>q[0].length>24?q[0].slice(0,22)+'…':q[0]),
+        datasets:[{data:topQ.map(q=>q[1]),backgroundColor:COLORS.map(c=>c+'AA'),borderRadius:4,borderSkipped:false}]},
+      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+        scales:{x:{...G,ticks:{precision:0}},y:{grid:{display:false}}}},
+    });
+  }
+
+  renderTable('table-queries',queries.slice(0,15));
+  const groupSearch=countBy(searches,'content_group').slice(0,8);
+  renderTable('table-search-groups',groupSearch);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   FUNNEL BUILDER
+   ══════════════════════════════════════════════════════════════════ */
+const funnelSteps=[];
+function addFunnelStep(){
+  const idx=funnelSteps.length;
+  funnelSteps.push({type:'page',value:''});
+  renderFunnelSteps();
+}
+function removeFunnelStep(idx){funnelSteps.splice(idx,1);renderFunnelSteps();}
+function renderFunnelSteps(){
+  const container=document.getElementById('funnel-steps');
+  if(!funnelSteps.length){
+    container.innerHTML='<p style="font-size:12px;color:var(--text3);padding:8px 0">No steps yet. Add a step to define your funnel.</p>';
+    return;
+  }
+  container.innerHTML=funnelSteps.map((s,i)=>`
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+      <span style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--teal);min-width:20px">${i+1}.</span>
+      <select onchange="funnelSteps[${i}].type=this.value" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:Syne,sans-serif;font-size:12px;padding:7px 10px;outline:none">
+        <option value="page"${s.type==='page'?' selected':''}>Page URL contains</option>
+        <option value="goal"${s.type==='goal'?' selected':''}>Goal name</option>
+      </select>
+      <input value="${s.value}" oninput="funnelSteps[${i}].value=this.value"
+        placeholder="${s.type==='goal'?'e.g. contact_click':'e.g. /contact'}"
+        style="flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 12px;color:var(--text);font-family:JetBrains Mono,monospace;font-size:12px;outline:none">
+      <button onclick="removeFunnelStep(${i})" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px">&#x2715;</button>
+    </div>`).join('');
+}
+function clearFunnel(){funnelSteps.length=0;renderFunnelSteps();document.getElementById('funnel-badge').textContent='—';document.getElementById('funnel-detail').innerHTML='';}
+function runFunnel(){
+  if(!funnelSteps.length||!funnelSteps.every(s=>s.value.trim())){
+    alert('Add at least one step with a value.');return;
+  }
+  const ev=state.events;
+  const sessionMap={};
+  ev.forEach(e=>{if(!sessionMap[e.session_id])sessionMap[e.session_id]=[];sessionMap[e.session_id].push(e);});
+  Object.values(sessionMap).forEach(arr=>arr.sort((a,b)=>a.created_at<b.created_at?-1:1));
+
+  const stepCounts=funnelSteps.map(()=>0);
+  const sessions=Object.values(sessionMap);
+  sessions.forEach(events=>{
+    let lastMatchIdx=-1;
+    funnelSteps.forEach((step,si)=>{
+      const matched=events.some((e,ei)=>{
+        if(ei<=lastMatchIdx)return false;
+        if(step.type==='page'&&e.event_type==='pageview'&&(e.url||'').includes(step.value)){lastMatchIdx=ei;return true;}
+        if(step.type==='goal'&&e.event_type==='goal'&&(e.goal_name||'').includes(step.value)){lastMatchIdx=ei;return true;}
+        return false;
+      });
+      if(matched)stepCounts[si]++;
+    });
+  });
+
+  const labels=funnelSteps.map((s,i)=>'Step '+(i+1)+': '+(s.value.length>18?s.value.slice(0,16)+'…':s.value));
+  document.getElementById('funnel-badge').textContent=stepCounts[0]+' entered funnel';
+  kill('funnel');
+  charts['funnel']=new Chart(document.getElementById('chart-funnel'),{
+    type:'bar',
+    data:{labels,datasets:[{data:stepCounts,backgroundColor:COLORS,borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{display:false}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
+  });
+
+  const detail=document.getElementById('funnel-detail');
+  const max=stepCounts[0]||1;
+  detail.innerHTML=stepCounts.map((count,i)=>{
+    const prev=i===0?count:stepCounts[i-1]||1;
+    const dropPct=i===0?0:Math.round((1-count/prev)*100);
+    const overall=Math.round(count/max*100);
+    return`<div class="funnel-bar">
+      <div class="funnel-name">${labels[i]}</div>
+      <div class="funnel-track"><div class="funnel-fill" style="width:${overall}%"></div></div>
+      <div class="funnel-num">${fmt(count)}</div>
+      <div class="funnel-rate">${i===0?'entry':dropPct+'% drop'}</div>
+    </div>`;
+  }).join('');
+}
+// Init funnel with empty step
+document.addEventListener('DOMContentLoaded',()=>{addFunnelStep();addFunnelStep();addFunnelStep();});
+
+/* ══════════════════════════════════════════════════════════════════
+   COHORT ANALYSIS
+   ══════════════════════════════════════════════════════════════════ */
+function renderCohort(){
+  const ev=state.events;
+  if(!ev.length){document.getElementById('cohort-tbody').innerHTML='<tr><td colspan="10" class="empty">No data</td></tr>';return;}
+
+  // Build visitor->first_seen_week map
+  const visitorFirstWeek={};
+  const visitorWeeks={};
+  ev.forEach(e=>{
+    if(!e.visitor_id)return;
+    const d=new Date(e.created_at);
+    // Get ISO week start (Monday)
+    const day=d.getDay(),diff=d.getDate()-day+(day===0?-6:1);
+    const weekStart=new Date(d.setDate(diff));
+    const weekKey=weekStart.toISOString().slice(0,10);
+    if(!visitorFirstWeek[e.visitor_id]||weekKey<visitorFirstWeek[e.visitor_id]){
+      visitorFirstWeek[e.visitor_id]=weekKey;
+    }
+    if(!visitorWeeks[e.visitor_id])visitorWeeks[e.visitor_id]=new Set();
+    visitorWeeks[e.visitor_id].add(weekKey);
+  });
+
+  // Group visitors by acquisition week
+  const cohorts={};
+  Object.entries(visitorFirstWeek).forEach(([vid,week])=>{
+    if(!cohorts[week])cohorts[week]={visitors:new Set(),weeks:{}};
+    cohorts[week].visitors.add(vid);
+  });
+
+  // For each cohort, count how many returned in week N
+  Object.entries(visitorFirstWeek).forEach(([vid,cohortWeek])=>{
+    if(!cohorts[cohortWeek])return;
+    visitorWeeks[vid].forEach(activeWeek=>{
+      const cohortDate=new Date(cohortWeek),activeDate=new Date(activeWeek);
+      const weekN=Math.round((activeDate-cohortDate)/(7*86400000));
+      if(weekN>=0){
+        if(!cohorts[cohortWeek].weeks[weekN])cohorts[cohortWeek].weeks[weekN]=new Set();
+        cohorts[cohortWeek].weeks[weekN].add(vid);
+      }
+    });
+  });
+
+  const sortedWeeks=Object.keys(cohorts).sort();
+  const maxN=Math.min(8,sortedWeeks.length);
+
+  // Build table
+  const thead=document.getElementById('cohort-thead');
+  const tbody=document.getElementById('cohort-tbody');
+  thead.innerHTML='<tr><th style="padding:8px 12px;text-align:left;font-size:10px;color:var(--text2);border-bottom:1px solid var(--border)">Cohort Week</th><th style="padding:8px 12px;font-size:10px;color:var(--text2);border-bottom:1px solid var(--border)">Users</th>'+
+    Array.from({length:maxN},(_,i)=>`<th style="padding:8px 12px;font-size:10px;color:var(--text2);border-bottom:1px solid var(--border);text-align:center">Week ${i}</th>`).join('')+'</tr>';
+
+  tbody.innerHTML=sortedWeeks.map(week=>{
+    const cohort=cohorts[week];
+    const size=cohort.visitors.size;
+    const cells=Array.from({length:maxN},(_,n)=>{
+      const ret=cohort.weeks[n]?cohort.weeks[n].size:0;
+      const pct=n===0?100:Math.round(ret/size*100);
+      const alpha=pct/100;
+      const bg=n===0?'rgba(13,148,136,.8)':`rgba(13,148,136,${(alpha*.6).toFixed(2)})`;
+      return`<td style="padding:7px 10px;text-align:center;background:${bg};font-family:'JetBrains Mono',monospace;font-size:11px">${n===0?size:ret?pct+'%':'—'}</td>`;
+    }).join('');
+    return`<tr><td style="padding:7px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2);border-bottom:1px solid rgba(13,148,136,.07)">${week}</td>
+      <td style="padding:7px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);border-bottom:1px solid rgba(13,148,136,.07)">${size}</td>
+      ${cells}</tr>`;
+  }).join('');
+
+  // Retention line chart (avg retention per week N across all cohorts)
+  const avgRetention=Array.from({length:maxN},(_,n)=>{
+    const vals=sortedWeeks.map(week=>{
+      const c=cohorts[week];
+      if(n===0)return 100;
+      return c.weeks[n]?Math.round(c.weeks[n].size/c.visitors.size*100):0;
+    }).filter(v=>v>0);
+    return vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;
+  });
+
+  kill('cohort-line');
+  charts['cohort-line']=new Chart(document.getElementById('chart-cohort-line'),{
+    type:'line',
+    data:{labels:Array.from({length:maxN},(_,i)=>'Week '+i),
+      datasets:[{label:'Avg Retention',data:avgRetention,borderColor:'#0D9488',backgroundColor:'rgba(13,148,136,.1)',borderWidth:2,pointRadius:4,fill:true,tension:.3}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{display:false}},y:{...G,beginAtZero:true,max:100,ticks:{callback:v=>v+'%'}}}},
+  });
+
+  // Cohort size bar
+  kill('cohort-size');
+  charts['cohort-size']=new Chart(document.getElementById('chart-cohort-size'),{
+    type:'bar',
+    data:{labels:sortedWeeks.map(w=>w.slice(5)),
+      datasets:[{data:sortedWeeks.map(w=>cohorts[w].visitors.size),backgroundColor:'rgba(139,92,246,.7)',borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{display:false},ticks:{maxTicksLimit:10}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
+  });
+}
 /* ── Live ─────────────────────────────────────────────────────────── */
 async function updateLive(){
   try{
