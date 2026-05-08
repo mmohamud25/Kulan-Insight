@@ -11,6 +11,11 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230B2545'/><circle cx='16' cy='16' r='7' fill='none' stroke='%230D9488' stroke-width='2.5'/><circle cx='16' cy='16' r='3' fill='%230D9488'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css">
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.min.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/MarkerCluster.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" crossorigin="anonymous"></script>
 <style>
@@ -222,6 +227,22 @@ main{padding:16px;max-width:1400px;margin:0 auto}
 .comp-table tr:hover td{background:rgba(13,148,136,.04)}
 .comp-table .num{font-family:'JetBrains Mono',monospace;color:var(--teal)}
 .site-pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;background:var(--teal-dim);color:var(--teal)}
+
+/* MAP */
+#visitor-map{height:460px;border-radius:var(--radius);border:1px solid var(--border);z-index:1;background:#0B1A2E}
+.leaflet-container{background:#0B1A2E!important;font-family:'Syne',sans-serif}
+.leaflet-tile-pane{filter:grayscale(1) invert(1) brightness(.4) hue-rotate(180deg) saturate(2)}
+.leaflet-popup-content-wrapper{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+.leaflet-popup-tip{background:var(--card)}
+.leaflet-popup-content{font-family:'Syne',sans-serif;font-size:12px;margin:10px 14px}
+.leaflet-popup-content strong{color:var(--teal)}
+.map-popup-row{display:flex;justify-content:space-between;gap:16px;margin:3px 0}
+.map-popup-label{color:var(--text2)}
+.map-popup-val{font-family:'JetBrains Mono',monospace;color:var(--text)}
+.map-controls{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
+.map-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--text2);margin-top:10px}
+.map-legend-item{display:flex;align-items:center;gap:5px}
+.map-legend-dot{width:10px;height:10px;border-radius:50%;border:2px solid}
 
 footer{text-align:center;padding:14px;color:var(--text3);font-size:11px;letter-spacing:.5px;border-top:1px solid var(--border)}
 footer a{color:var(--teal);text-decoration:none}
@@ -605,9 +626,31 @@ footer a{color:var(--teal);text-decoration:none}
         <div class="kpi-card"><div class="kpi-label">Cities</div><div class="kpi-value" id="geo-cities">—</div><div class="kpi-sub">distinct</div></div>
         <div class="kpi-card amber"><div class="kpi-label">Top Country</div><div class="kpi-value" id="geo-top" style="font-size:13px">—</div><div class="kpi-sub">most traffic</div></div>
       </div>
+
+      <!-- INTERACTIVE MAP -->
+      <div class="chart-card" style="margin-bottom:14px">
+        <div class="chart-header">
+          <div class="chart-title">Visitor Map</div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <div class="chart-badge" id="map-badge">0 locations</div>
+            <select id="map-layer" onchange="updateMapLayer()" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:Syne,sans-serif;font-size:11px;padding:4px 8px;outline:none">
+              <option value="dots">Dot markers</option>
+              <option value="heat">Bubble size</option>
+            </select>
+          </div>
+        </div>
+        <div id="visitor-map"></div>
+        <div class="map-legend">
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:#0D9488;border-color:#0D9488"></div>1–5 visits</div>
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:#D97706;border-color:#D97706"></div>6–20 visits</div>
+          <div class="map-legend-item"><div class="map-legend-dot" style="background:#EF4444;border-color:#EF4444"></div>20+ visits</div>
+          <span style="margin-left:auto;font-size:10px">Scroll to zoom · Click markers for details</span>
+        </div>
+      </div>
+
       <div class="g11">
-        <div class="chart-card"><div class="chart-header"><div class="chart-title">Top Countries</div></div><div style="height:240px"><canvas id="chart-countries-bar"></canvas></div></div>
-        <div class="chart-card"><div class="chart-header"><div class="chart-title">Top Regions / States</div></div><div style="height:240px"><canvas id="chart-regions-bar"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Top Countries</div></div><div style="height:220px"><canvas id="chart-countries-bar"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Top Regions / States</div></div><div style="height:220px"><canvas id="chart-regions-bar"></canvas></div></div>
       </div>
       <div class="g3" style="margin-bottom:16px">
         <div class="table-card"><div class="table-head">Countries</div><div class="table-body" id="geo-table-countries"></div></div>
@@ -616,7 +659,7 @@ footer a{color:var(--teal);text-decoration:none}
       </div>
       <div class="g11" style="margin-bottom:16px">
         <div class="table-card"><div class="table-head">Postal Codes</div><div class="table-body" id="geo-table-postal"></div></div>
-        <div class="table-card"><div class="table-head">Coordinate Clusters (lat, lng)</div><div class="table-body" id="geo-table-coords"></div></div>
+        <div class="table-card"><div class="table-head">Coordinate Clusters</div><div class="table-body" id="geo-table-coords"></div></div>
       </div>
     </main>
   </div>
@@ -1582,6 +1625,126 @@ function renderAudience(){
   renderTable('table-resolutions',Object.entries(resMap).sort((a,b)=>b[1]-a[1]).slice(0,10));
 }
 
+
+/* ══════════════════════════════════════════════════════════════════
+   INTERACTIVE MAP
+   ══════════════════════════════════════════════════════════════════ */
+let _map = null;
+let _markerLayer = null;
+
+function initMap(){
+  if(_map) return;
+  _map = L.map('visitor-map', {
+    center: [20, 0], zoom: 2,
+    zoomControl: true,
+    attributionControl: true,
+  });
+
+  // Dark tile layer (CartoDB Dark Matter — no API key needed)
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19,
+  }).addTo(_map);
+}
+
+function updateMapLayer(){
+  if(!_map) return;
+  renderGeoMap(state.events.filter(e=>e.event_type==='pageview'));
+}
+
+function renderGeoMap(pv){
+  initMap();
+  if(_markerLayer){ _map.removeLayer(_markerLayer); _markerLayer=null; }
+
+  // Build location clusters (group identical lat/lng)
+  const locMap={};
+  pv.forEach(e=>{
+    if(!e.latitude||!e.longitude)return;
+    const key=Number(e.latitude).toFixed(3)+','+Number(e.longitude).toFixed(3);
+    if(!locMap[key]){
+      locMap[key]={
+        lat: Number(e.latitude), lng: Number(e.longitude),
+        count:0, country:e.country||'?', region:e.region||'',
+        city:e.city||'', postal:e.postal_code||'',
+      };
+    }
+    locMap[key].count++;
+  });
+
+  const locations = Object.values(locMap);
+  const mode = document.getElementById('map-layer')?.value || 'dots';
+  document.getElementById('map-badge').textContent = locations.length+' locations';
+
+  if(!locations.length){
+    document.getElementById('map-badge').textContent='No coordinate data yet — tracker v3 needed';
+    return;
+  }
+
+  if(mode==='heat'){
+    // Bubble mode — circle radius proportional to visits
+    const maxCount = Math.max(...locations.map(l=>l.count));
+    _markerLayer = L.layerGroup();
+    locations.forEach(loc=>{
+      const r = Math.max(6, Math.round((loc.count/maxCount)*40));
+      const color = loc.count>=20?'#EF4444':loc.count>=6?'#D97706':'#0D9488';
+      const circle = L.circleMarker([loc.lat,loc.lng],{
+        radius: r, color: color, fillColor: color,
+        fillOpacity: 0.55, weight: 1.5, opacity: 0.9,
+      });
+      circle.bindPopup(buildPopup(loc));
+      _markerLayer.addLayer(circle);
+    });
+    _markerLayer.addTo(_map);
+  } else {
+    // Clustered dot mode
+    _markerLayer = L.markerClusterGroup({
+      maxClusterRadius: 40,
+      iconCreateFunction: cluster=>{
+        const n=cluster.getChildCount();
+        const size=n>100?52:n>20?42:34;
+        const bg=n>100?'#EF4444':n>20?'#D97706':'#0D9488';
+        return L.divIcon({
+          html:`<div style="width:${size}px;height:${size}px;background:${bg};border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:JetBrains Mono,monospace;font-size:11px;font-weight:600;color:#fff;border:2px solid rgba(255,255,255,.3)">${n}</div>`,
+          className:'',iconSize:[size,size],iconAnchor:[size/2,size/2],
+        });
+      },
+    });
+
+    locations.forEach(loc=>{
+      const color=loc.count>=20?'#EF4444':loc.count>=6?'#D97706':'#0D9488';
+      const icon=L.divIcon({
+        html:`<div style="width:12px;height:12px;background:${color};border-radius:50%;border:2px solid rgba(255,255,255,.5);box-shadow:0 0 6px ${color}"></div>`,
+        className:'',iconSize:[12,12],iconAnchor:[6,6],
+      });
+      const marker=L.marker([loc.lat,loc.lng],{icon});
+      marker.bindPopup(buildPopup(loc));
+      _markerLayer.addLayer(marker);
+    });
+    _markerLayer.addTo(_map);
+  }
+
+  // Fit map to data bounds
+  if(locations.length>0){
+    try{
+      const bounds=L.latLngBounds(locations.map(l=>[l.lat,l.lng]));
+      _map.fitBounds(bounds,{padding:[30,30],maxZoom:8});
+    }catch(_){}
+  }
+}
+
+function buildPopup(loc){
+  return `<div>
+    <div style="font-weight:700;font-size:13px;margin-bottom:8px;color:var(--teal)">${loc.city||loc.region||loc.country}</div>
+    <div class="map-popup-row"><span class="map-popup-label">Country</span><span class="map-popup-val">${loc.country}</span></div>
+    ${loc.region?`<div class="map-popup-row"><span class="map-popup-label">Region</span><span class="map-popup-val">${loc.region}</span></div>`:''}
+    ${loc.city?`<div class="map-popup-row"><span class="map-popup-label">City</span><span class="map-popup-val">${loc.city}</span></div>`:''}
+    ${loc.postal?`<div class="map-popup-row"><span class="map-popup-label">Postal</span><span class="map-popup-val">${loc.postal}</span></div>`:''}
+    <div class="map-popup-row"><span class="map-popup-label">Visits</span><span class="map-popup-val">${loc.count}</span></div>
+    <div class="map-popup-row"><span class="map-popup-label">Coords</span><span class="map-popup-val">${loc.lat.toFixed(3)}, ${loc.lng.toFixed(3)}</span></div>
+  </div>`;
+}
+
 /* ══════════════════════════════════════════════════════════════════
    GEOGRAPHIC TAB
    ══════════════════════════════════════════════════════════════════ */
@@ -1596,6 +1759,9 @@ function renderGeo(){
   document.getElementById('geo-regions').textContent=fmt(regions.length);
   document.getElementById('geo-cities').textContent=fmt(cities.length);
   document.getElementById('geo-top').textContent=countries[0]?countries[0][0]:'—';
+
+  // Render interactive map
+  setTimeout(()=>renderGeoMap(pv), 100);
 
   // Countries bar
   const topC=countries.slice(0,8);
