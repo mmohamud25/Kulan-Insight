@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kulan Analytics</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kulan Analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -15,197 +15,210 @@
   --border:rgba(13,148,136,.18);--teal:#0D9488;--teal-dim:rgba(13,148,136,.13);
   --amber:#D97706;--amber-dim:rgba(217,119,6,.1);
   --text:#E8F0FE;--text2:#8BA3C7;--text3:#4A6080;
-  --green:#10B981;--red:#EF4444;--purple:#8B5CF6;
+  --green:#10B981;--red:#EF4444;--purple:#8B5CF6;--orange:#F97316;
   --radius:12px;--radius-sm:7px;
 }
-html,body{height:100%;background:var(--bg);color:var(--text);
-  font-family:'Syne',sans-serif;font-size:14px;line-height:1.5;overflow-x:hidden}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;line-height:1.5;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;
-  background-image:linear-gradient(rgba(13,148,136,.04) 1px,transparent 1px),
-                   linear-gradient(90deg,rgba(13,148,136,.04) 1px,transparent 1px);
+  background-image:linear-gradient(rgba(13,148,136,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(13,148,136,.04) 1px,transparent 1px);
   background-size:40px 40px;pointer-events:none;z-index:0}
 
-/* LOGIN */
-#login-screen{position:fixed;inset:0;display:flex;align-items:center;
-  justify-content:center;z-index:100;background:var(--bg)}
-.login-box{width:360px;background:var(--card);border:1px solid var(--border);
-  border-radius:16px;padding:40px 36px;position:relative}
-.login-box::before{content:'';position:absolute;top:-1px;left:-1px;right:-1px;
-  height:3px;background:linear-gradient(90deg,var(--teal),var(--amber));border-radius:16px 16px 0 0}
+/* ── LOGIN ─────────────────────────────────────────────────────────────────── */
+#login-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:100;background:var(--bg)}
+.login-box{width:360px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:40px 36px;position:relative}
+.login-box::before{content:'';position:absolute;top:-1px;left:-1px;right:-1px;height:3px;background:linear-gradient(90deg,var(--teal),var(--amber));border-radius:16px 16px 0 0}
 .login-logo{display:flex;align-items:center;gap:10px;margin-bottom:28px}
-.login-logo .dot{width:10px;height:10px;background:var(--teal);border-radius:50%;
-  box-shadow:0 0 10px var(--teal)}
+.login-logo .dot{width:10px;height:10px;background:var(--teal);border-radius:50%;box-shadow:0 0 10px var(--teal)}
 .login-logo span{font-size:18px;font-weight:700}
 .login-box h2{font-size:22px;font-weight:800;margin-bottom:6px}
 .login-box p{color:var(--text2);margin-bottom:28px;font-size:13px}
 .input-group{margin-bottom:16px}
-.input-group input{width:100%;background:var(--bg2);border:1px solid var(--border);
-  border-radius:var(--radius-sm);padding:12px 16px;color:var(--text);
-  font-family:'JetBrains Mono',monospace;font-size:14px;outline:none;transition:border-color .2s}
+.input-group input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;outline:none;transition:border-color .2s}
 .input-group input:focus{border-color:var(--teal)}
-.btn-primary{width:100%;background:var(--teal);color:#fff;border:none;
-  border-radius:var(--radius-sm);padding:13px;font-family:'Syne',sans-serif;
-  font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px;transition:opacity .2s,transform .1s}
-.btn-primary:hover{opacity:.9}.btn-primary:active{transform:scale(.98)}
+.btn-primary{width:100%;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);padding:13px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.btn-primary:hover{opacity:.9}
 #login-error{color:var(--red);font-size:12px;margin-top:10px;text-align:center;min-height:16px}
 
-/* LOADING */
-#loading{position:fixed;inset:0;background:rgba(4,12,24,.85);display:flex;
-  align-items:center;justify-content:center;z-index:90;backdrop-filter:blur(4px)}
-.spinner{width:36px;height:36px;border:3px solid var(--border);
-  border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes pulse{0%,100%{box-shadow:0 0 8px var(--teal);opacity:1}50%{box-shadow:0 0 16px var(--teal);opacity:.7}}
+/* ── ALERTS BANNER ─────────────────────────────────────────────────────────── */
+#alert-banner{display:none;position:sticky;top:0;z-index:60;padding:10px 20px;
+  font-size:12px;font-weight:600;display:none;align-items:center;justify-content:space-between;gap:12px}
+#alert-banner.spike{background:rgba(16,185,129,.15);border-bottom:1px solid rgba(16,185,129,.3);color:#10B981}
+#alert-banner.drop{background:rgba(217,119,6,.12);border-bottom:1px solid rgba(217,119,6,.3);color:#D97706}
+.alert-dismiss{background:none;border:none;color:inherit;cursor:pointer;font-size:16px;opacity:.7;padding:0 4px}
+.alert-dismiss:hover{opacity:1}
 
-/* MODAL */
-.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.7);
-  z-index:80;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;
-  padding:28px;width:700px;max-width:95vw;max-height:85vh;overflow-y:auto;position:relative}
-.modal-title{font-size:16px;font-weight:800;margin-bottom:20px;display:flex;
-  align-items:center;justify-content:space-between}
-.modal-close{background:none;border:none;color:var(--text2);cursor:pointer;
-  font-size:20px;padding:0 4px;line-height:1}
+/* ── LOADING ───────────────────────────────────────────────────────────────── */
+#loading{position:fixed;inset:0;background:rgba(4,12,24,.85);display:flex;align-items:center;justify-content:center;z-index:90;backdrop-filter:blur(4px)}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── MODAL ─────────────────────────────────────────────────────────────────── */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:80;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;width:460px;max-width:95vw;position:relative}
+.modal-title{font-size:15px;font-weight:800;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
+.modal-close{background:none;border:none;color:var(--text2);cursor:pointer;font-size:20px;padding:0 4px}
 .modal-close:hover{color:var(--text)}
-#email-preview{background:var(--bg);border:1px solid var(--border);border-radius:8px;
-  padding:20px;font-size:12px;color:var(--text2);white-space:pre-wrap;
-  font-family:'JetBrains Mono',monospace;max-height:340px;overflow-y:auto;margin-bottom:16px}
-.modal-actions{display:flex;gap:10px}
-.btn-secondary{background:var(--card2);border:1px solid var(--border);color:var(--text);
-  border-radius:var(--radius-sm);padding:9px 16px;font-family:'Syne',sans-serif;
-  font-size:13px;font-weight:600;cursor:pointer;transition:border-color .2s}
+.modal label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);margin-bottom:6px}
+.modal input,.modal select,.modal textarea{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;color:var(--text);font-family:'Syne',sans-serif;font-size:13px;outline:none;margin-bottom:14px;transition:border-color .2s}
+.modal input:focus,.modal select:focus,.modal textarea:focus{border-color:var(--teal)}
+.modal textarea{resize:vertical;min-height:80px}
+.modal-actions{display:flex;gap:10px;margin-top:4px}
+.btn-teal{background:var(--teal);color:#fff;border:none;border-radius:var(--radius-sm);padding:10px 20px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.btn-teal:hover{opacity:.85}
+.btn-secondary{background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:var(--radius-sm);padding:10px 16px;font-family:'Syne',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:border-color .2s}
 .btn-secondary:hover{border-color:var(--teal);color:var(--teal)}
 
-/* APP */
+/* ── APP ───────────────────────────────────────────────────────────────────── */
 #app{position:relative;z-index:1;min-height:100vh}
 
-/* HEADER */
-header{position:sticky;top:0;z-index:50;background:rgba(4,12,24,.92);
-  backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
-  padding:0 20px;height:60px;display:flex;align-items:center;
-  justify-content:space-between;gap:12px}
-.header-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.brand-pulse{width:8px;height:8px;background:var(--teal);border-radius:50%;
-  box-shadow:0 0 8px var(--teal);animation:pulse 2s infinite}
+/* ── HEADER ────────────────────────────────────────────────────────────────── */
+header{position:sticky;top:0;z-index:50;background:rgba(4,12,24,.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);padding:0 16px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.header-brand{display:flex;align-items:center;gap:9px;flex-shrink:0}
+.brand-pulse{width:8px;height:8px;background:var(--teal);border-radius:50%;box-shadow:0 0 8px var(--teal);animation:pulse 2s infinite}
 .brand-name{font-size:15px;font-weight:700;letter-spacing:.5px}
 .brand-name span{color:var(--teal)}
-.header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-select,.btn-ctrl{background:var(--card);border:1px solid var(--border);
-  border-radius:var(--radius-sm);color:var(--text);font-family:'Syne',sans-serif;
-  font-size:12px;padding:6px 10px;cursor:pointer;outline:none;transition:border-color .2s}
+.header-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+
+/* Date range picker */
+.date-range{display:flex;align-items:center;gap:4px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px 8px}
+.date-range input[type=date]{background:none;border:none;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;width:108px;cursor:pointer}
+.date-range input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.5);cursor:pointer}
+.date-range span{color:var(--text3);font-size:11px}
+.presets{display:flex;gap:3px}
+.preset-btn{background:var(--card);border:1px solid var(--border);color:var(--text2);border-radius:5px;padding:5px 8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.preset-btn:hover,.preset-btn.active{background:var(--teal-dim);border-color:rgba(13,148,136,.4);color:var(--teal)}
+
+select,.btn-ctrl{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Syne',sans-serif;font-size:11px;padding:5px 9px;cursor:pointer;outline:none;transition:border-color .2s}
 select:hover,.btn-ctrl:hover{border-color:var(--teal)}
 .btn-ctrl{display:flex;align-items:center;gap:5px;font-weight:600}
-.live-badge{display:flex;align-items:center;gap:6px;background:var(--teal-dim);
-  border:1px solid rgba(13,148,136,.3);border-radius:20px;padding:5px 12px;
-  font-size:11px;font-weight:600;color:var(--teal)}
-.live-dot{width:7px;height:7px;background:var(--teal);border-radius:50%;animation:pulse 1.5s infinite}
+.live-badge{display:flex;align-items:center;gap:5px;background:var(--teal-dim);border:1px solid rgba(13,148,136,.3);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--teal)}
+.live-dot{width:6px;height:6px;background:var(--teal);border-radius:50%;animation:pulse 1.5s infinite}
 
-/* TABS */
-.tab-nav{display:flex;gap:2px;padding:0 20px;background:rgba(4,12,24,.7);
-  border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:60px;z-index:40}
-.tab-btn{background:none;border:none;color:var(--text2);font-family:'Syne',sans-serif;
-  font-size:12px;font-weight:700;padding:12px 18px;cursor:pointer;letter-spacing:.8px;
-  text-transform:uppercase;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+/* ── TABS ──────────────────────────────────────────────────────────────────── */
+.tab-nav{display:flex;gap:0;padding:0 16px;background:rgba(4,12,24,.8);border-bottom:1px solid var(--border);overflow-x:auto;position:sticky;top:60px;z-index:40}
+.tab-btn{background:none;border:none;color:var(--text2);font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:11px 16px;cursor:pointer;letter-spacing:.8px;text-transform:uppercase;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
 .tab-btn:hover{color:var(--text)}
 .tab-btn.active{color:var(--teal);border-bottom-color:var(--teal)}
 .tab-panel{display:none}
 .tab-panel.active{display:block}
 
-/* MAIN CONTENT */
-main{padding:20px;max-width:1400px;margin:0 auto}
+/* ── MAIN ──────────────────────────────────────────────────────────────────── */
+main{padding:16px;max-width:1400px;margin:0 auto}
 
-/* KPI */
-.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px}
+/* ── KPI ───────────────────────────────────────────────────────────────────── */
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px}
 @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
-.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
-  padding:16px 18px;position:relative;overflow:hidden;transition:border-color .2s}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;position:relative;overflow:hidden;transition:border-color .2s}
 .kpi-card:hover{border-color:rgba(13,148,136,.4)}
-.kpi-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--teal),transparent);opacity:0;transition:opacity .2s}
+.kpi-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--teal),transparent);opacity:0;transition:opacity .2s}
 .kpi-card:hover::after{opacity:1}
-.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
-  color:var(--text2);margin-bottom:6px}
-.kpi-value{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;
-  color:var(--text);line-height:1}
-.kpi-sub{font-size:10px;color:var(--text3);margin-top:4px}
+.kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:5px}
+.kpi-value{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--text);line-height:1}
+.kpi-sub{font-size:10px;color:var(--text3);margin-top:3px}
 .kpi-card.teal .kpi-value{color:var(--teal)}
 .kpi-card.amber .kpi-value{color:var(--amber)}
 .kpi-card.green .kpi-value{color:var(--green)}
 .kpi-card.purple .kpi-value{color:var(--purple)}
 
-/* CARDS & CHARTS */
-.chart-card{background:var(--card);border:1px solid var(--border);
-  border-radius:var(--radius);padding:18px 20px;overflow:hidden}
-.chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.chart-title{font-size:11px;font-weight:700;text-transform:uppercase;
-  letter-spacing:.8px;color:var(--text2)}
-.chart-badge{font-family:'JetBrains Mono',monospace;font-size:10px;
-  background:var(--teal-dim);color:var(--teal);border-radius:4px;padding:2px 7px}
-.chart-wrap{position:relative}
+/* ── CHART CARDS ───────────────────────────────────────────────────────────── */
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;overflow:hidden}
+.chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.chart-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2)}
+.chart-badge{font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--teal-dim);color:var(--teal);border-radius:4px;padding:2px 7px}
+.chart-actions{display:flex;gap:6px;align-items:center}
 
-/* GRID LAYOUTS */
-.grid-2-1{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
-.grid-1-1{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
-.grid-1-3{display:grid;grid-template-columns:1fr 2fr;gap:14px;margin-bottom:14px}
-@media(max-width:900px){.grid-2-1,.grid-1-1,.grid-3,.grid-1-3{grid-template-columns:1fr}}
+/* ── GRIDS ─────────────────────────────────────────────────────────────────── */
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:12px}
+.g11{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.g13{display:grid;grid-template-columns:1fr 2fr;gap:12px;margin-bottom:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+@media(max-width:900px){.g21,.g11,.g13,.g3{grid-template-columns:1fr}}
 
-/* TABLES */
-.table-card{background:var(--card);border:1px solid var(--border);
-  border-radius:var(--radius);overflow:hidden}
-.table-head{padding:14px 18px;border-bottom:1px solid var(--border);
-  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2)}
-.table-body{padding:6px 0}
-.table-row{display:flex;align-items:center;justify-content:space-between;
-  padding:8px 18px;transition:background .15s}
+/* ── TABLES ────────────────────────────────────────────────────────────────── */
+.table-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.table-head{padding:12px 16px;border-bottom:1px solid var(--border);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2)}
+.table-body{padding:4px 0}
+.table-row{display:flex;align-items:center;padding:7px 16px;transition:background .15s;gap:8px}
 .table-row:hover{background:rgba(13,148,136,.06)}
-.table-lbl{font-size:12px;color:var(--text);overflow:hidden;
-  text-overflow:ellipsis;white-space:nowrap;max-width:200px}
-.table-bar{flex:1;height:3px;background:var(--bg2);border-radius:2px;margin:0 10px}
+.table-lbl{font-size:12px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:0 0 auto;max-width:180px}
+.table-bar{flex:1;height:3px;background:var(--bg2);border-radius:2px}
 .table-bar-fill{height:100%;background:var(--teal);border-radius:2px;transition:width .5s ease}
-.table-cnt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2);flex-shrink:0}
-.empty{text-align:center;padding:28px;color:var(--text3);font-size:12px}
+.table-cnt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2);flex-shrink:0;min-width:36px;text-align:right}
+.empty{text-align:center;padding:24px;color:var(--text3);font-size:12px}
 
-/* COMPARISON TABLE */
+/* ── ANNOTATIONS ───────────────────────────────────────────────────────────── */
+.annotation-list{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.annotation-item{display:flex;align-items:center;gap:10px;background:var(--card2);border-radius:6px;padding:8px 12px;font-size:12px}
+.ann-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ann-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2);flex-shrink:0}
+.ann-note{flex:1;color:var(--text)}
+.ann-site{font-size:10px;color:var(--text3);flex-shrink:0}
+.ann-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:0 2px;line-height:1}
+.ann-del:hover{color:var(--red)}
+
+/* ── STATUS TAB ────────────────────────────────────────────────────────────── */
+.status-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:16px}
+.status-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;position:relative}
+.status-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;border-radius:var(--radius) 0 0 var(--radius)}
+.status-card.active::before{background:var(--green)}
+.status-card.idle::before{background:var(--amber)}
+.status-card.offline::before{background:var(--text3)}
+.status-site{font-size:14px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.status-badge{font-size:10px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:20px}
+.status-badge.active{background:rgba(16,185,129,.15);color:var(--green)}
+.status-badge.idle{background:rgba(217,119,6,.12);color:var(--amber)}
+.status-badge.offline{background:rgba(74,96,128,.2);color:var(--text3)}
+.status-meta{font-size:11px;color:var(--text2);display:flex;flex-direction:column;gap:3px}
+.status-meta span{display:flex;justify-content:space-between}
+.status-meta strong{color:var(--text);font-family:'JetBrains Mono',monospace}
+
+/* ── REALTIME TAB ──────────────────────────────────────────────────────────── */
+.rt-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px}
+.rt-controls{display:flex;align-items:center;gap:8px}
+.rt-counter{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--teal)}
+#rt-feed{height:520px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;padding:4px 0}
+#rt-feed::-webkit-scrollbar{width:4px}
+#rt-feed::-webkit-scrollbar-track{background:transparent}
+#rt-feed::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.rt-event{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--card2);border-radius:6px;font-size:12px;animation:fadein .3s ease;flex-wrap:wrap}
+.rt-type{font-size:10px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:4px;flex-shrink:0}
+.rt-type.pageview{background:var(--teal-dim);color:var(--teal)}
+.rt-type.click{background:rgba(59,130,246,.15);color:#3B82F6}
+.rt-type.goal{background:rgba(139,92,246,.15);color:var(--purple)}
+.rt-type.session_end{background:rgba(74,96,128,.15);color:var(--text3)}
+.rt-site{font-size:10px;background:var(--card);border:1px solid var(--border);border-radius:4px;padding:1px 7px;color:var(--text2)}
+.rt-page{flex:1;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:100px}
+.rt-meta{font-size:10px;color:var(--text3);display:flex;gap:8px;flex-shrink:0}
+.rt-time{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);flex-shrink:0}
+.rt-paused{text-align:center;padding:12px;font-size:12px;color:var(--amber);background:var(--amber-dim);border-radius:6px;margin-bottom:8px}
+
+/* ── FLOW TAB ──────────────────────────────────────────────────────────────── */
+#flow-canvas{width:100%;border-radius:8px;background:var(--bg2);display:block}
+.flow-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:var(--text2)}
+.flow-legend-item{display:flex;align-items:center;gap:6px}
+.flow-legend-dot{width:10px;height:10px;border-radius:50%}
+
+/* ── FUNNEL ────────────────────────────────────────────────────────────────── */
+.funnel-bar{background:var(--card2);border-radius:6px;padding:10px 14px;margin-bottom:6px;display:flex;align-items:center;gap:12px}
+.funnel-name{font-size:12px;font-weight:600;min-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.funnel-track{flex:1;height:7px;background:var(--bg2);border-radius:4px}
+.funnel-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--green));border-radius:4px;transition:width .6s ease}
+.funnel-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);min-width:50px;text-align:right}
+.funnel-rate{font-size:10px;color:var(--text3);min-width:48px;text-align:right}
+
+/* ── COMPARISON TABLE ──────────────────────────────────────────────────────── */
 .comp-table{width:100%;border-collapse:collapse;font-size:12px}
-.comp-table th{padding:10px 16px;text-align:left;font-size:10px;font-weight:700;
-  text-transform:uppercase;letter-spacing:.8px;color:var(--text2);
-  border-bottom:1px solid var(--border)}
-.comp-table td{padding:10px 16px;border-bottom:1px solid rgba(13,148,136,.08)}
-.comp-table tr:hover td{background:rgba(13,148,136,.05)}
+.comp-table th{padding:9px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)}
+.comp-table td{padding:9px 14px;border-bottom:1px solid rgba(13,148,136,.07)}
+.comp-table tr:hover td{background:rgba(13,148,136,.04)}
 .comp-table .num{font-family:'JetBrains Mono',monospace;color:var(--teal)}
-.site-pill{display:inline-block;padding:2px 10px;border-radius:20px;
-  font-size:11px;font-weight:600;background:var(--teal-dim);color:var(--teal)}
+.site-pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;background:var(--teal-dim);color:var(--teal)}
 
-/* HEATMAP */
-#heatmap-canvas{width:100%;max-width:500px;border-radius:8px;
-  border:1px solid var(--border);background:var(--bg2);display:block;margin:0 auto}
-.heatmap-controls{display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
-.heatmap-stat{background:var(--card2);border:1px solid var(--border);
-  border-radius:var(--radius-sm);padding:10px 16px;font-size:11px}
-.heatmap-stat span{font-family:'JetBrains Mono',monospace;color:var(--teal);font-size:18px;
-  display:block;margin-bottom:2px}
-
-/* GOAL FUNNEL */
-.funnel-bar{background:var(--card2);border-radius:6px;padding:12px 16px;
-  margin-bottom:8px;display:flex;align-items:center;gap:14px}
-.funnel-name{font-size:12px;font-weight:600;min-width:180px;overflow:hidden;
-  text-overflow:ellipsis;white-space:nowrap}
-.funnel-track{flex:1;height:8px;background:var(--bg2);border-radius:4px}
-.funnel-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--green));
-  border-radius:4px;transition:width .6s ease}
-.funnel-num{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--teal);
-  min-width:60px;text-align:right}
-.funnel-rate{font-size:11px;color:var(--text3);min-width:55px;text-align:right}
-
-/* SECTION LABEL */
-.section-label{font-size:11px;font-weight:700;text-transform:uppercase;
-  letter-spacing:1px;color:var(--text3);margin-bottom:10px;padding-bottom:6px;
-  border-bottom:1px solid var(--border)}
-
-footer{text-align:center;padding:16px;color:var(--text3);font-size:11px;
-  letter-spacing:.5px;border-top:1px solid var(--border)}
+footer{text-align:center;padding:14px;color:var(--text3);font-size:11px;letter-spacing:.5px;border-top:1px solid var(--border)}
 footer a{color:var(--teal);text-decoration:none}
 </style>
 </head>
@@ -217,9 +230,7 @@ footer a{color:var(--teal);text-decoration:none}
     <div class="login-logo"><div class="dot"></div><span>Kulan Analytics</span></div>
     <h2>Dashboard Access</h2>
     <p>Enter your password to continue</p>
-    <div class="input-group">
-      <input type="password" id="pw-input" placeholder="Password" autocomplete="current-password">
-    </div>
+    <div class="input-group"><input type="password" id="pw-input" placeholder="Password"></div>
     <button class="btn-primary" onclick="doLogin()">Sign In</button>
     <p id="login-error"></p>
   </div>
@@ -228,19 +239,49 @@ footer a{color:var(--teal);text-decoration:none}
 <!-- LOADING -->
 <div id="loading" style="display:none"><div class="spinner"></div></div>
 
+<!-- ALERT BANNER -->
+<div id="alert-banner">
+  <span id="alert-text"></span>
+  <button class="alert-dismiss" onclick="dismissAlert()">&#x2715;</button>
+</div>
+
+<!-- ANNOTATION MODAL -->
+<div id="ann-modal" style="display:none">
+  <div class="modal-backdrop" onclick="if(event.target===this)closeAnnModal()">
+    <div class="modal">
+      <div class="modal-title">Add Annotation <button class="modal-close" onclick="closeAnnModal()">&#x2715;</button></div>
+      <label>Date</label>
+      <input type="date" id="ann-date">
+      <label>Note</label>
+      <textarea id="ann-note" placeholder="e.g. Published LinkedIn post, launched campaign..."></textarea>
+      <label>Site (optional)</label>
+      <input type="text" id="ann-site" placeholder="all">
+      <label>Color</label>
+      <select id="ann-color">
+        <option value="#0D9488">Teal</option>
+        <option value="#D97706">Amber</option>
+        <option value="#10B981">Green</option>
+        <option value="#8B5CF6">Purple</option>
+        <option value="#EF4444">Red</option>
+      </select>
+      <div class="modal-actions">
+        <button class="btn-teal" onclick="saveAnnotation()">Save</button>
+        <button class="btn-secondary" onclick="closeAnnModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- EMAIL MODAL -->
 <div id="email-modal" style="display:none">
-  <div class="modal-backdrop" onclick="if(event.target===this)closeModal()">
-    <div class="modal">
-      <div class="modal-title">
-        Weekly Analytics Report
-        <button class="modal-close" onclick="closeModal()">&#x2715;</button>
-      </div>
-      <pre id="email-preview"></pre>
+  <div class="modal-backdrop" onclick="if(event.target===this)closeEmailModal()">
+    <div class="modal" style="width:680px;max-height:85vh;overflow-y:auto">
+      <div class="modal-title">Weekly Report <button class="modal-close" onclick="closeEmailModal()">&#x2715;</button></div>
+      <pre id="email-preview" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:11px;color:var(--text2);white-space:pre-wrap;font-family:'JetBrains Mono',monospace;max-height:320px;overflow-y:auto;margin-bottom:14px"></pre>
       <div class="modal-actions">
+        <button class="btn-teal" onclick="downloadReport()">Download .html</button>
         <button class="btn-secondary" onclick="copyReport()">Copy HTML</button>
-        <button class="btn-secondary" onclick="downloadReport()">Download .html</button>
-        <button class="btn-secondary" onclick="closeModal()">Close</button>
+        <button class="btn-secondary" onclick="closeEmailModal()">Close</button>
       </div>
     </div>
   </div>
@@ -248,7 +289,6 @@ footer a{color:var(--teal);text-decoration:none}
 
 <!-- APP -->
 <div id="app" style="display:none">
-
   <header>
     <div class="header-brand">
       <div class="brand-pulse"></div>
@@ -256,104 +296,80 @@ footer a{color:var(--teal);text-decoration:none}
     </div>
     <div class="header-right">
       <select id="site-select"><option value="">All Sites</option></select>
-      <select id="range-select" onchange="loadData()">
-        <option value="7">Last 7 Days</option>
-        <option value="30" selected>Last 30 Days</option>
-        <option value="90">Last 90 Days</option>
-        <option value="365">Last Year</option>
-      </select>
-      <button class="btn-ctrl" onclick="loadData()">
-        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
-        </svg>
-        Refresh
-      </button>
+      <div class="presets">
+        <button class="preset-btn" onclick="setPreset(7)">7d</button>
+        <button class="preset-btn active" onclick="setPreset(30)">30d</button>
+        <button class="preset-btn" onclick="setPreset(90)">90d</button>
+        <button class="preset-btn" onclick="setPreset(365)">1y</button>
+      </div>
+      <div class="date-range">
+        <input type="date" id="date-start" onchange="onDateChange()">
+        <span>to</span>
+        <input type="date" id="date-end" onchange="onDateChange()">
+      </div>
+      <button class="btn-ctrl" onclick="loadData()">&#x21BB; Refresh</button>
       <button class="btn-ctrl" onclick="exportCSV()">&#x2193; CSV</button>
       <button class="btn-ctrl" onclick="openEmailReport()">&#x2709; Report</button>
-      <div class="live-badge">
-        <div class="live-dot"></div>
-        <span id="live-count">0</span> live
-      </div>
+      <div class="live-badge"><div class="live-dot"></div><span id="live-count">0</span> live</div>
     </div>
   </header>
 
-  <!-- TABS -->
   <nav class="tab-nav">
     <button class="tab-btn active" data-tab="overview"   onclick="switchTab('overview')">Overview</button>
-    <button class="tab-btn"         data-tab="comparison" onclick="switchTab('comparison')">Comparison</button>
-    <button class="tab-btn"         data-tab="campaigns"  onclick="switchTab('campaigns')">Campaigns</button>
-    <button class="tab-btn"         data-tab="goals"      onclick="switchTab('goals')">Goals</button>
-    <button class="tab-btn"         data-tab="heatmap"    onclick="switchTab('heatmap')">Heatmap</button>
+    <button class="tab-btn"        data-tab="status"     onclick="switchTab('status')">Status</button>
+    <button class="tab-btn"        data-tab="realtime"   onclick="switchTab('realtime')">Realtime</button>
+    <button class="tab-btn"        data-tab="flow"       onclick="switchTab('flow')">Flow</button>
+    <button class="tab-btn"        data-tab="comparison" onclick="switchTab('comparison')">Comparison</button>
+    <button class="tab-btn"        data-tab="campaigns"  onclick="switchTab('campaigns')">Campaigns</button>
+    <button class="tab-btn"        data-tab="goals"      onclick="switchTab('goals')">Goals</button>
+    <button class="tab-btn"        data-tab="heatmap"    onclick="switchTab('heatmap')">Heatmap</button>
   </nav>
 
-  <!-- OVERVIEW TAB -->
+  <!-- OVERVIEW -->
   <div id="tab-overview" class="tab-panel active">
     <main>
       <div class="kpi-grid">
-        <div class="kpi-card teal">
-          <div class="kpi-label">Page Views</div>
-          <div class="kpi-value" id="kpi-pv">—</div>
-          <div class="kpi-sub" id="kpi-pv-sub">loading...</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Unique Visitors</div>
-          <div class="kpi-value" id="kpi-vis">—</div>
-          <div class="kpi-sub">distinct IDs</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Sessions</div>
-          <div class="kpi-value" id="kpi-sess">—</div>
-          <div class="kpi-sub">distinct sessions</div>
-        </div>
-        <div class="kpi-card amber">
-          <div class="kpi-label">Bounce Rate</div>
-          <div class="kpi-value" id="kpi-bounce">—</div>
-          <div class="kpi-sub">1-page sessions</div>
-        </div>
-        <div class="kpi-card green">
-          <div class="kpi-label">Avg Duration</div>
-          <div class="kpi-value" id="kpi-dur">—</div>
-          <div class="kpi-sub">per session</div>
-        </div>
-        <div class="kpi-card purple">
-          <div class="kpi-label">Conversions</div>
-          <div class="kpi-value" id="kpi-goals">—</div>
-          <div class="kpi-sub">goal events</div>
-        </div>
+        <div class="kpi-card teal"><div class="kpi-label">Page Views</div><div class="kpi-value" id="kpi-pv">—</div><div class="kpi-sub" id="kpi-pv-sub">loading...</div></div>
+        <div class="kpi-card"><div class="kpi-label">Unique Visitors</div><div class="kpi-value" id="kpi-vis">—</div><div class="kpi-sub">distinct IDs</div></div>
+        <div class="kpi-card"><div class="kpi-label">Sessions</div><div class="kpi-value" id="kpi-sess">—</div><div class="kpi-sub">distinct sessions</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Bounce Rate</div><div class="kpi-value" id="kpi-bounce">—</div><div class="kpi-sub">1-page sessions</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Avg Duration</div><div class="kpi-value" id="kpi-dur">—</div><div class="kpi-sub">per session</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">Conversions</div><div class="kpi-value" id="kpi-goals">—</div><div class="kpi-sub">goal events</div></div>
       </div>
 
-      <div class="grid-2-1">
+      <div class="g21">
         <div class="chart-card">
           <div class="chart-header">
             <div class="chart-title">Pageviews Over Time</div>
-            <div class="chart-badge" id="time-badge">—</div>
+            <div class="chart-actions">
+              <div class="chart-badge" id="time-badge">—</div>
+              <button class="btn-ctrl" style="font-size:10px;padding:3px 8px" onclick="openAnnModal()">+ Note</button>
+            </div>
           </div>
-          <div class="chart-wrap" style="height:200px"><canvas id="chart-timeline"></canvas></div>
+          <div style="height:200px"><canvas id="chart-timeline"></canvas></div>
+          <div class="annotation-list" id="annotation-list"></div>
         </div>
         <div class="chart-card">
           <div class="chart-header"><div class="chart-title">Devices</div></div>
-          <div class="chart-wrap" style="height:200px"><canvas id="chart-devices"></canvas></div>
+          <div style="height:200px"><canvas id="chart-devices"></canvas></div>
         </div>
       </div>
 
-      <div class="grid-1-1">
+      <div class="g11">
         <div class="chart-card">
-          <div class="chart-header">
-            <div class="chart-title">Top Pages</div>
-            <div class="chart-badge" id="pages-badge">—</div>
-          </div>
-          <div class="chart-wrap" style="height:220px"><canvas id="chart-pages"></canvas></div>
+          <div class="chart-header"><div class="chart-title">Top Pages</div><div class="chart-badge" id="pages-badge">—</div></div>
+          <div style="height:200px"><canvas id="chart-pages"></canvas></div>
         </div>
         <div class="chart-card">
           <div class="chart-header"><div class="chart-title">Browsers</div></div>
-          <div class="chart-wrap" style="height:220px"><canvas id="chart-browsers"></canvas></div>
+          <div style="height:200px"><canvas id="chart-browsers"></canvas></div>
         </div>
       </div>
 
-      <div class="grid-1-3">
+      <div class="g13">
         <div class="chart-card">
-          <div class="chart-header"><div class="chart-title">OS Breakdown</div></div>
-          <div class="chart-wrap" style="height:220px"><canvas id="chart-os"></canvas></div>
+          <div class="chart-header"><div class="chart-title">OS</div></div>
+          <div style="height:200px"><canvas id="chart-os"></canvas></div>
         </div>
         <div class="table-card">
           <div class="table-head">Top Referrers</div>
@@ -361,7 +377,7 @@ footer a{color:var(--teal);text-decoration:none}
         </div>
       </div>
 
-      <div class="grid-1-1" style="margin-bottom:20px">
+      <div class="g3" style="margin-bottom:16px">
         <div class="table-card">
           <div class="table-head">Countries</div>
           <div class="table-body" id="table-countries"><div class="empty">Loading...</div></div>
@@ -370,210 +386,233 @@ footer a{color:var(--teal);text-decoration:none}
           <div class="table-head">Cities</div>
           <div class="table-body" id="table-cities"><div class="empty">Loading...</div></div>
         </div>
+        <div class="table-card">
+          <div class="table-head">Top Exit Pages</div>
+          <div class="table-body" id="table-exits"><div class="empty">Loading...</div></div>
+        </div>
       </div>
     </main>
   </div>
 
-  <!-- COMPARISON TAB -->
+  <!-- STATUS -->
+  <div id="tab-status" class="tab-panel">
+    <main>
+      <div class="status-grid" id="status-grid"><div class="empty">Loading...</div></div>
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Events Per Site (Last 7 Days)</div></div>
+        <div style="height:220px"><canvas id="chart-status-bars"></canvas></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- REALTIME -->
+  <div id="tab-realtime" class="tab-panel">
+    <main>
+      <div class="chart-card">
+        <div class="rt-header">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="chart-title">Live Event Feed</div>
+            <span class="rt-counter" id="rt-counter">0 events</span>
+          </div>
+          <div class="rt-controls">
+            <button class="btn-ctrl" id="rt-pause-btn" onclick="toggleRTPause()">&#x23F8; Pause</button>
+            <button class="btn-ctrl" onclick="clearRTFeed()">&#x2715; Clear</button>
+          </div>
+        </div>
+        <div id="rt-paused-banner" class="rt-paused" style="display:none">Feed paused — click Resume to continue</div>
+        <div id="rt-feed"><div class="empty" style="margin:auto">Waiting for events... Open any tracked site in a new tab.</div></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- FLOW -->
+  <div id="tab-flow" class="tab-panel">
+    <main>
+      <div class="chart-card" style="margin-bottom:12px">
+        <div class="chart-header">
+          <div class="chart-title">Page Transition Flow</div>
+          <div class="chart-badge" id="flow-badge">—</div>
+        </div>
+        <canvas id="flow-canvas" height="420"></canvas>
+        <div class="flow-legend" id="flow-legend"></div>
+      </div>
+      <div class="g11" style="margin-bottom:16px">
+        <div class="table-card">
+          <div class="table-head">Top Transitions (A to B)</div>
+          <div class="table-body" id="table-transitions"><div class="empty">Loading...</div></div>
+        </div>
+        <div class="table-card">
+          <div class="table-head">Entry Pages (First Touch)</div>
+          <div class="table-body" id="table-entries"><div class="empty">Loading...</div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- COMPARISON -->
   <div id="tab-comparison" class="tab-panel">
     <main>
-      <div class="section-label" style="margin-bottom:16px">Site-by-Site Performance</div>
-      <div class="chart-card" style="margin-bottom:14px;overflow-x:auto">
-        <table class="comp-table" id="comp-table">
-          <thead>
-            <tr>
-              <th>Site</th><th>Page Views</th><th>Visitors</th>
-              <th>Sessions</th><th>Bounce Rate</th><th>Avg Duration</th><th>Goals</th>
-            </tr>
-          </thead>
+      <div class="chart-card" style="margin-bottom:12px;overflow-x:auto">
+        <table class="comp-table">
+          <thead><tr><th>Site</th><th>Views</th><th>Visitors</th><th>Sessions</th><th>Bounce</th><th>Avg Dur</th><th>Goals</th></tr></thead>
           <tbody id="comp-tbody"><tr><td colspan="7" class="empty">Loading...</td></tr></tbody>
         </table>
       </div>
       <div class="chart-card">
-        <div class="chart-header">
-          <div class="chart-title">Pageviews Over Time by Site</div>
-        </div>
-        <div class="chart-wrap" style="height:260px"><canvas id="chart-comp-timeline"></canvas></div>
+        <div class="chart-header"><div class="chart-title">Pageviews Over Time by Site</div></div>
+        <div style="height:240px"><canvas id="chart-comp-timeline"></canvas></div>
       </div>
     </main>
   </div>
 
-  <!-- CAMPAIGNS TAB -->
+  <!-- CAMPAIGNS -->
   <div id="tab-campaigns" class="tab-panel">
     <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
-        <div class="kpi-card teal">
-          <div class="kpi-label">UTM Sessions</div>
-          <div class="kpi-value" id="utmk-sessions">—</div>
-          <div class="kpi-sub">from campaigns</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Organic</div>
-          <div class="kpi-value" id="utmk-organic">—</div>
-          <div class="kpi-sub">no UTM params</div>
-        </div>
-        <div class="kpi-card amber">
-          <div class="kpi-label">Top Source</div>
-          <div class="kpi-value" id="utmk-top-src" style="font-size:14px">—</div>
-          <div class="kpi-sub">most traffic</div>
-        </div>
-        <div class="kpi-card green">
-          <div class="kpi-label">Top Campaign</div>
-          <div class="kpi-value" id="utmk-top-camp" style="font-size:14px">—</div>
-          <div class="kpi-sub">most traffic</div>
-        </div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+        <div class="kpi-card teal"><div class="kpi-label">UTM Sessions</div><div class="kpi-value" id="utmk-sess">—</div><div class="kpi-sub">from campaigns</div></div>
+        <div class="kpi-card"><div class="kpi-label">Organic</div><div class="kpi-value" id="utmk-org">—</div><div class="kpi-sub">no UTM params</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Top Source</div><div class="kpi-value" id="utmk-src" style="font-size:13px">—</div><div class="kpi-sub">most traffic</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Top Campaign</div><div class="kpi-value" id="utmk-camp" style="font-size:13px">—</div><div class="kpi-sub">most traffic</div></div>
       </div>
-
-      <div class="grid-1-1">
-        <div class="chart-card">
-          <div class="chart-header"><div class="chart-title">Traffic by Source</div></div>
-          <div class="chart-wrap" style="height:240px"><canvas id="chart-utm-source"></canvas></div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-header"><div class="chart-title">Traffic by Medium</div></div>
-          <div class="chart-wrap" style="height:240px"><canvas id="chart-utm-medium"></canvas></div>
-        </div>
+      <div class="g11">
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">By Source</div></div><div style="height:220px"><canvas id="chart-utm-src"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">By Medium</div></div><div style="height:220px"><canvas id="chart-utm-med"></canvas></div></div>
       </div>
-
-      <div class="table-card" style="margin-bottom:20px">
+      <div class="table-card" style="margin-bottom:16px">
         <div class="table-head">Campaign Performance</div>
-        <div class="table-body" id="table-campaigns"><div class="empty">No campaign data yet. Add <code>?utm_campaign=name</code> to your links.</div></div>
+        <div class="table-body" id="table-campaigns"><div class="empty">No campaign data yet.</div></div>
       </div>
     </main>
   </div>
 
-  <!-- GOALS TAB -->
+  <!-- GOALS -->
   <div id="tab-goals" class="tab-panel">
     <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
-        <div class="kpi-card purple">
-          <div class="kpi-label">Total Conversions</div>
-          <div class="kpi-value" id="goalsk-total">—</div>
-          <div class="kpi-sub">all goal events</div>
-        </div>
-        <div class="kpi-card green">
-          <div class="kpi-label">Conversion Rate</div>
-          <div class="kpi-value" id="goalsk-rate">—</div>
-          <div class="kpi-sub">goals / sessions</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Unique Goals</div>
-          <div class="kpi-value" id="goalsk-unique">—</div>
-          <div class="kpi-sub">distinct goal names</div>
-        </div>
-        <div class="kpi-card amber">
-          <div class="kpi-label">Top Goal</div>
-          <div class="kpi-value" id="goalsk-top" style="font-size:13px">—</div>
-          <div class="kpi-sub">most conversions</div>
-        </div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+        <div class="kpi-card purple"><div class="kpi-label">Total Conversions</div><div class="kpi-value" id="gk-total">—</div><div class="kpi-sub">all goal events</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Conversion Rate</div><div class="kpi-value" id="gk-rate">—</div><div class="kpi-sub">goals / sessions</div></div>
+        <div class="kpi-card"><div class="kpi-label">Unique Goals</div><div class="kpi-value" id="gk-unique">—</div><div class="kpi-sub">distinct names</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Top Goal</div><div class="kpi-value" id="gk-top" style="font-size:12px">—</div><div class="kpi-sub">most conversions</div></div>
       </div>
-
-      <div class="grid-2-1">
-        <div class="chart-card">
-          <div class="chart-header"><div class="chart-title">Conversions Over Time</div></div>
-          <div class="chart-wrap" style="height:200px"><canvas id="chart-goals-timeline"></canvas></div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-header"><div class="chart-title">Goal Distribution</div></div>
-          <div class="chart-wrap" style="height:200px"><canvas id="chart-goals-dist"></canvas></div>
-        </div>
+      <div class="g21">
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Conversions Over Time</div></div><div style="height:180px"><canvas id="chart-goals-tl"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Distribution</div></div><div style="height:180px"><canvas id="chart-goals-dist"></canvas></div></div>
       </div>
-
-      <div class="chart-card" style="margin-bottom:20px">
+      <div class="chart-card" style="margin-bottom:16px">
         <div class="chart-header"><div class="chart-title">Goal Funnel</div></div>
-        <div id="goals-funnel"><div class="empty">No goal events yet. Add <code>data-kl-goal="goal_name"</code> to elements you want to track.</div></div>
+        <div id="goals-funnel"><div class="empty">No goal events yet.</div></div>
       </div>
     </main>
   </div>
 
-  <!-- HEATMAP TAB -->
+  <!-- HEATMAP -->
   <div id="tab-heatmap" class="tab-panel">
     <main>
-      <div class="heatmap-controls">
-        <select id="heatmap-url-select" onchange="renderHeatmap()" style="min-width:280px">
-          <option value="">All Pages</option>
-        </select>
-        <div class="heatmap-stat"><span id="hm-total-clicks">0</span>Total Clicks</div>
-        <div class="heatmap-stat"><span id="hm-filtered-clicks">0</span>Shown</div>
-        <div class="heatmap-stat"><span id="hm-top-zone">—</span>Hottest Zone</div>
+      <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+        <select id="heatmap-url-select" onchange="renderHeatmap()" style="min-width:260px"><option value="">All Pages</option></select>
+        <div style="display:flex;gap:8px">
+          <div class="kpi-card" style="padding:10px 14px;min-width:110px"><div class="kpi-label">Total Clicks</div><div class="kpi-value" style="font-size:18px" id="hm-total">0</div></div>
+          <div class="kpi-card" style="padding:10px 14px;min-width:110px"><div class="kpi-label">Hottest Zone</div><div class="kpi-value" style="font-size:12px" id="hm-zone">—</div></div>
+        </div>
       </div>
-      <div class="grid-1-1" style="align-items:start">
+      <div class="g11" style="margin-bottom:16px">
         <div class="chart-card">
-          <div class="chart-header">
-            <div class="chart-title">Click Heatmap</div>
-            <div class="chart-badge">X=width% Y=height%</div>
-          </div>
-          <canvas id="heatmap-canvas" width="500" height="700"></canvas>
+          <div class="chart-header"><div class="chart-title">Click Heatmap</div><div class="chart-badge">x=width% y=height%</div></div>
+          <canvas id="heatmap-canvas" width="500" height="680" style="width:100%;border-radius:8px;background:var(--bg2);display:block"></canvas>
         </div>
         <div>
-          <div class="table-card" style="margin-bottom:14px">
-            <div class="table-head">Click Distribution by Zone</div>
-            <div class="table-body" id="heatmap-zones"><div class="empty">Loading...</div></div>
+          <div class="table-card" style="margin-bottom:12px">
+            <div class="table-head">Click Zones</div>
+            <div class="table-body" id="heatmap-zones"></div>
           </div>
           <div class="table-card">
             <div class="table-head">Most Clicked Elements</div>
-            <div class="table-body" id="table-clicks-hm"><div class="empty">Loading...</div></div>
+            <div class="table-body" id="table-clicks-hm"></div>
           </div>
         </div>
       </div>
     </main>
   </div>
 
-  <footer>
-    Kulan Analytics v2 &mdash; <a href="https://mmohamud.me" target="_blank">mmohamud.me</a>
-  </footer>
+  <footer>Kulan Analytics v3 &mdash; <a href="https://mmohamud.me" target="_blank">mmohamud.me</a></footer>
 </div>
 
 <script>
-/* ══════════════════════════════════════════════════════════════════════════════
-   CONFIG — edit these
-   ══════════════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════
+   CONFIG
+   ════════════════════════════════════════════════════════════════════ */
 const CFG = {
   SUPABASE_URL: 'https://xkadqvmqxdyqoddiypet.supabase.co',
   ANON_KEY:     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrYWRxdm1xeGR5cW9kZGl5cGV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNzI5NDMsImV4cCI6MjA4ODk0ODk0M30.FPBEXOx62vaTcLom7IkVRKRLda1xKk09slhQZ9yuRWc',
   PASSWORD:     'kulanAdmin2025',
 };
 
-/* ── Globals ─────────────────────────────────────────────────────────────────── */
-let sb;
+/* ── Globals ──────────────────────────────────────────────────────── */
+let sb, rtChannel;
 const charts = {};
-const state = { events: [], days: 30, siteId: '', tab: 'overview' };
-
-/* ── Formatters ──────────────────────────────────────────────────────────────── */
-const fmt = n => n == null ? '—' : n >= 1e6 ? (n/1e6).toFixed(1)+'M' : n >= 1e3 ? (n/1e3).toFixed(1)+'K' : String(n);
-const fmtDur = s => !s ? '—' : s < 60 ? s+'s' : Math.floor(s/60)+'m '+(s%60)+'s';
-const fmtUrl = u => { try { const p = new URL(u); return p.pathname+(p.search||''); } catch { return u; } };
-const fmtRef = r => { if(!r) return '(direct)'; try { return new URL(r).hostname; } catch { return r; } };
-const countBy = (arr, key) => {
-  const m = {};
-  arr.forEach(i => { const v = i[key]||'(unknown)'; m[v]=(m[v]||0)+1; });
-  return Object.entries(m).sort((a,b)=>b[1]-a[1]);
+const state = {
+  events: [], annotations: [], days: 30,
+  startDate: '', endDate: '', siteId: '',
+  tab: 'overview', rtPaused: false, rtCount: 0,
 };
-const groupByDay = (events, days) => {
-  const m = {};
-  events.forEach(e => { const d = e.created_at.slice(0,10); m[d]=(m[d]||0)+1; });
-  const labels=[], values=[];
-  for(let i=days-1;i>=0;i--){
-    const d = new Date(Date.now()-i*86400000).toISOString().slice(0,10);
-    labels.push(d.slice(5)); values.push(m[d]||0);
+
+/* ── Formatters ───────────────────────────────────────────────────── */
+const fmt   = n => n==null?'—':n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':String(n);
+const fmtD  = s => !s?'—':s<60?s+'s':Math.floor(s/60)+'m '+(s%60)+'s';
+const fmtUrl= u => { try{const p=new URL(u);return p.pathname+(p.search||'');}catch{return u;} };
+const fmtRef= r => { if(!r)return'(direct)';try{return new URL(r).hostname;}catch{return r;} };
+const fmtAgo= d => { const s=Math.round((Date.now()-new Date(d))/1000);if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago'; };
+const countBy=(arr,key)=>{const m={};arr.forEach(i=>{const v=i[key]||'(unknown)';m[v]=(m[v]||0)+1;});return Object.entries(m).sort((a,b)=>b[1]-a[1]);};
+const groupByDay=(events,days,startDate,endDate)=>{
+  const m={};events.forEach(e=>{const d=e.created_at.slice(0,10);m[d]=(m[d]||0)+1;});
+  const labels=[],values=[],dates=[];
+  const start=startDate?new Date(startDate):new Date(Date.now()-days*86400000);
+  const end=endDate?new Date(endDate):new Date();
+  for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1)){
+    const k=d.toISOString().slice(0,10);
+    labels.push(k.slice(5));values.push(m[k]||0);dates.push(k);
   }
-  return {labels, values};
+  return{labels,values,dates};
 };
 
-/* ── Chart helpers ───────────────────────────────────────────────────────────── */
-Chart.defaults.color='#8BA3C7'; Chart.defaults.font.family="'Syne',sans-serif"; Chart.defaults.font.size=11;
+/* ── Chart helpers ────────────────────────────────────────────────── */
+Chart.defaults.color='#8BA3C7';Chart.defaults.font.family="'Syne',sans-serif";Chart.defaults.font.size=11;
 const COLORS=['#0D9488','#D97706','#10B981','#3B82F6','#8B5CF6','#F97316','#EC4899','#14B8A6','#F59E0B','#6366F1'];
-const kill = id => { if(charts[id]){charts[id].destroy();delete charts[id];} };
-const gridOpts = { grid:{color:'rgba(255,255,255,.04)'} };
+const kill=id=>{if(charts[id]){charts[id].destroy();delete charts[id];}};
+const G={grid:{color:'rgba(255,255,255,.04)'}};
+function animCount(el,target){const steps=36,dur=600;let i=0;const t=setInterval(()=>{i++;el.textContent=fmt(Math.min(Math.round(target/steps*i),target));if(i>=steps)clearInterval(t);},dur/steps);}
 
-function animCount(el, target) {
-  const steps=40, dur=700;
-  let i=0;
-  const t = setInterval(()=>{ i++; el.textContent=fmt(Math.min(Math.round(target/steps*i),target)); if(i>=steps)clearInterval(t); }, dur/steps);
+/* ── Date range helpers ───────────────────────────────────────────── */
+function setPreset(days){
+  state.days=days;
+  const end=new Date(),start=new Date(Date.now()-days*86400000);
+  document.getElementById('date-end').value=end.toISOString().slice(0,10);
+  document.getElementById('date-start').value=start.toISOString().slice(0,10);
+  state.startDate=document.getElementById('date-start').value;
+  state.endDate=document.getElementById('date-end').value;
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.toggle('active',parseInt(b.textContent)===days||(days===365&&b.textContent==='1y')));
+  loadData();
+}
+function onDateChange(){
+  state.startDate=document.getElementById('date-start').value;
+  state.endDate=document.getElementById('date-end').value;
+  if(state.startDate&&state.endDate){
+    const diff=Math.round((new Date(state.endDate)-new Date(state.startDate))/86400000);
+    state.days=diff;
+    document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+    loadData();
+  }
+}
+function initDates(){
+  const end=new Date(),start=new Date(Date.now()-30*86400000);
+  document.getElementById('date-end').value=end.toISOString().slice(0,10);
+  document.getElementById('date-start').value=start.toISOString().slice(0,10);
+  state.startDate=document.getElementById('date-start').value;
+  state.endDate=document.getElementById('date-end').value;
 }
 
-/* ── Login ───────────────────────────────────────────────────────────────────── */
-function doLogin() {
+/* ── Login ────────────────────────────────────────────────────────── */
+function doLogin(){
   if(document.getElementById('pw-input').value.trim()===CFG.PASSWORD){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='block';
@@ -584,128 +623,203 @@ function doLogin() {
     document.getElementById('pw-input').focus();
   }
 }
-document.getElementById('pw-input').addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+document.getElementById('pw-input').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 
-/* ── Tab switching ───────────────────────────────────────────────────────────── */
-function switchTab(tab) {
-  state.tab = tab;
+/* ── Tab ──────────────────────────────────────────────────────────── */
+function switchTab(tab){
+  state.tab=tab;
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tab));
-  if(state.events.length) {
-    if(tab==='comparison') renderComparison();
-    if(tab==='campaigns')  renderCampaigns();
-    if(tab==='goals')      renderGoals();
-    if(tab==='heatmap')    { populateHeatmapUrls(); renderHeatmap(); }
-  }
+  if(!state.events.length)return;
+  if(tab==='status')     renderStatus();
+  if(tab==='realtime')   initRealtime();
+  if(tab==='flow')       renderFlow();
+  if(tab==='comparison') renderComparison();
+  if(tab==='campaigns')  renderCampaigns();
+  if(tab==='goals')      renderGoals();
+  if(tab==='heatmap')    {populateHeatmapUrls();renderHeatmap();}
 }
 
-/* ── Init ────────────────────────────────────────────────────────────────────── */
-async function initApp() {
-  sb = supabase.createClient(CFG.SUPABASE_URL, CFG.ANON_KEY);
+/* ── Init ─────────────────────────────────────────────────────────── */
+async function initApp(){
+  sb=supabase.createClient(CFG.SUPABASE_URL,CFG.ANON_KEY);
+  initDates();
   await loadSites();
   await loadData();
   startLivePoll();
 }
 
-/* ── Load sites ──────────────────────────────────────────────────────────────── */
-async function loadSites() {
-  try {
-    const { data } = await sb.from('analytics_events').select('site_id').limit(10000);
-    if(!data) return;
-    const sites = [...new Set(data.map(r=>r.site_id))].sort();
-    const sel = document.getElementById('site-select');
-    sites.forEach(s=>{ const o=document.createElement('option'); o.value=o.textContent=s; sel.appendChild(o); });
-    sel.addEventListener('change', ()=>{ state.siteId=sel.value; loadData(); });
-  } catch(e) { console.error(e); }
+async function loadSites(){
+  try{
+    const{data}=await sb.from('analytics_events').select('site_id').limit(10000);
+    if(!data)return;
+    const sites=[...new Set(data.map(r=>r.site_id))].sort();
+    const sel=document.getElementById('site-select');
+    sites.forEach(s=>{const o=document.createElement('option');o.value=o.textContent=s;sel.appendChild(o);});
+    sel.addEventListener('change',()=>{state.siteId=sel.value;loadData();});
+  }catch(e){console.error(e);}
 }
 
-/* ── Main data load ──────────────────────────────────────────────────────────── */
-async function loadData() {
+/* ── Load data ────────────────────────────────────────────────────── */
+async function loadData(){
   document.getElementById('loading').style.display='flex';
-  try {
-    state.days = parseInt(document.getElementById('range-select').value,10);
-    state.siteId = document.getElementById('site-select').value;
-    const since = new Date(Date.now()-state.days*86400000).toISOString();
-    let q = sb.from('analytics_events').select('*').gte('created_at',since)
+  try{
+    const since=(state.startDate||new Date(Date.now()-state.days*86400000).toISOString().slice(0,10))+'T00:00:00Z';
+    const until=(state.endDate||new Date().toISOString().slice(0,10))+'T23:59:59Z';
+    let q=sb.from('analytics_events').select('*').gte('created_at',since).lte('created_at',until)
       .order('created_at',{ascending:true}).limit(50000);
-    if(state.siteId) q = q.eq('site_id',state.siteId);
-    const { data, error } = await q;
-    if(error) throw error;
-    state.events = data||[];
+    if(state.siteId)q=q.eq('site_id',state.siteId);
+    const[{data:events,error},{data:anns}]=await Promise.all([
+      q,
+      sb.from('analytics_annotations').select('*').order('date',{ascending:true}),
+    ]);
+    if(error)throw error;
+    state.events=events||[];
+    state.annotations=anns||[];
     renderOverview();
+    checkAlerts();
+    if(state.tab==='status')     renderStatus();
+    if(state.tab==='flow')       renderFlow();
     if(state.tab==='comparison') renderComparison();
     if(state.tab==='campaigns')  renderCampaigns();
     if(state.tab==='goals')      renderGoals();
-    if(state.tab==='heatmap')    { populateHeatmapUrls(); renderHeatmap(); }
-  } catch(e) {
+    if(state.tab==='heatmap')    {populateHeatmapUrls();renderHeatmap();}
+  }catch(e){
     console.error('loadData:',e);
-    alert('Error loading data: '+(e.message||JSON.stringify(e)));
-  } finally { document.getElementById('loading').style.display='none'; }
+    alert('Error: '+(e.message||JSON.stringify(e)));
+  }finally{document.getElementById('loading').style.display='none';}
 }
 
-/* ══════════════════════════════════════════════════════════════════════════════
-   OVERVIEW
-   ══════════════════════════════════════════════════════════════════════════════ */
-function renderOverview() {
-  const ev = state.events;
-  const pv = ev.filter(e=>e.event_type==='pageview');
-  const cl = ev.filter(e=>e.event_type==='click');
-  const gl = ev.filter(e=>e.event_type==='goal');
-  const se = ev.filter(e=>e.event_type==='session_end'&&e.duration!=null);
-  const visitors = new Set(ev.map(e=>e.visitor_id)).size;
-  const sessions = new Set(ev.map(e=>e.session_id)).size;
+/* ══════════════════════════════════════════════════════════════════
+   ALERTS
+   ══════════════════════════════════════════════════════════════════ */
+function checkAlerts(){
+  const pv=state.events.filter(e=>e.event_type==='pageview');
+  if(!pv.length||state.days<3)return;
+  const dayMap={};
+  pv.forEach(e=>{const d=e.created_at.slice(0,10);dayMap[d]=(dayMap[d]||0)+1;});
+  const days=Object.values(dayMap);
+  if(days.length<3)return;
+  const today=days[days.length-1];
+  const avg=days.slice(0,-1).reduce((a,b)=>a+b,0)/(days.length-1);
+  if(avg<5)return;
+  const banner=document.getElementById('alert-banner');
+  const text=document.getElementById('alert-text');
+  if(today>avg*2){
+    banner.className='spike';banner.style.display='flex';
+    text.textContent=`Traffic spike detected: ${today} pageviews today vs avg ${Math.round(avg)}/day (${Math.round(today/avg*100-100)}% above normal)`;
+  } else if(today<avg*0.3&&avg>10){
+    banner.className='drop';banner.style.display='flex';
+    text.textContent=`Traffic drop detected: only ${today} pageviews today vs avg ${Math.round(avg)}/day`;
+  }
+}
+function dismissAlert(){document.getElementById('alert-banner').style.display='none';}
 
-  const pvPerSess={};
-  pv.forEach(e=>{ pvPerSess[e.session_id]=(pvPerSess[e.session_id]||0)+1; });
-  const slist=Object.values(pvPerSess);
-  const bounce=slist.length ? Math.round(slist.filter(c=>c===1).length/slist.length*100) : 0;
-  const durs=se.map(e=>e.duration).filter(Boolean);
-  const avgDur=durs.length ? Math.round(durs.reduce((a,b)=>a+b,0)/durs.length) : null;
-
-  animCount(document.getElementById('kpi-pv'), pv.length);
-  animCount(document.getElementById('kpi-vis'), visitors);
-  animCount(document.getElementById('kpi-sess'), sessions);
-  animCount(document.getElementById('kpi-goals'), gl.length);
-  document.getElementById('kpi-bounce').textContent = bounce+'%';
-  document.getElementById('kpi-dur').textContent    = fmtDur(avgDur);
-  document.getElementById('kpi-pv-sub').textContent = 'last '+state.days+' days';
-
-  // Timeline
-  const {labels,values} = groupByDay(pv, state.days);
-  document.getElementById('time-badge').textContent = fmt(pv.length)+' views';
-  kill('timeline');
-  charts.timeline = new Chart(document.getElementById('chart-timeline'),{
-    type:'line',
-    data:{labels,datasets:[{data:values,borderColor:'#0D9488',backgroundColor:'rgba(13,148,136,.1)',
-      borderWidth:2,pointRadius:state.days<=14?3:0,pointHoverRadius:5,fill:true,tension:.35}]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
-      scales:{x:{...gridOpts,ticks:{maxTicksLimit:10}},y:{...gridOpts,beginAtZero:true,ticks:{precision:0}}}},
+/* ══════════════════════════════════════════════════════════════════
+   ANNOTATIONS
+   ══════════════════════════════════════════════════════════════════ */
+function openAnnModal(){
+  document.getElementById('ann-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('ann-note').value='';
+  document.getElementById('ann-site').value='all';
+  document.getElementById('ann-modal').style.display='flex';
+}
+function closeAnnModal(){document.getElementById('ann-modal').style.display='none';}
+async function saveAnnotation(){
+  const date=document.getElementById('ann-date').value;
+  const note=document.getElementById('ann-note').value.trim();
+  if(!date||!note)return;
+  await sb.from('analytics_annotations').insert({
+    date,note,
+    site_id:document.getElementById('ann-site').value||'all',
+    color:document.getElementById('ann-color').value,
   });
+  closeAnnModal();
+  await loadData();
+}
+async function deleteAnnotation(id){
+  await sb.from('analytics_annotations').delete().eq('id',id);
+  await loadData();
+}
+function renderAnnotations(labels,dates){
+  const list=document.getElementById('annotation-list');
+  const relevant=state.annotations.filter(a=>dates.includes(a.date));
+  if(!relevant.length){list.innerHTML='';return;}
+  list.innerHTML=relevant.map(a=>`
+    <div class="annotation-item">
+      <div class="ann-dot" style="background:${a.color}"></div>
+      <div class="ann-date">${a.date}</div>
+      <div class="ann-note">${a.note}</div>
+      <div class="ann-site">${a.site_id}</div>
+      <button class="ann-del" onclick="deleteAnnotation('${a.id}')" title="Delete">&#x2715;</button>
+    </div>
+  `).join('');
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   OVERVIEW
+   ══════════════════════════════════════════════════════════════════ */
+function renderOverview(){
+  const ev=state.events;
+  const pv=ev.filter(e=>e.event_type==='pageview');
+  const gl=ev.filter(e=>e.event_type==='goal');
+  const se=ev.filter(e=>e.event_type==='session_end'&&e.duration!=null);
+  const visitors=new Set(ev.map(e=>e.visitor_id)).size;
+  const sessions=new Set(ev.map(e=>e.session_id)).size;
+  const pvPS={};pv.forEach(e=>{pvPS[e.session_id]=(pvPS[e.session_id]||0)+1;});
+  const sl=Object.values(pvPS);
+  const bounce=sl.length?Math.round(sl.filter(c=>c===1).length/sl.length*100):0;
+  const durs=se.map(e=>e.duration).filter(Boolean);
+  const avgDur=durs.length?Math.round(durs.reduce((a,b)=>a+b,0)/durs.length):null;
+
+  animCount(document.getElementById('kpi-pv'),pv.length);
+  animCount(document.getElementById('kpi-vis'),visitors);
+  animCount(document.getElementById('kpi-sess'),sessions);
+  animCount(document.getElementById('kpi-goals'),gl.length);
+  document.getElementById('kpi-bounce').textContent=bounce+'%';
+  document.getElementById('kpi-dur').textContent=fmtD(avgDur);
+  document.getElementById('kpi-pv-sub').textContent=state.days+' day window';
+
+  // Timeline with annotation lines
+  const{labels,values,dates}=groupByDay(pv,state.days,state.startDate,state.endDate);
+  document.getElementById('time-badge').textContent=fmt(pv.length)+' views';
+  const annLines=state.annotations.map(a=>{
+    const idx=dates.indexOf(a.date);
+    if(idx<0)return null;
+    return{value:idx,scaleID:'x',borderColor:a.color,borderWidth:1.5,borderDash:[4,3],
+      label:{display:true,content:a.note.slice(0,24),position:'start',font:{size:9},color:a.color,backgroundColor:'rgba(4,12,24,.85)',padding:3}};
+  }).filter(Boolean);
+  kill('timeline');
+  charts.timeline=new Chart(document.getElementById('chart-timeline'),{
+    type:'line',
+    data:{labels,datasets:[{data:values,borderColor:'#0D9488',backgroundColor:'rgba(13,148,136,.1)',borderWidth:2,pointRadius:0,pointHoverRadius:5,fill:true,tension:.35}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false},
+        annotation:{annotations:annLines}},
+      scales:{x:{...G,ticks:{maxTicksLimit:12}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
+  });
+  renderAnnotations(labels,dates);
 
   // Devices
   const dc=countBy(pv,'device_type');
   kill('devices');
   charts.devices=new Chart(document.getElementById('chart-devices'),{
     type:'doughnut',
-    data:{labels:dc.map(d=>d[0]),datasets:[{data:dc.map(d=>d[1]),backgroundColor:COLORS,borderWidth:0,hoverOffset:6}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',
-      plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:12,boxWidth:8}}}},
+    data:{labels:dc.map(d=>d[0]),datasets:[{data:dc.map(d=>d[1]),backgroundColor:COLORS,borderWidth:0,hoverOffset:5}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:11,boxWidth:8}}}},
   });
 
   // Top pages
-  const pageMap={};
-  pv.forEach(e=>{ const k=fmtUrl(e.url||''); pageMap[k]=(pageMap[k]||0)+1; });
-  const topPages=Object.entries(pageMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  document.getElementById('pages-badge').textContent=topPages.length+' pages';
+  const pm={};pv.forEach(e=>{const k=fmtUrl(e.url||'');pm[k]=(pm[k]||0)+1;});
+  const tp=Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  document.getElementById('pages-badge').textContent=tp.length+' pages';
   kill('pages');
   charts.pages=new Chart(document.getElementById('chart-pages'),{
     type:'bar',
-    data:{labels:topPages.map(p=>p[0].length>26?p[0].slice(0,24)+'…':p[0]),
-      datasets:[{data:topPages.map(p=>p[1]),backgroundColor:'rgba(13,148,136,.7)',borderRadius:4,borderSkipped:false}]},
-    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
-      scales:{x:{...gridOpts,ticks:{precision:0}},y:{grid:{display:false},ticks:{font:{family:"'JetBrains Mono'"}}}}},
+    data:{labels:tp.map(p=>p[0].length>28?p[0].slice(0,26)+'…':p[0]),
+      datasets:[{data:tp.map(p=>p[1]),backgroundColor:'rgba(13,148,136,.7)',borderRadius:4,borderSkipped:false}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{...G,ticks:{precision:0}},y:{grid:{display:false},ticks:{font:{family:"'JetBrains Mono'",size:10}}}}},
   });
 
   // Browsers
@@ -715,7 +829,7 @@ function renderOverview() {
     type:'bar',
     data:{labels:bc.map(b=>b[0]),datasets:[{data:bc.map(b=>b[1]),backgroundColor:COLORS.map(c=>c+'BB'),borderRadius:4,borderSkipped:false}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{x:{grid:{display:false}},y:{...gridOpts,beginAtZero:true,ticks:{precision:0}}}},
+      scales:{x:{grid:{display:false}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
   });
 
   // OS
@@ -723,319 +837,435 @@ function renderOverview() {
   kill('os');
   charts.os=new Chart(document.getElementById('chart-os'),{
     type:'doughnut',
-    data:{labels:oc.map(o=>o[0]),datasets:[{data:oc.map(o=>o[1]),backgroundColor:COLORS.slice(2),borderWidth:0,hoverOffset:6}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
-      plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:10,boxWidth:8,font:{size:10}}}}},
+    data:{labels:oc.map(o=>o[0]),datasets:[{data:oc.map(o=>o[1]),backgroundColor:COLORS.slice(2),borderWidth:0,hoverOffset:5}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:9,boxWidth:8,font:{size:10}}}}},
   });
 
-  // Tables
-  renderTable('table-referrers', countBy(pv,'referrer').map(([r,c])=>[fmtRef(r),c]).slice(0,10));
-  renderTable('table-countries', countBy(pv,'country').slice(0,10));
-  renderTable('table-cities',    countBy(pv,'city').slice(0,10));
+  // Exit pages
+  const lastPvPerSession={};
+  pv.forEach(e=>{lastPvPerSession[e.session_id]=fmtUrl(e.url||'');});
+  const exitMap={};
+  Object.values(lastPvPerSession).forEach(p=>{exitMap[p]=(exitMap[p]||0)+1;});
+  const exits=Object.entries(exitMap).sort((a,b)=>b[1]-a[1]).slice(0,10);
+
+  renderTable('table-referrers',countBy(pv,'referrer').map(([r,c])=>[fmtRef(r),c]).slice(0,10));
+  renderTable('table-countries',countBy(pv,'country').slice(0,10));
+  renderTable('table-cities',countBy(pv,'city').slice(0,10));
+  renderTable('table-exits',exits);
 }
 
-/* ══════════════════════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════
+   STATUS TAB
+   ══════════════════════════════════════════════════════════════════ */
+function renderStatus(){
+  const ev=state.events;
+  const allSites=[...new Set(ev.map(e=>e.site_id))].sort();
+  const now=Date.now();
+  const DAY=86400000;
+
+  const grid=document.getElementById('status-grid');
+  grid.innerHTML='';
+
+  const siteData=allSites.map(site=>{
+    const se=ev.filter(e=>e.site_id===site);
+    const last=se.reduce((m,e)=>e.created_at>m?e.created_at:m,'');
+    const first=se.reduce((m,e)=>!m||e.created_at<m?e.created_at:m,'');
+    const lastMs=last?new Date(last).getTime():0;
+    const age=now-lastMs;
+    const status=age<DAY?'active':age<7*DAY?'idle':'offline';
+    return{site,count:se.length,last,first,status};
+  });
+
+  siteData.forEach(d=>{
+    const card=document.createElement('div');
+    card.className='status-card '+d.status;
+    card.innerHTML=`
+      <div class="status-site">
+        ${d.site}
+        <span class="status-badge ${d.status}">${d.status}</span>
+      </div>
+      <div class="status-meta">
+        <span>Total Events <strong>${fmt(d.count)}</strong></span>
+        <span>Last Seen <strong>${d.last?fmtAgo(d.last):'never'}</strong></span>
+        <span>First Seen <strong>${d.first?d.first.slice(0,10):'—'}</strong></span>
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  // Bar chart
+  const week=now-7*DAY;
+  const weekCounts=allSites.map(s=>ev.filter(e=>e.site_id===s&&new Date(e.created_at).getTime()>week).length);
+  kill('status-bars');
+  charts['status-bars']=new Chart(document.getElementById('chart-status-bars'),{
+    type:'bar',
+    data:{labels:allSites,datasets:[{data:weekCounts,backgroundColor:COLORS,borderRadius:6,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{display:false}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   REALTIME TAB
+   ══════════════════════════════════════════════════════════════════ */
+function initRealtime(){
+  if(rtChannel)return; // already subscribed
+  rtChannel=sb.channel('rt-events')
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'analytics_events'},payload=>{
+      if(!state.rtPaused) appendRTEvent(payload.new);
+    })
+    .subscribe();
+}
+
+function appendRTEvent(e){
+  state.rtCount++;
+  document.getElementById('rt-counter').textContent=state.rtCount+' events';
+  const feed=document.getElementById('rt-feed');
+  // Remove placeholder
+  const empty=feed.querySelector('.empty');
+  if(empty)empty.remove();
+  const div=document.createElement('div');
+  div.className='rt-event';
+  div.innerHTML=`
+    <span class="rt-type ${e.event_type}">${e.event_type}</span>
+    <span class="rt-site">${e.site_id||'—'}</span>
+    <span class="rt-page">${fmtUrl(e.url||'')}</span>
+    <span class="rt-meta">
+      <span>${e.device_type||'?'}</span>
+      <span>${e.country||'?'}</span>
+    </span>
+    <span class="rt-time">${fmtAgo(e.created_at)}</span>`;
+  feed.insertBefore(div,feed.firstChild);
+  // Keep max 200 events
+  while(feed.children.length>200)feed.removeChild(feed.lastChild);
+}
+
+function toggleRTPause(){
+  state.rtPaused=!state.rtPaused;
+  const btn=document.getElementById('rt-pause-btn');
+  const banner=document.getElementById('rt-paused-banner');
+  btn.textContent=state.rtPaused?'▶ Resume':'⏸ Pause';
+  banner.style.display=state.rtPaused?'block':'none';
+}
+
+function clearRTFeed(){
+  state.rtCount=0;
+  document.getElementById('rt-counter').textContent='0 events';
+  document.getElementById('rt-feed').innerHTML='<div class="empty" style="margin:auto">Feed cleared — waiting for new events...</div>';
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   FLOW TAB
+   ══════════════════════════════════════════════════════════════════ */
+function renderFlow(){
+  const pv=state.events.filter(e=>e.event_type==='pageview');
+  // Build session paths
+  const sessionMap={};
+  pv.forEach(e=>{
+    if(!sessionMap[e.session_id])sessionMap[e.session_id]=[];
+    sessionMap[e.session_id].push({url:fmtUrl(e.url||''),t:e.created_at});
+  });
+  // Sort each session by time
+  Object.values(sessionMap).forEach(arr=>arr.sort((a,b)=>a.t<b.t?-1:1));
+
+  // Entry pages
+  const entryMap={};
+  Object.values(sessionMap).forEach(arr=>{if(arr.length){const k=arr[0].url;entryMap[k]=(entryMap[k]||0)+1;}});
+  renderTable('table-entries',Object.entries(entryMap).sort((a,b)=>b[1]-a[1]).slice(0,8));
+
+  // Transitions A->B
+  const transMap={};
+  Object.values(sessionMap).forEach(arr=>{
+    for(let i=0;i<arr.length-1;i++){
+      const key=arr[i].url+' → '+arr[i+1].url;
+      transMap[key]=(transMap[key]||0)+1;
+    }
+  });
+  const topTrans=Object.entries(transMap).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  renderTable('table-transitions',topTrans);
+  document.getElementById('flow-badge').textContent=topTrans.length+' transitions';
+
+  // Canvas flow diagram
+  const canvas=document.getElementById('flow-canvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.offsetWidth||800;
+  canvas.width=W;canvas.height=420;
+  ctx.clearRect(0,0,W,420);
+
+  // Get top pages for first 2 levels (entry + next)
+  const entryPages=Object.entries(entryMap).sort((a,b)=>b[1]-a[1]).slice(0,5).map(e=>e[0]);
+  const nextMap={};
+  Object.values(sessionMap).forEach(arr=>{
+    if(arr.length>=2&&entryPages.includes(arr[0].url)){
+      const k=arr[1].url;nextMap[k]=(nextMap[k]||0)+1;
+    }
+  });
+  const nextPages=Object.entries(nextMap).sort((a,b)=>b[1]-a[1]).slice(0,6).map(e=>e[0]);
+
+  const totalSessions=Object.keys(sessionMap).length;
+  if(!totalSessions){
+    ctx.fillStyle='#4A6080';ctx.font='14px Syne';ctx.textAlign='center';
+    ctx.fillText('Not enough session data yet',W/2,210);return;
+  }
+
+  const nodeColor=COLORS;
+  const col1X=140,col2X=W-140;
+  const nodeH=36,gap=16;
+
+  // Draw entry nodes
+  const drawNode=(x,y,w,label,color,alpha)=>{
+    ctx.globalAlpha=alpha||1;
+    ctx.fillStyle=color+'33';
+    ctx.strokeStyle=color;
+    ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.roundRect(x-w/2,y-nodeH/2,w,nodeH,6);ctx.fill();ctx.stroke();
+    ctx.globalAlpha=1;
+    ctx.fillStyle='#E8F0FE';ctx.font='11px Syne';ctx.textAlign='center';ctx.textBaseline='middle';
+    const short=label.length>20?label.slice(0,18)+'…':label;
+    ctx.fillText(short,x,y);
+  };
+
+  const totalH=(entryPages.length*(nodeH+gap))-gap;
+  const startY=(420-totalH)/2;
+  const entryNodes=entryPages.map((p,i)=>{
+    const count=entryMap[p]||0;
+    const y=startY+i*(nodeH+gap)+nodeH/2;
+    return{page:p,count,x:col1X,y,color:nodeColor[i%nodeColor.length]};
+  });
+
+  const nextTotalH=(nextPages.length*(nodeH+gap))-gap;
+  const nextStartY=(420-nextTotalH)/2;
+  const nextNodes=nextPages.map((p,i)=>{
+    const count=nextMap[p]||0;
+    const y=nextStartY+i*(nodeH+gap)+nodeH/2;
+    return{page:p,count,x:col2X,y,color:nodeColor[(i+3)%nodeColor.length]};
+  });
+
+  // Draw flows
+  entryNodes.forEach((en,ei)=>{
+    nextNodes.forEach((nn,ni)=>{
+      const flowKey=en.page+' → '+nn.page;
+      const flowCount=transMap[flowKey]||0;
+      if(!flowCount)return;
+      const w=Math.max(1,Math.round(flowCount/totalSessions*20));
+      ctx.globalAlpha=0.25;
+      ctx.strokeStyle=en.color;
+      ctx.lineWidth=w;
+      ctx.beginPath();
+      ctx.moveTo(en.x+80,en.y);
+      const cx=(en.x+nn.x)/2;
+      ctx.bezierCurveTo(cx,en.y,cx,nn.y,nn.x-80,nn.y);
+      ctx.stroke();
+    });
+  });
+  ctx.globalAlpha=1;
+
+  // Draw nodes
+  entryNodes.forEach(n=>drawNode(n.x,n.y,160,n.page,n.color));
+  nextNodes.forEach(n=>drawNode(n.x,n.y,160,n.page,n.color));
+
+  // Labels
+  ctx.fillStyle='#4A6080';ctx.font='bold 10px Syne';ctx.textAlign='center';ctx.textBaseline='bottom';
+  ctx.fillText('ENTRY PAGES',col1X,18);
+  ctx.fillText('NEXT PAGES',col2X,18);
+
+  // Legend
+  const legend=document.getElementById('flow-legend');
+  legend.innerHTML=[...entryNodes,...nextNodes].map((n,i)=>`
+    <div class="flow-legend-item">
+      <div class="flow-legend-dot" style="background:${n.color}"></div>
+      <span>${n.page}</span>
+    </div>`).join('');
+}
+
+/* ══════════════════════════════════════════════════════════════════
    COMPARISON
-   ══════════════════════════════════════════════════════════════════════════════ */
-function renderComparison() {
-  const ev = state.events;
-  const sites = [...new Set(ev.map(e=>e.site_id))].sort();
-
-  const tbody = document.getElementById('comp-tbody');
-  if(!sites.length){ tbody.innerHTML='<tr><td colspan="7" class="empty">No data</td></tr>'; return; }
-
-  const rows = sites.map(site => {
-    const se  = ev.filter(e=>e.site_id===site);
-    const pv  = se.filter(e=>e.event_type==='pageview');
-    const gl  = se.filter(e=>e.event_type==='goal');
-    const vis = new Set(se.map(e=>e.visitor_id)).size;
-    const sess= new Set(se.map(e=>e.session_id)).size;
-    const pvPS={};
-    pv.forEach(e=>{ pvPS[e.session_id]=(pvPS[e.session_id]||0)+1; });
+   ══════════════════════════════════════════════════════════════════ */
+function renderComparison(){
+  const ev=state.events;
+  const sites=[...new Set(ev.map(e=>e.site_id))].sort();
+  const tbody=document.getElementById('comp-tbody');
+  if(!sites.length){tbody.innerHTML='<tr><td colspan="7" class="empty">No data</td></tr>';return;}
+  const rows=sites.map(site=>{
+    const se=ev.filter(e=>e.site_id===site);
+    const pv=se.filter(e=>e.event_type==='pageview');
+    const gl=se.filter(e=>e.event_type==='goal');
+    const vis=new Set(se.map(e=>e.visitor_id)).size;
+    const sess=new Set(se.map(e=>e.session_id)).size;
+    const pvPS={};pv.forEach(e=>{pvPS[e.session_id]=(pvPS[e.session_id]||0)+1;});
     const sl=Object.values(pvPS);
     const bounce=sl.length?Math.round(sl.filter(c=>c===1).length/sl.length*100):0;
     const durs=se.filter(e=>e.event_type==='session_end'&&e.duration).map(e=>e.duration);
     const avgD=durs.length?Math.round(durs.reduce((a,b)=>a+b,0)/durs.length):null;
-    return {site,pv:pv.length,vis,sess,bounce,avgD,goals:gl.length};
+    return{site,pv:pv.length,vis,sess,bounce,avgD,goals:gl.length};
   });
-
-  tbody.innerHTML = rows.map(r=>`
-    <tr>
-      <td><span class="site-pill">${r.site}</span></td>
-      <td class="num">${fmt(r.pv)}</td>
-      <td class="num">${fmt(r.vis)}</td>
-      <td class="num">${fmt(r.sess)}</td>
-      <td class="num">${r.bounce}%</td>
-      <td class="num">${fmtDur(r.avgD)}</td>
-      <td class="num">${fmt(r.goals)}</td>
-    </tr>
-  `).join('');
-
-  // Multi-line timeline
-  const datasets = sites.map((site,i) => {
-    const pv = ev.filter(e=>e.site_id===site&&e.event_type==='pageview');
-    const {labels,values}=groupByDay(pv,state.days);
-    return {label:site,data:values,borderColor:COLORS[i%COLORS.length],
-      backgroundColor:'transparent',borderWidth:2,pointRadius:0,pointHoverRadius:4,tension:.3};
-  });
-  const {labels}=groupByDay(ev.filter(e=>e.event_type==='pageview'),state.days);
-  kill('comp-timeline');
-  charts['comp-timeline']=new Chart(document.getElementById('chart-comp-timeline'),{
-    type:'line',data:{labels,datasets},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{usePointStyle:true,padding:14,boxWidth:8}}},
-      scales:{x:{...gridOpts,ticks:{maxTicksLimit:12}},y:{...gridOpts,beginAtZero:true,ticks:{precision:0}}}},
+  tbody.innerHTML=rows.map(r=>`<tr><td><span class="site-pill">${r.site}</span></td>
+    <td class="num">${fmt(r.pv)}</td><td class="num">${fmt(r.vis)}</td>
+    <td class="num">${fmt(r.sess)}</td><td class="num">${r.bounce}%</td>
+    <td class="num">${fmtD(r.avgD)}</td><td class="num">${fmt(r.goals)}</td></tr>`).join('');
+  const{labels}=groupByDay(ev.filter(e=>e.event_type==='pageview'),state.days,state.startDate,state.endDate);
+  kill('comp-tl');
+  charts['comp-tl']=new Chart(document.getElementById('chart-comp-timeline'),{
+    type:'line',
+    data:{labels,datasets:sites.map((s,i)=>{
+      const{values}=groupByDay(ev.filter(e=>e.site_id===s&&e.event_type==='pageview'),state.days,state.startDate,state.endDate);
+      return{label:s,data:values,borderColor:COLORS[i%COLORS.length],backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:.3};
+    })},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{usePointStyle:true,padding:12,boxWidth:8}}},
+      scales:{x:{...G,ticks:{maxTicksLimit:12}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
   });
 }
 
-/* ══════════════════════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════
    CAMPAIGNS
-   ══════════════════════════════════════════════════════════════════════════════ */
-function renderCampaigns() {
-  const ev = state.events;
-  const withUTM = ev.filter(e=>e.utm_source||e.utm_medium||e.utm_campaign);
-  const withoutUTM = ev.filter(e=>!e.utm_source&&!e.utm_medium&&!e.utm_campaign);
-  const utmSessions = new Set(withUTM.map(e=>e.session_id)).size;
-  const orgSessions = new Set(withoutUTM.map(e=>e.session_id)).size;
-
-  const srcCounts = countBy(withUTM.filter(e=>e.utm_source),'utm_source').slice(0,8);
-  const medCounts = countBy(withUTM.filter(e=>e.utm_medium),'utm_medium').slice(0,8);
-  const campCounts= countBy(withUTM.filter(e=>e.utm_campaign),'utm_campaign').slice(0,8);
-
-  document.getElementById('utmk-sessions').textContent = fmt(utmSessions);
-  document.getElementById('utmk-organic').textContent  = fmt(orgSessions);
-  document.getElementById('utmk-top-src').textContent  = srcCounts[0]?srcCounts[0][0]:'—';
-  document.getElementById('utmk-top-camp').textContent = campCounts[0]?campCounts[0][0]:'—';
-
-  // Source chart
-  kill('utm-source');
-  if(srcCounts.length){
-    charts['utm-source']=new Chart(document.getElementById('chart-utm-source'),{
-      type:'bar',
-      data:{labels:srcCounts.map(s=>s[0]),datasets:[{data:srcCounts.map(s=>s[1]),
-        backgroundColor:COLORS.map(c=>c+'AA'),borderRadius:4,borderSkipped:false}]},
-      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
-        plugins:{legend:{display:false}},scales:{x:{...gridOpts,ticks:{precision:0}},y:{grid:{display:false}}}},
-    });
-  }
-
-  // Medium chart
-  kill('utm-medium');
-  if(medCounts.length){
-    charts['utm-medium']=new Chart(document.getElementById('chart-utm-medium'),{
-      type:'bar',
-      data:{labels:medCounts.map(m=>m[0]),datasets:[{data:medCounts.map(m=>m[1]),
-        backgroundColor:COLORS.slice(2).map(c=>c+'AA'),borderRadius:4,borderSkipped:false}]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-        scales:{x:{grid:{display:false}},y:{...gridOpts,beginAtZero:true,ticks:{precision:0}}}},
-    });
-  }
-
-  // Campaign table
-  const tbody=document.getElementById('table-campaigns');
-  if(!campCounts.length){
-    tbody.innerHTML='<div class="empty">No campaign data yet. Add <code>?utm_campaign=name</code> to your marketing links.</div>';
-    return;
-  }
-  const max=campCounts[0][1];
-  tbody.innerHTML=campCounts.map(([name,count])=>`
-    <div class="table-row">
-      <div class="table-lbl">${name}</div>
-      <div class="table-bar"><div class="table-bar-fill" style="width:${Math.round(count/max*100)}%"></div></div>
-      <div class="table-cnt">${fmt(count)}</div>
-    </div>
-  `).join('');
+   ══════════════════════════════════════════════════════════════════ */
+function renderCampaigns(){
+  const ev=state.events;
+  const withUTM=ev.filter(e=>e.utm_source||e.utm_medium||e.utm_campaign);
+  const withoutUTM=ev.filter(e=>!e.utm_source&&!e.utm_medium&&!e.utm_campaign);
+  const srcC=countBy(withUTM.filter(e=>e.utm_source),'utm_source').slice(0,8);
+  const medC=countBy(withUTM.filter(e=>e.utm_medium),'utm_medium').slice(0,8);
+  const campC=countBy(withUTM.filter(e=>e.utm_campaign),'utm_campaign').slice(0,8);
+  document.getElementById('utmk-sess').textContent=fmt(new Set(withUTM.map(e=>e.session_id)).size);
+  document.getElementById('utmk-org').textContent=fmt(new Set(withoutUTM.map(e=>e.session_id)).size);
+  document.getElementById('utmk-src').textContent=srcC[0]?srcC[0][0]:'—';
+  document.getElementById('utmk-camp').textContent=campC[0]?campC[0][0]:'—';
+  kill('utm-src');
+  if(srcC.length)charts['utm-src']=new Chart(document.getElementById('chart-utm-src'),{
+    type:'bar',data:{labels:srcC.map(s=>s[0]),datasets:[{data:srcC.map(s=>s[1]),backgroundColor:COLORS.map(c=>c+'AA'),borderRadius:4,borderSkipped:false}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{...G,ticks:{precision:0}},y:{grid:{display:false}}}},
+  });
+  kill('utm-med');
+  if(medC.length)charts['utm-med']=new Chart(document.getElementById('chart-utm-med'),{
+    type:'bar',data:{labels:medC.map(m=>m[0]),datasets:[{data:medC.map(m=>m[1]),backgroundColor:COLORS.slice(2).map(c=>c+'AA'),borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
+  });
+  const tb=document.getElementById('table-campaigns');
+  if(!campC.length){tb.innerHTML='<div class="empty">No campaign data yet.</div>';return;}
+  const max=campC[0][1];
+  tb.innerHTML=campC.map(([n,c])=>`<div class="table-row"><div class="table-lbl">${n}</div>
+    <div class="table-bar"><div class="table-bar-fill" style="width:${Math.round(c/max*100)}%"></div></div>
+    <div class="table-cnt">${fmt(c)}</div></div>`).join('');
 }
 
-/* ══════════════════════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════
    GOALS
-   ══════════════════════════════════════════════════════════════════════════════ */
-function renderGoals() {
-  const ev = state.events;
-  const goals = ev.filter(e=>e.event_type==='goal');
-  const sessions = new Set(ev.map(e=>e.session_id)).size;
-  const goalNames = countBy(goals,'goal_name');
-  const rate = sessions ? Math.round(goals.length/sessions*100) : 0;
-
-  document.getElementById('goalsk-total').textContent  = fmt(goals.length);
-  document.getElementById('goalsk-rate').textContent   = rate+'%';
-  document.getElementById('goalsk-unique').textContent = goalNames.length||'0';
-  document.getElementById('goalsk-top').textContent    = goalNames[0]?goalNames[0][0]:'—';
-
-  // Timeline
-  const {labels,values}=groupByDay(goals,state.days);
-  kill('goals-timeline');
-  charts['goals-timeline']=new Chart(document.getElementById('chart-goals-timeline'),{
-    type:'bar',
-    data:{labels,datasets:[{data:values,backgroundColor:'rgba(139,92,246,.7)',borderRadius:3,borderSkipped:false}]},
+   ══════════════════════════════════════════════════════════════════ */
+function renderGoals(){
+  const ev=state.events;
+  const goals=ev.filter(e=>e.event_type==='goal');
+  const sessions=new Set(ev.map(e=>e.session_id)).size;
+  const gnames=countBy(goals,'goal_name');
+  const rate=sessions?Math.round(goals.length/sessions*100):0;
+  document.getElementById('gk-total').textContent=fmt(goals.length);
+  document.getElementById('gk-rate').textContent=rate+'%';
+  document.getElementById('gk-unique').textContent=gnames.length||'0';
+  document.getElementById('gk-top').textContent=gnames[0]?gnames[0][0]:'—';
+  const{labels,values}=groupByDay(goals,state.days,state.startDate,state.endDate);
+  kill('goals-tl');
+  charts['goals-tl']=new Chart(document.getElementById('chart-goals-tl'),{
+    type:'bar',data:{labels,datasets:[{data:values,backgroundColor:'rgba(139,92,246,.7)',borderRadius:3,borderSkipped:false}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{x:{...gridOpts,ticks:{maxTicksLimit:12}},y:{...gridOpts,beginAtZero:true,ticks:{precision:0}}}},
+      scales:{x:{...G,ticks:{maxTicksLimit:12}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
   });
-
-  // Distribution doughnut
   kill('goals-dist');
-  if(goalNames.length){
-    charts['goals-dist']=new Chart(document.getElementById('chart-goals-dist'),{
-      type:'doughnut',
-      data:{labels:goalNames.slice(0,6).map(g=>g[0]),
-        datasets:[{data:goalNames.slice(0,6).map(g=>g[1]),backgroundColor:COLORS.slice(4),borderWidth:0,hoverOffset:5}]},
-      options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
-        plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:10,boxWidth:8,font:{size:10}}}}},
-    });
-  }
-
-  // Funnel
+  if(gnames.length)charts['goals-dist']=new Chart(document.getElementById('chart-goals-dist'),{
+    type:'doughnut',data:{labels:gnames.slice(0,6).map(g=>g[0]),datasets:[{data:gnames.slice(0,6).map(g=>g[1]),backgroundColor:COLORS.slice(4),borderWidth:0,hoverOffset:5}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:9,boxWidth:8,font:{size:10}}}}},
+  });
   const funnel=document.getElementById('goals-funnel');
-  if(!goalNames.length){
-    funnel.innerHTML='<div class="empty">No goal events yet. Add <code>data-kl-goal="goal_name"</code> to buttons, links, and forms.</div>';
-    return;
-  }
-  const maxG=goalNames[0][1];
-  funnel.innerHTML=goalNames.slice(0,10).map(([name,count])=>{
-    const sessWithGoal=new Set(goals.filter(g=>g.goal_name===name).map(g=>g.session_id)).size;
-    const convRate=sessions?Math.round(sessWithGoal/sessions*100):0;
-    return `<div class="funnel-bar">
-      <div class="funnel-name">${name}</div>
+  if(!gnames.length){funnel.innerHTML='<div class="empty">No goal events yet.</div>';return;}
+  const maxG=gnames[0][1];
+  funnel.innerHTML=gnames.slice(0,10).map(([name,count])=>{
+    const sessG=new Set(goals.filter(g=>g.goal_name===name).map(g=>g.session_id)).size;
+    const cvr=sessions?Math.round(sessG/sessions*100):0;
+    return`<div class="funnel-bar"><div class="funnel-name">${name}</div>
       <div class="funnel-track"><div class="funnel-fill" style="width:${Math.round(count/maxG*100)}%"></div></div>
-      <div class="funnel-num">${fmt(count)}</div>
-      <div class="funnel-rate">${convRate}% CVR</div>
-    </div>`;
+      <div class="funnel-num">${fmt(count)}</div><div class="funnel-rate">${cvr}% CVR</div></div>`;
   }).join('');
 }
 
-/* ══════════════════════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════
    HEATMAP
-   ══════════════════════════════════════════════════════════════════════════════ */
-function populateHeatmapUrls() {
-  const clicks = state.events.filter(e=>e.event_type==='click'&&e.click_x!=null);
-  const urls = [...new Set(clicks.map(c=>fmtUrl(c.url||'')))].sort();
-  const sel = document.getElementById('heatmap-url-select');
+   ══════════════════════════════════════════════════════════════════ */
+function populateHeatmapUrls(){
+  const clicks=state.events.filter(e=>e.event_type==='click'&&e.click_x!=null);
+  const urls=[...new Set(clicks.map(c=>fmtUrl(c.url||'')))].sort();
+  const sel=document.getElementById('heatmap-url-select');
   sel.innerHTML='<option value="">All Pages</option>';
-  urls.forEach(u=>{ const o=document.createElement('option'); o.value=o.textContent=u; sel.appendChild(o); });
+  urls.forEach(u=>{const o=document.createElement('option');o.value=o.textContent=u;sel.appendChild(o);});
 }
-
-function renderHeatmap() {
-  const urlFilter = document.getElementById('heatmap-url-select').value;
-  const allClicks = state.events.filter(e=>e.event_type==='click');
-  const filtered  = allClicks.filter(c=>c.click_x!=null&&c.click_y!=null&&
-    (!urlFilter||fmtUrl(c.url||'')===urlFilter));
-
-  document.getElementById('hm-total-clicks').textContent  = fmt(allClicks.length);
-  document.getElementById('hm-filtered-clicks').textContent = fmt(filtered.length);
-
-  const canvas = document.getElementById('heatmap-canvas');
-  const ctx = canvas.getContext('2d');
-  const W=canvas.width, H=canvas.height;
-
-  // Background
-  ctx.fillStyle='#08121F';
-  ctx.fillRect(0,0,W,H);
-
-  // Draw webpage skeleton
-  const drawRect=(y,h,color)=>{ ctx.fillStyle=color; ctx.fillRect(0,y,W,h); };
-  drawRect(0,50,'#0B1A2E');    // navbar
-  drawRect(50,180,'#071018');  // hero
-  drawRect(230,3,'#0D9488');   // divider
-  for(let i=0;i<5;i++) drawRect(233+i*90,80,'#081220'); // content sections
-
-  // Heatmap blobs
+function renderHeatmap(){
+  const urlFilter=document.getElementById('heatmap-url-select').value;
+  const allClicks=state.events.filter(e=>e.event_type==='click');
+  const filtered=allClicks.filter(c=>c.click_x!=null&&c.click_y!=null&&(!urlFilter||fmtUrl(c.url||'')===urlFilter));
+  document.getElementById('hm-total').textContent=fmt(allClicks.length);
+  const canvas=document.getElementById('heatmap-canvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  ctx.fillStyle='#08121F';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#0B1A2E';ctx.fillRect(0,0,W,50);
+  for(let i=0;i<6;i++){ctx.fillStyle=i%2===0?'#071018':'#081220';ctx.fillRect(0,50+i*60,W,60);}
   if(filtered.length){
-    // Use globalCompositeOperation to accumulate heat
-    const offscreen = document.createElement('canvas');
-    offscreen.width=W; offscreen.height=H;
-    const octx=offscreen.getContext('2d');
-
+    const off=document.createElement('canvas');off.width=W;off.height=H;
+    const octx=off.getContext('2d');
     filtered.forEach(c=>{
-      const x=(c.click_x/100)*W, y=(c.click_y/100)*H;
-      const grd=octx.createRadialGradient(x,y,0,x,y,40);
-      grd.addColorStop(0,'rgba(255,255,255,0.3)');
-      grd.addColorStop(1,'rgba(255,255,255,0)');
-      octx.globalCompositeOperation='lighter';
-      octx.fillStyle=grd;
-      octx.beginPath(); octx.arc(x,y,40,0,Math.PI*2); octx.fill();
+      const x=(c.click_x/100)*W,y=(c.click_y/100)*H;
+      const grd=octx.createRadialGradient(x,y,0,x,y,38);
+      grd.addColorStop(0,'rgba(255,255,255,.35)');grd.addColorStop(1,'rgba(255,255,255,0)');
+      octx.globalCompositeOperation='lighter';octx.fillStyle=grd;
+      octx.beginPath();octx.arc(x,y,38,0,Math.PI*2);octx.fill();
     });
-
-    // Colorize using a gradient lookup
-    const imgData=octx.getImageData(0,0,W,H);
-    const d=imgData.data;
+    const id=octx.getImageData(0,0,W,H),d=id.data;
     for(let i=0;i<d.length;i+=4){
-      const alpha=d[i]/255; // intensity 0-1
-      if(alpha<0.01){d[i]=d[i+1]=d[i+2]=d[i+3]=0;continue;}
-      // Gradient: blue -> cyan -> green -> yellow -> red
+      const a=d[i]/255;if(a<0.01){d[i]=d[i+1]=d[i+2]=d[i+3]=0;continue;}
       let r,g,b;
-      if(alpha<0.25){const t=alpha/0.25;r=0;g=Math.round(t*100);b=255;}
-      else if(alpha<0.5){const t=(alpha-0.25)/0.25;r=0;g=Math.round(100+t*155);b=Math.round(255*(1-t));}
-      else if(alpha<0.75){const t=(alpha-0.5)/0.25;r=Math.round(t*255);g=255;b=0;}
-      else{const t=(alpha-0.75)/0.25;r=255;g=Math.round(255*(1-t));b=0;}
-      d[i]=r; d[i+1]=g; d[i+2]=b; d[i+3]=Math.round(alpha*220);
+      if(a<.25){const t=a/.25;r=0;g=Math.round(t*100);b=255;}
+      else if(a<.5){const t=(a-.25)/.25;r=0;g=Math.round(100+t*155);b=Math.round(255*(1-t));}
+      else if(a<.75){const t=(a-.5)/.25;r=Math.round(t*255);g=255;b=0;}
+      else{const t=(a-.75)/.25;r=255;g=Math.round(255*(1-t));b=0;}
+      d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=Math.round(a*220);
     }
-    octx.putImageData(imgData,0,0);
-    ctx.drawImage(offscreen,0,0);
-
-    // Click dots
+    octx.putImageData(id,0,0);ctx.drawImage(off,0,0);
     filtered.forEach(c=>{
-      const x=(c.click_x/100)*W, y=(c.click_y/100)*H;
-      ctx.beginPath(); ctx.arc(x,y,2,0,Math.PI*2);
-      ctx.fillStyle='rgba(255,255,255,0.6)'; ctx.fill();
+      const x=(c.click_x/100)*W,y=(c.click_y/100)*H;
+      ctx.beginPath();ctx.arc(x,y,2,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.5)';ctx.fill();
     });
   }
-
-  // Zone labels
   const zones=[
-    {label:'Navigation (top)',y:0,h:8},
-    {label:'Hero / Above Fold',y:8,h:25},
-    {label:'Upper Content',y:33,h:25},
-    {label:'Mid Content',y:58,h:25},
-    {label:'Lower Content',y:83,h:17},
+    {label:'Navigation',y:0,h:8},{label:'Hero/Fold',y:8,h:22},
+    {label:'Upper Content',y:30,h:25},{label:'Mid Content',y:55,h:25},{label:'Lower',y:80,h:20},
   ];
-  const zoneStats=zones.map(z=>{
-    const count=filtered.filter(c=>c.click_y>=z.y&&c.click_y<z.y+z.h).length;
-    return {...z,count};
-  }).sort((a,b)=>b.count-a.count);
-
-  document.getElementById('hm-top-zone').textContent = zoneStats[0]?.label||'—';
-  const maxZ=zoneStats[0]?.count||1;
-  document.getElementById('heatmap-zones').innerHTML=zoneStats.map(z=>`
-    <div class="table-row">
-      <div class="table-lbl">${z.label}</div>
-      <div class="table-bar"><div class="table-bar-fill" style="width:${Math.round(z.count/maxZ*100)}%"></div></div>
-      <div class="table-cnt">${fmt(z.count)}</div>
-    </div>
-  `).join('');
-
-  // Click elements table
-  const elMap={};
-  filtered.forEach(c=>{
-    const k=[c.element_tag,c.element_text].filter(Boolean).join(': ').trim()||'(unnamed)';
-    elMap[k]=(elMap[k]||0)+1;
-  });
-  const topEl=Object.entries(elMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  renderTable('table-clicks-hm', topEl);
+  const zs=zones.map(z=>({...z,count:filtered.filter(c=>c.click_y>=z.y&&c.click_y<z.y+z.h).length})).sort((a,b)=>b.count-a.count);
+  document.getElementById('hm-zone').textContent=zs[0]?.label||'—';
+  const maxZ=zs[0]?.count||1;
+  document.getElementById('heatmap-zones').innerHTML=zs.map(z=>`<div class="table-row">
+    <div class="table-lbl">${z.label}</div>
+    <div class="table-bar"><div class="table-bar-fill" style="width:${Math.round(z.count/maxZ*100)}%"></div></div>
+    <div class="table-cnt">${fmt(z.count)}</div></div>`).join('');
+  const em={};filtered.forEach(c=>{const k=[c.element_tag,c.element_text].filter(Boolean).join(': ')||'(unnamed)';em[k]=(em[k]||0)+1;});
+  renderTable('table-clicks-hm',Object.entries(em).sort((a,b)=>b[1]-a[1]).slice(0,8));
 }
 
-/* ══════════════════════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════
    SHARED TABLE RENDERER
-   ══════════════════════════════════════════════════════════════════════════════ */
-function renderTable(id, rows) {
+   ══════════════════════════════════════════════════════════════════ */
+function renderTable(id,rows){
   const el=document.getElementById(id);
   if(!rows||!rows.length){el.innerHTML='<div class="empty">No data yet</div>';return;}
   const max=rows[0][1];
-  el.innerHTML=rows.map(([label,count])=>`
-    <div class="table-row">
-      <div class="table-lbl" title="${label}">${label}</div>
-      <div class="table-bar"><div class="table-bar-fill" style="width:${Math.round(count/max*100)}%"></div></div>
-      <div class="table-cnt">${fmt(count)}</div>
-    </div>
-  `).join('');
+  el.innerHTML=rows.map(([label,count])=>`<div class="table-row">
+    <div class="table-lbl" title="${label}">${label}</div>
+    <div class="table-bar"><div class="table-bar-fill" style="width:${Math.round(count/max*100)}%"></div></div>
+    <div class="table-cnt">${fmt(count)}</div></div>`).join('');
 }
 
-/* ══════════════════════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════
    EXPORT CSV
-   ══════════════════════════════════════════════════════════════════════════════ */
-function exportCSV() {
-  if(!state.events.length){alert('No data loaded yet.');return;}
-  const cols=['id','site_id','event_type','url','page_title','referrer','session_id',
-    'visitor_id','device_type','browser','os','country','city','screen_width','screen_height',
+   ══════════════════════════════════════════════════════════════════ */
+function exportCSV(){
+  if(!state.events.length){alert('No data loaded.');return;}
+  const cols=['id','site_id','event_type','url','page_title','referrer','session_id','visitor_id',
+    'device_type','browser','os','country','city','screen_width','screen_height',
     'utm_source','utm_medium','utm_campaign','utm_content','utm_term',
     'click_x','click_y','goal_name','element_tag','element_text','duration','created_at'];
   const esc=v=>{if(v==null)return'';const s=String(v);return s.includes(',')||s.includes('"')||s.includes('\n')?`"${s.replace(/"/g,'""')}"`:`${s}`;};
@@ -1046,107 +1276,72 @@ function exportCSV() {
   a.click();
 }
 
-/* ══════════════════════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════
    EMAIL REPORT
-   ══════════════════════════════════════════════════════════════════════════════ */
-let _reportHtml='';
-function openEmailReport() {
-  const ev=state.events;
-  const pv=ev.filter(e=>e.event_type==='pageview');
-  const gl=ev.filter(e=>e.event_type==='goal');
-  const visitors=new Set(ev.map(e=>e.visitor_id)).size;
-  const sessions=new Set(ev.map(e=>e.session_id)).size;
-  const pvPS={};
-  pv.forEach(e=>{pvPS[e.session_id]=(pvPS[e.session_id]||0)+1;});
-  const sl=Object.values(pvPS);
-  const bounce=sl.length?Math.round(sl.filter(c=>c===1).length/sl.length*100):0;
+   ══════════════════════════════════════════════════════════════════ */
+let _rHtml='';
+function openEmailReport(){
+  const ev=state.events,pv=ev.filter(e=>e.event_type==='pageview'),gl=ev.filter(e=>e.event_type==='goal');
+  const vis=new Set(ev.map(e=>e.visitor_id)).size,sess=new Set(ev.map(e=>e.session_id)).size;
+  const pvPS={};pv.forEach(e=>{pvPS[e.session_id]=(pvPS[e.session_id]||0)+1;});
+  const sl=Object.values(pvPS),bounce=sl.length?Math.round(sl.filter(c=>c===1).length/sl.length*100):0;
   const durs=ev.filter(e=>e.event_type==='session_end'&&e.duration).map(e=>e.duration);
   const avgDur=durs.length?Math.round(durs.reduce((a,b)=>a+b,0)/durs.length):null;
-
-  const pageMap={};
-  pv.forEach(e=>{const k=fmtUrl(e.url||'');pageMap[k]=(pageMap[k]||0)+1;});
-  const topPages=Object.entries(pageMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  const topRefs=countBy(pv,'referrer').map(([r,c])=>[fmtRef(r),c]).slice(0,5);
-  const topCountries=countBy(pv,'country').slice(0,5);
-  const range=`Last ${state.days} Days${state.siteId?' ('+state.siteId+')':''}`;
+  const pm={};pv.forEach(e=>{const k=fmtUrl(e.url||'');pm[k]=(pm[k]||0)+1;});
+  const tp=Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const tr=countBy(pv,'referrer').map(([r,c])=>[fmtRef(r),c]).slice(0,5);
+  const tc=countBy(pv,'country').slice(0,5);
   const now=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-
-  _reportHtml=`<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><style>
+  _rHtml=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
 body{font-family:Arial,sans-serif;background:#f4f4f4;padding:20px}
-.wrap{max-width:600px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden}
-.hdr{background:#0B2545;padding:28px 32px;color:#fff}
-.hdr h1{font-size:20px;margin:0 0 4px}
-.hdr p{font-size:12px;color:#8BA3C7;margin:0}
-.body{padding:28px 32px}
-h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#666;margin:20px 0 10px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
-.stat{background:#f8f8f8;border-radius:6px;padding:14px;text-align:center}
-.stat .v{font-size:24px;font-weight:700;color:#0B2545;font-family:monospace}
-.stat .l{font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-td,th{padding:8px 10px;text-align:left;border-bottom:1px solid #f0f0f0}
-th{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#999;font-weight:600}
-.num{font-family:monospace;color:#0D9488;font-weight:600}
-.ftr{background:#0B2545;padding:16px 32px;text-align:center;font-size:11px;color:#8BA3C7}
-.ftr a{color:#0D9488}
-</style></head><body>
-<div class="wrap">
-  <div class="hdr">
-    <h1>Kulan Analytics Report</h1>
-    <p>${range} &mdash; Generated ${now}</p>
-  </div>
-  <div class="body">
-    <h2>Overview</h2>
-    <div class="stats">
-      <div class="stat"><div class="v">${fmt(pv.length)}</div><div class="l">Page Views</div></div>
-      <div class="stat"><div class="v">${fmt(visitors)}</div><div class="l">Visitors</div></div>
-      <div class="stat"><div class="v">${fmt(sessions)}</div><div class="l">Sessions</div></div>
-      <div class="stat"><div class="v">${bounce}%</div><div class="l">Bounce Rate</div></div>
-      <div class="stat"><div class="v">${fmtDur(avgDur)}</div><div class="l">Avg Duration</div></div>
-      <div class="stat"><div class="v">${fmt(gl.length)}</div><div class="l">Conversions</div></div>
-    </div>
-    <h2>Top Pages</h2>
-    <table><tr><th>Page</th><th>Views</th></tr>
-      ${topPages.map(([p,c])=>`<tr><td>${p}</td><td class="num">${fmt(c)}</td></tr>`).join('')}
-    </table>
-    <h2>Top Referrers</h2>
-    <table><tr><th>Source</th><th>Sessions</th></tr>
-      ${topRefs.map(([r,c])=>`<tr><td>${r}</td><td class="num">${fmt(c)}</td></tr>`).join('')}
-    </table>
-    <h2>Countries</h2>
-    <table><tr><th>Country</th><th>Views</th></tr>
-      ${topCountries.map(([c,n])=>`<tr><td>${c}</td><td class="num">${fmt(n)}</td></tr>`).join('')}
-    </table>
-  </div>
-  <div class="ftr">Kulan Analytics &mdash; <a href="https://mmohamud.me">mmohamud.me</a></div>
+.w{max-width:600px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden}
+.h{background:#0B2545;padding:26px 30px;color:#fff}.h h1{font-size:19px;margin:0 0 4px}.h p{font-size:11px;color:#8BA3C7;margin:0}
+.b{padding:26px 30px}h2{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#666;margin:18px 0 8px}
+.s{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.sc{background:#f8f8f8;border-radius:6px;padding:12px;text-align:center}
+.sv{font-size:22px;font-weight:700;color:#0B2545;font-family:monospace}.sl{font-size:9px;color:#999;text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:12px}td,th{padding:7px 9px;text-align:left;border-bottom:1px solid #f0f0f0}
+th{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#999;font-weight:600}.n{font-family:monospace;color:#0D9488;font-weight:600}
+.f{background:#0B2545;padding:14px 30px;text-align:center;font-size:11px;color:#8BA3C7}.f a{color:#0D9488}
+</style></head><body><div class="w">
+<div class="h"><h1>Kulan Analytics Report</h1><p>Last ${state.days} Days${state.siteId?' — '+state.siteId:''} &mdash; ${now}</p></div>
+<div class="b">
+<h2>Overview</h2>
+<div class="s">
+  <div class="sc"><div class="sv">${fmt(pv.length)}</div><div class="sl">Page Views</div></div>
+  <div class="sc"><div class="sv">${fmt(vis)}</div><div class="sl">Visitors</div></div>
+  <div class="sc"><div class="sv">${fmt(sess)}</div><div class="sl">Sessions</div></div>
+  <div class="sc"><div class="sv">${bounce}%</div><div class="sl">Bounce Rate</div></div>
+  <div class="sc"><div class="sv">${fmtD(avgDur)}</div><div class="sl">Avg Duration</div></div>
+  <div class="sc"><div class="sv">${fmt(gl.length)}</div><div class="sl">Conversions</div></div>
 </div>
-</body></html>`;
-
-  document.getElementById('email-preview').textContent=_reportHtml.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,1200)+'...';
+<h2>Top Pages</h2>
+<table><tr><th>Page</th><th>Views</th></tr>${tp.map(([p,c])=>`<tr><td>${p}</td><td class="n">${fmt(c)}</td></tr>`).join('')}</table>
+<h2>Top Referrers</h2>
+<table><tr><th>Source</th><th>Visits</th></tr>${tr.map(([r,c])=>`<tr><td>${r}</td><td class="n">${fmt(c)}</td></tr>`).join('')}</table>
+<h2>Countries</h2>
+<table><tr><th>Country</th><th>Views</th></tr>${tc.map(([c,n])=>`<tr><td>${c}</td><td class="n">${fmt(n)}</td></tr>`).join('')}</table>
+</div>
+<div class="f">Kulan Analytics &mdash; <a href="https://mmohamud.me">mmohamud.me</a></div>
+</div></body></html>`;
+  document.getElementById('email-preview').textContent=_rHtml.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,1400)+'...';
   document.getElementById('email-modal').style.display='flex';
 }
+function closeEmailModal(){document.getElementById('email-modal').style.display='none';}
+function copyReport(){navigator.clipboard.writeText(_rHtml).then(()=>alert('HTML copied!'));}
+function downloadReport(){const a=document.createElement('a');a.href='data:text/html;charset=utf-8,'+encodeURIComponent(_rHtml);a.download='kulan-analytics-report-'+new Date().toISOString().slice(0,10)+'.html';a.click();}
 
-function closeModal()  { document.getElementById('email-modal').style.display='none'; }
-function copyReport()  { navigator.clipboard.writeText(_reportHtml).then(()=>alert('HTML copied to clipboard!')); }
-function downloadReport() {
-  const a=document.createElement('a');
-  a.href='data:text/html;charset=utf-8,'+encodeURIComponent(_reportHtml);
-  a.download='kulan-analytics-report-'+new Date().toISOString().slice(0,10)+'.html';
-  a.click();
-}
-
-/* ── Live users ──────────────────────────────────────────────────────────────── */
-async function updateLive() {
-  try {
+/* ── Live ─────────────────────────────────────────────────────────── */
+async function updateLive(){
+  try{
     const since=new Date(Date.now()-5*60000).toISOString();
     let q=sb.from('analytics_events').select('visitor_id').gte('created_at',since);
-    if(state.siteId) q=q.eq('site_id',state.siteId);
-    const {data}=await q;
-    if(data) document.getElementById('live-count').textContent=new Set(data.map(r=>r.visitor_id)).size;
-  } catch(_){}
+    if(state.siteId)q=q.eq('site_id',state.siteId);
+    const{data}=await q;
+    if(data)document.getElementById('live-count').textContent=new Set(data.map(r=>r.visitor_id)).size;
+  }catch(_){}
 }
-function startLivePoll() { updateLive(); setInterval(updateLive,30000); }
+function startLivePoll(){updateLive();setInterval(updateLive,30000);}
 </script>
 </body>
 </html>
