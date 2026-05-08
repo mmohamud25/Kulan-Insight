@@ -129,6 +129,31 @@ main{padding:16px;max-width:1400px;margin:0 auto}
 .kpi-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:5px}
 .kpi-value{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--text);line-height:1}
 .kpi-sub{font-size:10px;color:var(--text3);margin-top:3px}
+.kpi-change{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;margin-top:4px;display:inline-block}
+.kpi-change.up{background:rgba(16,185,129,.15);color:#10B981}
+.kpi-change.down{background:rgba(239,68,68,.12);color:#EF4444}
+.kpi-change.flat{background:rgba(74,96,128,.15);color:var(--text3)}
+.channel-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.visitor-row{display:flex;align-items:center;gap:10px;padding:8px 16px;border-bottom:1px solid rgba(13,148,136,.07);cursor:pointer;transition:background .15s}
+.visitor-row:hover{background:rgba(13,148,136,.06)}
+.visitor-id{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--teal);flex-shrink:0}
+.visitor-meta{font-size:11px;color:var(--text2);flex:1}
+.visitor-count{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--text2);flex-shrink:0}
+.timeline-event{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(13,148,136,.06)}
+.tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.tl-type{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--text2)}
+.tl-page{font-size:12px;color:var(--text)}
+.tl-time{font-size:10px;color:var(--text3);flex-shrink:0;font-family:"JetBrains Mono",monospace}
+.alert-rule{background:var(--card2);border-radius:8px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.alert-rule-name{font-size:13px;font-weight:600;flex:1}
+.alert-rule-desc{font-size:11px;color:var(--text2)}
+.alert-active{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.alert-active.on{background:var(--green);box-shadow:0 0 6px var(--green)}
+.alert-active.off{background:var(--text3)}
+.settings-section{margin-bottom:20px}
+.settings-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.share-token{font-family:"JetBrains Mono",monospace;font-size:11px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 14px;word-break:break-all;color:var(--teal)}
+.engagement-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;background:rgba(59,130,246,.15);color:#3B82F6}
 .kpi-card.teal .kpi-value{color:var(--teal)}
 .kpi-card.amber .kpi-value{color:var(--amber)}
 .kpi-card.green .kpi-value{color:var(--green)}
@@ -228,6 +253,43 @@ main{padding:16px;max-width:1400px;margin:0 auto}
 .comp-table .num{font-family:'JetBrains Mono',monospace;color:var(--teal)}
 .site-pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600;background:var(--teal-dim);color:var(--teal)}
 
+/* PERIOD COMPARISON */
+.kpi-change{font-size:11px;font-weight:700;margin-top:4px;display:flex;align-items:center;gap:3px}
+.kpi-change.up{color:var(--green)}.kpi-change.down{color:var(--red)}.kpi-change.neutral{color:var(--text3)}
+/* VISITOR EXPLORER */
+.visitor-event{display:flex;gap:10px;padding:8px 14px;border-bottom:1px solid rgba(13,148,136,.07);font-size:12px;transition:background .15s}
+.visitor-event:hover{background:rgba(13,148,136,.05)}
+.ve-type{font-size:10px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:4px;flex-shrink:0}
+.ve-type.pageview{background:var(--teal-dim);color:var(--teal)}
+.ve-type.click{background:rgba(59,130,246,.15);color:#3B82F6}
+.ve-type.goal{background:rgba(139,92,246,.15);color:var(--purple)}
+.ve-type.scroll{background:rgba(16,185,129,.15);color:var(--green)}
+.ve-type.purchase{background:rgba(217,119,6,.15);color:var(--amber)}
+.ve-url{flex:1;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ve-time{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--text3);flex-shrink:0}
+/* ALERTS */
+.alert-rule{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.alert-rule-name{font-size:13px;font-weight:700;min-width:140px}
+.alert-rule-desc{flex:1;font-size:12px;color:var(--text2)}
+.alert-rule-status{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px}
+.alert-rule-status.enabled{background:rgba(16,185,129,.15);color:var(--green)}
+.alert-rule-status.disabled{background:rgba(74,96,128,.2);color:var(--text3)}
+.alert-fired{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3)}
+/* CHANNEL */
+.channel-pill{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.ch-organic{background:rgba(16,185,129,.15);color:var(--green)}
+.ch-direct{background:rgba(13,148,136,.15);color:var(--teal)}
+.ch-social{background:rgba(139,92,246,.15);color:var(--purple)}
+.ch-paid{background:rgba(239,68,68,.15);color:var(--red)}
+.ch-email{background:rgba(217,119,6,.15);color:var(--amber)}
+.ch-referral{background:rgba(59,130,246,.15);color:#3B82F6}
+.ch-campaign{background:rgba(249,115,22,.15);color:var(--orange)}
+/* FORM ANALYTICS */
+.field-row{display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid rgba(13,148,136,.07)}
+.field-name{font-size:12px;font-weight:600;min-width:140px}
+.field-bar-wrap{flex:1;height:6px;background:var(--bg2);border-radius:3px}
+.field-bar-fill{height:100%;border-radius:3px;transition:width .5s}
+.field-stat{font-family:"JetBrains Mono",monospace;font-size:11px;min-width:50px;text-align:right}
 /* MAP */
 #visitor-map{height:460px;border-radius:var(--radius);border:1px solid var(--border);z-index:1;background:#0B1A2E}
 .leaflet-container{background:#0B1A2E!important;font-family:'Syne',sans-serif}
@@ -303,6 +365,39 @@ footer a{color:var(--teal);text-decoration:none}
   </div>
 </div>
 
+
+<!-- ALERT MODAL -->
+<div id="alert-modal" style="display:none">
+  <div class="modal-backdrop" onclick="if(event.target===this)closeAlertModal()">
+    <div class="modal">
+      <div class="modal-title">New Alert Rule <button class="modal-close" onclick="closeAlertModal()">&#x2715;</button></div>
+      <label>Alert Name</label>
+      <input type="text" id="al-name" placeholder="e.g. Traffic Drop Alert">
+      <label>Metric</label>
+      <select id="al-metric">
+        <option value="pageviews">Page Views</option>
+        <option value="visitors">Unique Visitors</option>
+        <option value="goals">Goal Conversions</option>
+        <option value="bounce_rate">Bounce Rate</option>
+      </select>
+      <label>Condition</label>
+      <select id="al-condition">
+        <option value="above">Goes above</option>
+        <option value="below">Falls below</option>
+        <option value="change_pct">Changes by % (vs yesterday)</option>
+      </select>
+      <label>Threshold</label>
+      <input type="number" id="al-threshold" placeholder="e.g. 100 or 30 (for %)">
+      <label>Webhook URL (optional — Slack, Discord, etc.)</label>
+      <input type="url" id="al-webhook" placeholder="https://hooks.slack.com/...">
+      <div class="modal-actions">
+        <button class="btn-teal" onclick="saveAlertRule()">Save Rule</button>
+        <button class="btn-secondary" onclick="closeAlertModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- APP -->
 <div id="app">
   <header>
@@ -326,6 +421,7 @@ footer a{color:var(--teal);text-decoration:none}
       <button class="btn-ctrl" onclick="loadData()">&#x21BB; Refresh</button>
       <button class="btn-ctrl" onclick="exportCSV()">&#x2193; CSV</button>
       <button class="btn-ctrl" onclick="openEmailReport()">&#x2709; Report</button>
+      <button class="btn-ctrl" onclick="copyShareLink()">&#x1F517; Share</button>
       <div class="live-badge"><div class="live-dot"></div><span id="live-count">0</span> live</div>
     </div>
   </header>
@@ -346,18 +442,47 @@ footer a{color:var(--teal);text-decoration:none}
     <button class="tab-btn"        data-tab="search"     onclick="switchTab('search')">Search</button>
     <button class="tab-btn"        data-tab="funnel"     onclick="switchTab('funnel')">Funnel</button>
     <button class="tab-btn"        data-tab="cohort"     onclick="switchTab('cohort')">Cohort</button>
+    <button class="tab-btn"        data-tab="channels"   onclick="switchTab('channels')">Channels</button>
+    <button class="tab-btn"        data-tab="landing"    onclick="switchTab('landing')">Landing Pages</button>
+    <button class="tab-btn"        data-tab="visitors"   onclick="switchTab('visitors')">Visitor Explorer</button>
+    <button class="tab-btn"        data-tab="forms"      onclick="switchTab('forms')">Forms</button>
+    <button class="tab-btn"        data-tab="ecommerce"  onclick="switchTab('ecommerce')">Ecommerce</button>
+    <button class="tab-btn"        data-tab="alertsctr"  onclick="switchTab('alertsctr')">Alerts</button>
+    <button class="tab-btn"        data-tab="channels"   onclick="switchTab('channels')">Channels</button>
+    <button class="tab-btn"        data-tab="visitors"   onclick="switchTab('visitors')">Visitors</button>
+    <button class="tab-btn"        data-tab="landing"    onclick="switchTab('landing')">Landing Pages</button>
+    <button class="tab-btn"        data-tab="alerts"     onclick="switchTab('alerts')">Alerts</button>
+    <button class="tab-btn"        data-tab="settings"   onclick="switchTab('settings')">Settings</button>
   </nav>
 
   <!-- OVERVIEW -->
   <div id="tab-overview" class="tab-panel active">
     <main>
       <div class="kpi-grid">
-        <div class="kpi-card teal"><div class="kpi-label">Page Views</div><div class="kpi-value" id="kpi-pv">—</div><div class="kpi-sub" id="kpi-pv-sub">loading...</div></div>
-        <div class="kpi-card"><div class="kpi-label">Unique Visitors</div><div class="kpi-value" id="kpi-vis">—</div><div class="kpi-sub">distinct IDs</div></div>
-        <div class="kpi-card"><div class="kpi-label">Sessions</div><div class="kpi-value" id="kpi-sess">—</div><div class="kpi-sub">distinct sessions</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Bounce Rate</div><div class="kpi-value" id="kpi-bounce">—</div><div class="kpi-sub">1-page sessions</div></div>
-        <div class="kpi-card green"><div class="kpi-label">Avg Duration</div><div class="kpi-value" id="kpi-dur">—</div><div class="kpi-sub">per session</div></div>
-        <div class="kpi-card purple"><div class="kpi-label">Conversions</div><div class="kpi-value" id="kpi-goals">—</div><div class="kpi-sub">goal events</div></div>
+        <div class="kpi-card teal"><div class="kpi-label">Page Views</div><div class="kpi-value" id="kpi-pv">—</div><div id="kpi-pv-chg"></div><div class="kpi-sub" id="kpi-pv-sub">loading...</div></div>
+        <div class="kpi-card"><div class="kpi-label">Unique Visitors</div><div class="kpi-value" id="kpi-vis">—</div><div id="kpi-vis-chg"></div><div class="kpi-sub">distinct IDs</div></div>
+        <div class="kpi-card"><div class="kpi-label">Sessions</div><div class="kpi-value" id="kpi-sess">—</div><div id="kpi-sess-chg"></div><div class="kpi-sub">distinct sessions</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Bounce Rate</div><div class="kpi-value" id="kpi-bounce">—</div><div id="kpi-bounce-chg"></div><div class="kpi-sub">1-page sessions</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Avg Duration</div><div class="kpi-value" id="kpi-dur">—</div><div id="kpi-dur-chg"></div><div class="kpi-sub">per session</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">Conversions</div><div class="kpi-value" id="kpi-goals">—</div><div id="kpi-goals-chg"></div><div class="kpi-sub">goal events</div></div>
+      </div>
+
+      <!-- DAU/MAU row -->
+      <div class="g11" style="margin-bottom:12px">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">DAU / MAU Stickiness</div>
+            <div id="dau-mau-badge" class="chart-badge">—</div>
+          </div>
+          <div style="height:160px"><canvas id="chart-dau-mau"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div class="chart-title">Engagement Rate</div>
+            <div id="eng-badge" class="chart-badge">—</div>
+          </div>
+          <div style="height:160px"><canvas id="chart-engagement"></canvas></div>
+        </div>
       </div>
 
       <div class="g21">
@@ -751,7 +876,376 @@ footer a{color:var(--teal);text-decoration:none}
     </main>
   </div>
 
-  <footer>Kulan Analytics v3 &mdash; <a href="https://mmohamud.me" target="_blank">mmohamud.me</a></footer>
+
+  <!-- CHANNELS TAB -->
+  <div id="tab-channels" class="tab-panel">
+    <main>
+      <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:14px">
+        <div class="kpi-card teal"><div class="kpi-label">Organic Search</div><div class="kpi-value" id="ch-organic">—</div></div>
+        <div class="kpi-card"><div class="kpi-label">Direct</div><div class="kpi-value" id="ch-direct">—</div></div>
+        <div class="kpi-card"><div class="kpi-label">Referral</div><div class="kpi-value" id="ch-referral">—</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Social</div><div class="kpi-value" id="ch-social">—</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">Email / Paid</div><div class="kpi-value" id="ch-other">—</div></div>
+      </div>
+      <div class="g11">
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Channel Distribution</div></div><div style="height:240px"><canvas id="chart-channels-pie"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Channel Trend Over Time</div></div><div style="height:240px"><canvas id="chart-channels-trend"></canvas></div></div>
+      </div>
+      <div class="g11" style="margin-bottom:16px">
+        <div class="table-card"><div class="table-head">Channel Performance</div><div class="table-body" id="table-channel-perf"></div></div>
+        <div class="table-card"><div class="table-head">Top Referral Domains</div><div class="table-body" id="table-channel-refs"></div></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- VISITOR EXPLORER TAB -->
+  <div id="tab-visitors" class="tab-panel">
+    <main>
+      <div class="chart-card" style="margin-bottom:14px">
+        <div class="chart-header">
+          <div class="chart-title">Visitor Explorer</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="visitor-search" type="text" placeholder="Search visitor ID..." oninput="filterVisitors()"
+              style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 12px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;width:240px">
+            <div class="chart-badge" id="visitors-count">0 visitors</div>
+          </div>
+        </div>
+        <div id="visitors-list" style="max-height:400px;overflow-y:auto"></div>
+      </div>
+      <!-- Visitor Timeline (shown when visitor selected) -->
+      <div id="visitor-timeline-wrap" style="display:none">
+        <div class="chart-card" style="margin-bottom:14px">
+          <div class="chart-header">
+            <div class="chart-title">Session Timeline</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <div class="chart-badge" id="tl-visitor-id"></div>
+              <button class="btn-secondary" style="font-size:11px;padding:4px 10px" onclick="closeTimeline()">&#x2715; Close</button>
+            </div>
+          </div>
+          <div class="g3" style="margin-bottom:12px">
+            <div class="kpi-card" style="padding:10px 14px"><div class="kpi-label">Page Views</div><div class="kpi-value" style="font-size:18px" id="tl-pv">—</div></div>
+            <div class="kpi-card" style="padding:10px 14px"><div class="kpi-label">Sessions</div><div class="kpi-value" style="font-size:18px" id="tl-sess">—</div></div>
+            <div class="kpi-card" style="padding:10px 14px"><div class="kpi-label">Goals</div><div class="kpi-value" style="font-size:18px" id="tl-goals">—</div></div>
+          </div>
+          <div id="visitor-timeline" style="max-height:380px;overflow-y:auto;padding:0 4px"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- LANDING PAGES TAB -->
+  <div id="tab-landing" class="tab-panel">
+    <main>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+        <div class="kpi-card teal"><div class="kpi-label">Landing Pages</div><div class="kpi-value" id="lp-count">—</div></div>
+        <div class="kpi-card"><div class="kpi-label">Avg Bounce Rate</div><div class="kpi-value" id="lp-bounce">—</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Best Converter</div><div class="kpi-value" id="lp-best" style="font-size:12px">—</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Highest Bounce</div><div class="kpi-value" id="lp-worst" style="font-size:12px">—</div></div>
+      </div>
+      <div class="chart-card" style="margin-bottom:14px;overflow-x:auto">
+        <div class="chart-header"><div class="chart-title">Landing Page Performance</div></div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px" id="landing-table">
+          <thead><tr>
+            <th style="padding:9px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">Page</th>
+            <th style="padding:9px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">Entrances</th>
+            <th style="padding:9px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">Bounce Rate</th>
+            <th style="padding:9px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">Avg Duration</th>
+            <th style="padding:9px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">Goals</th>
+            <th style="padding:9px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">CVR</th>
+          </tr></thead>
+          <tbody id="landing-tbody"><tr><td colspan="6" class="empty">Loading...</td></tr></tbody>
+        </table>
+      </div>
+      <div class="g11" style="margin-bottom:16px">
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Entrances by Page</div></div><div style="height:220px"><canvas id="chart-lp-entries"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Bounce Rate by Page</div></div><div style="height:220px"><canvas id="chart-lp-bounce"></canvas></div></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ALERTS TAB -->
+  <div id="tab-alerts" class="tab-panel">
+    <main>
+      <div class="chart-card" style="margin-bottom:14px">
+        <div class="chart-header">
+          <div class="chart-title">Alert Rules</div>
+          <button class="btn-teal" style="font-size:12px;padding:6px 14px" onclick="openAlertModal()">+ New Alert</button>
+        </div>
+        <div id="alert-rules-list"><div class="empty">No alert rules yet. Create one to get notified of traffic changes.</div></div>
+      </div>
+      <div class="chart-card" style="margin-bottom:16px">
+        <div class="chart-header"><div class="chart-title">Alert History (This Session)</div></div>
+        <div id="alert-history"><div class="empty">No alerts triggered yet.</div></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- SETTINGS TAB -->
+  <div id="tab-settings" class="tab-panel">
+    <main>
+      <!-- Goal Values -->
+      <div class="chart-card settings-section" style="margin-bottom:14px">
+        <div class="settings-title">Goal Monetary Values</div>
+        <p style="font-size:12px;color:var(--text2);margin-bottom:14px">Assign a dollar value to each goal to calculate estimated revenue.</p>
+        <div id="goal-values-list" style="margin-bottom:12px"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input id="gv-name" placeholder="Goal name" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;color:var(--text);font-family:'Syne',sans-serif;font-size:12px;outline:none;width:180px">
+          <input id="gv-value" type="number" placeholder="Value ($)" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;width:120px">
+          <button class="btn-teal" style="font-size:12px;padding:8px 16px" onclick="saveGoalValue()">Save</button>
+        </div>
+      </div>
+
+      <!-- Bot Filters -->
+      <div class="chart-card settings-section" style="margin-bottom:14px">
+        <div class="settings-title">Bot & Spam Filters</div>
+        <p style="font-size:12px;color:var(--text2);margin-bottom:14px">Block known bot IPs, user agents, or referrer domains from appearing in your data.</p>
+        <div id="bot-filters-list" style="margin-bottom:12px"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <select id="bf-type" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Syne',sans-serif;font-size:12px;padding:8px 10px;outline:none">
+            <option value="ip">IP Address</option>
+            <option value="ua">User Agent</option>
+            <option value="referrer">Referrer</option>
+          </select>
+          <input id="bf-pattern" placeholder="e.g. 123.456.789 or Googlebot" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;flex:1;min-width:180px">
+          <button class="btn-teal" style="font-size:12px;padding:8px 16px" onclick="saveBotFilter()">Add Filter</button>
+        </div>
+      </div>
+
+      <!-- Share Link -->
+      <div class="chart-card settings-section" style="margin-bottom:14px">
+        <div class="settings-title">Public Share Link</div>
+        <p style="font-size:12px;color:var(--text2);margin-bottom:14px">Generate a read-only link you can share with clients or collaborators.</p>
+        <div id="share-tokens-list" style="margin-bottom:12px"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input id="share-label" placeholder="Label (e.g. Client Report)" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;color:var(--text);font-family:'Syne',sans-serif;font-size:12px;outline:none;width:200px">
+          <button class="btn-teal" style="font-size:12px;padding:8px 16px" onclick="generateShareLink()">Generate Link</button>
+        </div>
+      </div>
+
+      <!-- API Reference -->
+      <div class="chart-card settings-section" style="margin-bottom:16px">
+        <div class="settings-title">REST API Access</div>
+        <p style="font-size:12px;color:var(--text2);margin-bottom:14px">Query your analytics data directly via the Supabase REST API.</p>
+        <pre style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;font-size:11px;color:var(--text2);font-family:'JetBrains Mono',monospace;overflow-x:auto;white-space:pre-wrap">// Fetch last 30 days of pageviews
+fetch("https://xkadqvmqxdyqoddiypet.supabase.co/rest/v1/analytics_events?event_type=eq.pageview&created_at=gte.2025-01-01&limit=1000", {
+  headers: {
+    "apikey": "YOUR_ANON_KEY",
+    "Authorization": "Bearer YOUR_ANON_KEY"
+  }
+})
+
+// Filter by site
+?site_id=eq.Portfolio&event_type=eq.pageview
+
+// Count pageviews
+?select=count&event_type=eq.pageview
+
+// Supabase Docs: https://supabase.com/docs/guides/api</pre>
+      </div>
+    </main>
+  </div>
+
+
+  <!-- CHANNELS TAB -->
+  <div id="tab-channels" class="tab-panel">
+    <main>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+        <div class="kpi-card teal"><div class="kpi-label">Organic Search</div><div class="kpi-value" id="ch-organic">—</div><div class="kpi-sub">search engines</div></div>
+        <div class="kpi-card"><div class="kpi-label">Direct</div><div class="kpi-value" id="ch-direct">—</div><div class="kpi-sub">typed / bookmarked</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Social</div><div class="kpi-value" id="ch-social">—</div><div class="kpi-sub">social platforms</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">Referral</div><div class="kpi-value" id="ch-referral">—</div><div class="kpi-sub">other sites</div></div>
+      </div>
+      <div class="g21">
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Traffic by Channel Over Time</div></div><div style="height:220px"><canvas id="chart-ch-tl"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Channel Distribution</div></div><div style="height:220px"><canvas id="chart-ch-dist"></canvas></div></div>
+      </div>
+      <div class="table-card" style="margin-bottom:16px">
+        <div class="table-head">Channel Performance</div>
+        <div class="table-body" id="table-channels"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- LANDING PAGES TAB -->
+  <div id="tab-landing" class="tab-panel">
+    <main>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+        <div class="kpi-card teal"><div class="kpi-label">Landing Pages</div><div class="kpi-value" id="lp-count">—</div><div class="kpi-sub">distinct entry pages</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Best Converting</div><div class="kpi-value" id="lp-best" style="font-size:12px">—</div><div class="kpi-sub">most goals</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Highest Bounce</div><div class="kpi-value" id="lp-bounce" style="font-size:12px">—</div><div class="kpi-sub">worst landing page</div></div>
+        <div class="kpi-card"><div class="kpi-label">Avg Bounce Rate</div><div class="kpi-value" id="lp-avg-bounce">—</div><div class="kpi-sub">across all landings</div></div>
+      </div>
+      <div class="chart-card" style="margin-bottom:14px">
+        <div class="chart-header"><div class="chart-title">Landing Page Performance</div><div class="chart-badge">bounce rate + conversions per page</div></div>
+        <div style="height:260px"><canvas id="chart-landing"></canvas></div>
+      </div>
+      <div class="chart-card" style="margin-bottom:16px;overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:12px" id="landing-table">
+          <thead><tr>
+            <th style="padding:9px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">Landing Page</th>
+            <th style="padding:9px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">Sessions</th>
+            <th style="padding:9px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">Bounce %</th>
+            <th style="padding:9px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">Goals</th>
+            <th style="padding:9px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">CVR</th>
+            <th style="padding:9px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">Avg Duration</th>
+          </tr></thead>
+          <tbody id="landing-tbody"><tr><td colspan="6" class="empty">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- VISITOR EXPLORER TAB -->
+  <div id="tab-visitors" class="tab-panel">
+    <main>
+      <div class="chart-card" style="margin-bottom:14px">
+        <div class="chart-header"><div class="chart-title">Visitor Explorer</div><div class="chart-badge">click any visitor to see full timeline</div></div>
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+          <input id="visitor-search" type="text" placeholder="Search visitor ID or enter one directly..."
+            style="flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 14px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none">
+          <button class="btn-teal" onclick="loadVisitorProfile()">View Profile</button>
+        </div>
+        <div class="table-body" id="visitor-list" style="max-height:280px;overflow-y:auto"></div>
+      </div>
+      <div id="visitor-profile" style="display:none">
+        <div class="chart-card" style="margin-bottom:14px">
+          <div class="chart-header">
+            <div class="chart-title">Visitor Profile</div>
+            <div id="visitor-profile-meta" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2)"></div>
+          </div>
+          <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:14px">
+            <div class="kpi-card"><div class="kpi-label">Sessions</div><div class="kpi-value" id="vp-sessions">—</div></div>
+            <div class="kpi-card teal"><div class="kpi-label">Page Views</div><div class="kpi-value" id="vp-pv">—</div></div>
+            <div class="kpi-card purple"><div class="kpi-label">Goals</div><div class="kpi-value" id="vp-goals">—</div></div>
+            <div class="kpi-card green"><div class="kpi-label">Total Time</div><div class="kpi-value" id="vp-time">—</div></div>
+            <div class="kpi-card amber"><div class="kpi-label">First Seen</div><div class="kpi-value" id="vp-first" style="font-size:12px">—</div></div>
+          </div>
+          <div id="visitor-timeline" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:8px"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- FORM ANALYTICS TAB -->
+  <div id="tab-forms" class="tab-panel">
+    <main>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+        <div class="kpi-card teal"><div class="kpi-label">Form Interactions</div><div class="kpi-value" id="form-total">—</div><div class="kpi-sub">field events</div></div>
+        <div class="kpi-card"><div class="kpi-label">Forms Tracked</div><div class="kpi-value" id="form-count">—</div><div class="kpi-sub">distinct forms</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Most Skipped</div><div class="kpi-value" id="form-skipped" style="font-size:12px">—</div><div class="kpi-sub">highest abandon field</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Avg Time/Field</div><div class="kpi-value" id="form-avg-time">—</div><div class="kpi-sub">seconds</div></div>
+      </div>
+      <div class="chart-card" style="margin-bottom:14px">
+        <div class="chart-header"><div class="chart-title">Select Form</div></div>
+        <select id="form-select" onchange="renderFormDetail()" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:Syne,sans-serif;font-size:12px;padding:7px 12px;outline:none;min-width:240px">
+          <option value="">All Forms</option>
+        </select>
+      </div>
+      <div class="chart-card" style="margin-bottom:14px">
+        <div class="chart-header"><div class="chart-title">Field Drop-off Analysis</div><div class="chart-badge" id="form-field-badge">—</div></div>
+        <div id="form-fields-viz"></div>
+      </div>
+      <div class="g11" style="margin-bottom:16px">
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Completion Rate by Field</div></div><div style="height:220px"><canvas id="chart-form-completion"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Avg Time per Field (seconds)</div></div><div style="height:220px"><canvas id="chart-form-time"></canvas></div></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ECOMMERCE TAB -->
+  <div id="tab-ecommerce" class="tab-panel">
+    <main>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+        <div class="kpi-card teal"><div class="kpi-label">Total Revenue</div><div class="kpi-value" id="ec-revenue">—</div><div class="kpi-sub">USD</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Transactions</div><div class="kpi-value" id="ec-txns">—</div><div class="kpi-sub">purchases</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Avg Order Value</div><div class="kpi-value" id="ec-aov">—</div><div class="kpi-sub">per transaction</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">Top Product</div><div class="kpi-value" id="ec-top" style="font-size:12px">—</div><div class="kpi-sub">most purchased</div></div>
+      </div>
+      <div class="g21">
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Revenue Over Time</div></div><div style="height:220px"><canvas id="chart-ec-tl"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Revenue by Product</div></div><div style="height:220px"><canvas id="chart-ec-products"></canvas></div></div>
+      </div>
+      <div class="g11" style="margin-bottom:16px">
+        <div class="table-card">
+          <div class="table-head">Goal Monetary Values</div>
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:8px">
+            <input id="gv-goal" placeholder="Goal name" style="flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none">
+            <input id="gv-value" type="number" placeholder="$0.00" style="width:90px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none">
+            <button class="btn-teal" onclick="saveGoalValue()" style="font-size:12px;padding:7px 14px">Save</button>
+          </div>
+          <div class="table-body" id="table-goal-values"><div class="empty">No goal values set yet</div></div>
+        </div>
+        <div class="table-card">
+          <div class="table-head">All Transactions</div>
+          <div class="table-body" id="table-transactions"><div class="empty">No purchase events yet</div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ALERTS CENTER TAB -->
+  <div id="tab-alertsctr" class="tab-panel">
+    <main>
+      <div class="chart-card" style="margin-bottom:14px">
+        <div class="chart-header">
+          <div class="chart-title">Alert Rules</div>
+          <button class="btn-teal" onclick="openAlertModal()" style="font-size:12px;padding:6px 14px">+ New Alert</button>
+        </div>
+        <div id="alert-rules-list"><div class="empty">No alert rules yet. Create one to get notified of traffic changes.</div></div>
+      </div>
+      <div class="chart-card" style="margin-bottom:14px">
+        <div class="chart-header"><div class="chart-title">Alert History</div><div class="chart-badge" id="alert-history-badge">—</div></div>
+        <div id="alert-history"><div class="empty">No alerts have fired yet</div></div>
+      </div>
+      <!-- Bot Filter Settings -->
+      <div class="chart-card" style="margin-bottom:16px">
+        <div class="chart-header"><div class="chart-title">Bot &amp; Spam Filtering</div></div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:14px">Tracker v4 automatically excludes known bots. Known bot patterns are filtered before any data is sent.</div>
+        <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="kpi-card"><div class="kpi-label">Bot Events Blocked</div><div class="kpi-value" id="bot-blocked">0</div><div class="kpi-sub">client-side filtered</div></div>
+          <div class="kpi-card teal"><div class="kpi-label">Human Sessions</div><div class="kpi-value" id="bot-human">—</div><div class="kpi-sub">is_bot = false</div></div>
+          <div class="kpi-card amber"><div class="kpi-label">Flagged Sessions</div><div class="kpi-value" id="bot-flagged">—</div><div class="kpi-sub">is_bot = true</div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ALERT MODAL -->
+  <div id="alert-modal" style="display:none">
+    <div class="modal-backdrop" onclick="if(event.target===this)closeAlertModal()">
+      <div class="modal">
+        <div class="modal-title">New Alert Rule <button class="modal-close" onclick="closeAlertModal()">&#x2715;</button></div>
+        <label>Alert Name</label>
+        <input type="text" id="al-name" placeholder="e.g. Traffic Drop Alert">
+        <label>Metric</label>
+        <select id="al-metric">
+          <option value="pageviews">Page Views</option>
+          <option value="sessions">Sessions</option>
+          <option value="goals">Goal Conversions</option>
+          <option value="revenue">Revenue</option>
+        </select>
+        <label>Condition</label>
+        <select id="al-condition">
+          <option value="above">Goes above</option>
+          <option value="below">Falls below</option>
+          <option value="change_pct_up">Increases by % vs previous period</option>
+          <option value="change_pct_down">Decreases by % vs previous period</option>
+        </select>
+        <label>Threshold</label>
+        <input type="number" id="al-threshold" placeholder="e.g. 100">
+        <label>Site (optional)</label>
+        <input type="text" id="al-site" placeholder="all">
+        <label>Webhook URL (optional)</label>
+        <input type="text" id="al-webhook" placeholder="https://hooks.slack.com/...">
+        <div class="modal-actions">
+          <button class="btn-teal" onclick="saveAlertRule()">Save Rule</button>
+          <button class="btn-secondary" onclick="closeAlertModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>Kulan Analytics v4 &mdash; <a href="https://mmohamud.me" target="_blank">mmohamud.me</a></footer>
 </div>
 
 <script>
@@ -768,7 +1262,7 @@ const CFG = {
 let sb, rtChannel;
 const charts = {};
 const state = {
-  events: [], annotations: [], days: 30,
+  events: [], annotations: [], prevEvents: [], days: 30,
   startDate: '', endDate: '', siteId: '',
   tab: 'overview', rtPaused: false, rtCount: 0,
 };
@@ -845,10 +1339,7 @@ document.addEventListener('DOMContentLoaded', initApp);
 /* ── Tab ──────────────────────────────────────────────────────────── */
 function switchTab(tab){
   state.tab=tab;
-  const titles={overview:'Overview',status:'Status',realtime:'Realtime',flow:'Flow',
-    comparison:'Comparison',campaigns:'Campaigns',goals:'Goals',heatmap:'Heatmap',
-    snippet:'Snippet',audience:'Audience',geo:'Geographic',scroll:'Scroll Depth',
-    search:'Search',funnel:'Funnel Builder',cohort:'Cohort Analysis'};
+  const titles={overview:'Overview',status:'Status',realtime:'Realtime',flow:'Flow',comparison:'Comparison',campaigns:'Campaigns',goals:'Goals',heatmap:'Heatmap',snippet:'Snippet',audience:'Audience',geo:'Geographic',scroll:'Scroll Depth',search:'Search',funnel:'Funnel Builder',cohort:'Cohort',channels:'Channels',landing:'Landing Pages',visitors:'Visitor Explorer',forms:'Form Analytics',ecommerce:'Ecommerce',alertsctr:'Alerts Center'};
   document.title=(titles[tab]||tab)+' — Kulan Analytics';
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tab));
@@ -865,13 +1356,20 @@ function switchTab(tab){
   if(tab==='scroll')     renderScroll();
   if(tab==='search')     renderSearch();
   if(tab==='cohort')     renderCohort();
+  if(tab==='channels')   renderChannels();
+  if(tab==='visitors')   renderVisitorExplorer();
+  if(tab==='landing')    renderLandingPages();
+  if(tab==='alerts')     renderAlertRules();
+  if(tab==='settings')   renderSettings();
 }
 
 /* ── Init ─────────────────────────────────────────────────────────── */
 async function initApp(){
   sb=supabase.createClient(CFG.SUPABASE_URL,CFG.ANON_KEY);
   initDates();
+  applyShareToken();
   await loadSites();
+  await Promise.all([loadGoalValues(), loadAlertRules()]);
   await loadData();
   startLivePoll();
 }
@@ -905,7 +1403,9 @@ async function loadData(){
       state.annotations=anns||[];
     }catch(_){ state.annotations=[]; }
     renderOverview();
+    renderDAUMAU();
     checkAlerts();
+    loadPrevPeriod().then(applyPeriodComparison);
     if(state.tab==='status')     renderStatus();
     if(state.tab==='flow')       renderFlow();
     if(state.tab==='comparison') renderComparison();
@@ -2071,6 +2571,1100 @@ function renderCohort(){
       scales:{x:{grid:{display:false},ticks:{maxTicksLimit:10}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
   });
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   PERIOD-OVER-PERIOD COMPARISON
+   ══════════════════════════════════════════════════════════════════ */
+function pctChg(curr,prev){if(!prev)return null;return Math.round((curr-prev)/prev*100);}
+function chgBadge(pct,invert){
+  if(pct===null)return'';
+  const good=invert?(pct<0):(pct>0);
+  const cls=pct===0?'flat':good?'up':'down';
+  const arrow=pct>0?'▲':pct<0?'▼':'—';
+  return`<span class="kpi-change ${cls}">${arrow} ${Math.abs(pct)}% vs prev</span>`;
+}
+
+async function loadPrevPeriod(){
+  try{
+    const days=state.days;
+    const prevEnd=new Date(new Date(state.startDate||Date.now()-days*86400000).getTime()-1000).toISOString();
+    const prevStart=new Date(new Date(prevEnd).getTime()-days*86400000).toISOString();
+    let q=sb.from('analytics_events').select('event_type,visitor_id,session_id,duration')
+      .gte('created_at',prevStart).lte('created_at',prevEnd).limit(50000);
+    if(state.siteId)q=q.eq('site_id',state.siteId);
+    const{data}=await q;
+    state.prevEvents=data||[];
+  }catch(_){state.prevEvents=[];}
+}
+
+function applyPeriodComparison(){
+  const ev=state.events,pev=state.prevEvents||[];
+  const pv=ev.filter(e=>e.event_type==='pageview').length;
+  const vis=new Set(ev.map(e=>e.visitor_id)).size;
+  const sess=new Set(ev.map(e=>e.session_id)).size;
+  const gl=ev.filter(e=>e.event_type==='goal').length;
+  const ppv=pev.filter(e=>e.event_type==='pageview').length;
+  const pvis=new Set(pev.map(e=>e.visitor_id)).size;
+  const psess=new Set(pev.map(e=>e.session_id)).size;
+  const pgl=pev.filter(e=>e.event_type==='goal').length;
+
+  // Bounce rates
+  const br=calcBounce(ev),pbr=calcBounce(pev);
+
+  document.getElementById('kpi-pv-chg').innerHTML=chgBadge(pctChg(pv,ppv));
+  document.getElementById('kpi-vis-chg').innerHTML=chgBadge(pctChg(vis,pvis));
+  document.getElementById('kpi-sess-chg').innerHTML=chgBadge(pctChg(sess,psess));
+  document.getElementById('kpi-goals-chg').innerHTML=chgBadge(pctChg(gl,pgl));
+  document.getElementById('kpi-bounce-chg').innerHTML=chgBadge(pctChg(br,pbr),true);
+}
+
+function calcBounce(ev){
+  const pvPS={};ev.filter(e=>e.event_type==='pageview').forEach(e=>{pvPS[e.session_id]=(pvPS[e.session_id]||0)+1;});
+  const sl=Object.values(pvPS);return sl.length?Math.round(sl.filter(c=>c===1).length/sl.length*100):0;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   DAU / MAU + ENGAGEMENT RATE
+   ══════════════════════════════════════════════════════════════════ */
+function renderDAUMAU(){
+  const ev=state.events;
+  const pv=ev.filter(e=>e.event_type==='pageview');
+
+  // DAU — unique visitors per day
+  const dauMap={};
+  pv.forEach(e=>{const d=e.created_at.slice(0,10);if(!dauMap[d])dauMap[d]=new Set();dauMap[d].add(e.visitor_id);});
+  const dauVals=Object.values(dauMap).map(s=>s.size);
+  const avgDAU=dauVals.length?Math.round(dauVals.reduce((a,b)=>a+b,0)/dauVals.length):0;
+
+  // MAU — unique visitors in last 30 days
+  const mauVis=new Set(pv.map(e=>e.visitor_id)).size;
+  const stickiness=mauVis?Math.round(avgDAU/mauVis*100):0;
+  document.getElementById('dau-mau-badge').textContent=`DAU ${avgDAU} / MAU ${mauVis} = ${stickiness}%`;
+
+  const{labels,values:dauLine}=groupByDay(pv,state.days,state.startDate,state.endDate);
+  const mauLine=labels.map((_,i)=>{
+    const windowStart=Math.max(0,i-29);
+    const windowDates=labels.slice(windowStart,i+1);
+    const uniq=new Set(pv.filter(e=>windowDates.includes(e.created_at.slice(0,10))).map(e=>e.visitor_id)).size;
+    return uniq;
+  });
+
+  kill('dau-mau');
+  charts['dau-mau']=new Chart(document.getElementById('chart-dau-mau'),{
+    type:'line',
+    data:{labels,datasets:[
+      {label:'DAU',data:dauLine,borderColor:'#0D9488',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:.3},
+      {label:'MAU (30d)',data:mauLine,borderColor:'#D97706',backgroundColor:'transparent',borderWidth:1.5,borderDash:[4,3],pointRadius:0,tension:.3},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{usePointStyle:true,padding:12,boxWidth:8}}},
+      scales:{x:{...G,ticks:{maxTicksLimit:10}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
+  });
+
+  // Engagement rate: sessions with 2+ pages OR 10s+ OR a goal
+  const sessMap={};
+  ev.forEach(e=>{if(!sessMap[e.session_id])sessMap[e.session_id]={pv:0,dur:0,goals:0};
+    if(e.event_type==='pageview')sessMap[e.session_id].pv++;
+    if(e.event_type==='session_end'&&e.duration)sessMap[e.session_id].dur=e.duration;
+    if(e.event_type==='goal')sessMap[e.session_id].goals++;
+  });
+  const sessions=Object.values(sessMap);
+  const engaged=sessions.filter(s=>s.pv>=2||s.dur>=10||s.goals>0).length;
+  const engRate=sessions.length?Math.round(engaged/sessions.length*100):0;
+  document.getElementById('eng-badge').textContent=engRate+'% engaged sessions';
+
+  // Engagement over time
+  const engByDay={};
+  ev.filter(e=>e.event_type==='pageview').forEach(e=>{
+    const d=e.created_at.slice(0,10);
+    if(!engByDay[d])engByDay[d]={total:new Set(),engaged:new Set()};
+    engByDay[d].total.add(e.session_id);
+  });
+  ev.filter(e=>e.event_type==='goal').forEach(e=>{
+    const d=e.created_at.slice(0,10);
+    if(engByDay[d])engByDay[d].engaged.add(e.session_id);
+  });
+  const engLine=labels.map(d=>engByDay[d]?Math.round(engByDay[d].engaged.size/Math.max(engByDay[d].total.size,1)*100):0);
+
+  kill('engagement');
+  charts['engagement']=new Chart(document.getElementById('chart-engagement'),{
+    type:'line',
+    data:{labels,datasets:[{label:'Engagement %',data:engLine,borderColor:'#3B82F6',backgroundColor:'rgba(59,130,246,.1)',borderWidth:2,pointRadius:0,fill:true,tension:.35}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{...G,ticks:{maxTicksLimit:10}},y:{...G,beginAtZero:true,max:100,ticks:{callback:v=>v+'%'}}}},
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   CHANNEL GROUPINGS
+   ══════════════════════════════════════════════════════════════════ */
+const SOCIAL_DOMAINS=['facebook.com','twitter.com','x.com','linkedin.com','instagram.com','tiktok.com','youtube.com','reddit.com','pinterest.com','snapchat.com','whatsapp.com'];
+const SEARCH_ENGINES=['google.com','bing.com','yahoo.com','duckduckgo.com','baidu.com','yandex.com','ecosia.org'];
+
+function classifyChannel(ref,utmMedium,utmSource){
+  if(utmMedium==='email'||utmSource==='email') return'Email';
+  if(['cpc','ppc','paid','paidsearch','paidsocial'].includes(utmMedium)) return'Paid';
+  if(utmMedium==='social'||SOCIAL_DOMAINS.some(d=>utmSource&&utmSource.includes(d))) return'Social';
+  if(utmSource||utmMedium) return'Campaign';
+  if(!ref) return'Direct';
+  try{
+    const host=new URL(ref).hostname.replace('www.','');
+    if(SEARCH_ENGINES.some(d=>host.includes(d))) return'Organic Search';
+    if(SOCIAL_DOMAINS.some(d=>host.includes(d))) return'Social';
+    return'Referral';
+  }catch{return'Direct';}
+}
+
+function renderChannels(){
+  const pv=state.events.filter(e=>e.event_type==='pageview');
+  const chMap={};
+  pv.forEach(e=>{
+    const ch=classifyChannel(e.referrer,e.utm_medium,e.utm_source);
+    chMap[ch]=(chMap[ch]||0)+1;
+  });
+
+  const channels=['Organic Search','Direct','Referral','Social','Email','Paid','Campaign'];
+  channels.forEach(ch=>{
+    const id={'Organic Search':'ch-organic','Direct':'ch-direct','Referral':'ch-referral','Social':'ch-social','Email':'ch-other','Paid':'ch-other','Campaign':'ch-other'}[ch];
+    if(id){const el=document.getElementById(id);if(el)el.textContent=fmt((chMap[ch]||0)+(parseInt(el.textContent)||0)||chMap[ch]||0);}
+  });
+  document.getElementById('ch-organic').textContent=fmt(chMap['Organic Search']||0);
+  document.getElementById('ch-direct').textContent=fmt(chMap['Direct']||0);
+  document.getElementById('ch-referral').textContent=fmt(chMap['Referral']||0);
+  document.getElementById('ch-social').textContent=fmt(chMap['Social']||0);
+  document.getElementById('ch-other').textContent=fmt((chMap['Email']||0)+(chMap['Paid']||0)+(chMap['Campaign']||0));
+
+  // Pie
+  const entries=Object.entries(chMap).sort((a,b)=>b[1]-a[1]);
+  kill('channels-pie');
+  charts['channels-pie']=new Chart(document.getElementById('chart-channels-pie'),{
+    type:'doughnut',
+    data:{labels:entries.map(e=>e[0]),datasets:[{data:entries.map(e=>e[1]),backgroundColor:COLORS,borderWidth:0,hoverOffset:5}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:12,boxWidth:8}}}},
+  });
+
+  // Trend over time per channel
+  const{labels}=groupByDay(pv,state.days,state.startDate,state.endDate);
+  const chByDay={};
+  pv.forEach(e=>{const d=e.created_at.slice(0,10);const ch=classifyChannel(e.referrer,e.utm_medium,e.utm_source);if(!chByDay[ch])chByDay[ch]={};chByDay[ch][d]=(chByDay[ch][d]||0)+1;});
+  kill('channels-trend');
+  charts['channels-trend']=new Chart(document.getElementById('chart-channels-trend'),{
+    type:'line',
+    data:{labels,datasets:Object.entries(chByDay).map(([ch,dm],i)=>({label:ch,data:labels.map(l=>dm[l]||0),borderColor:COLORS[i%COLORS.length],backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:.3}))},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{usePointStyle:true,padding:10,boxWidth:8}}},scales:{x:{...G,ticks:{maxTicksLimit:12}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
+  });
+
+  // Performance table
+  const totals=pv.length||1;
+  const tb=document.getElementById('table-channel-perf');
+  tb.innerHTML=entries.map(([ch,cnt])=>`<div class="table-row">
+    <div class="table-lbl">${ch}</div>
+    <div class="table-bar"><div class="table-bar-fill" style="width:${Math.round(cnt/totals*100)}%"></div></div>
+    <div class="table-cnt">${fmt(cnt)} (${Math.round(cnt/totals*100)}%)</div>
+  </div>`).join('');
+
+  // Referral domains
+  const refDoms=countBy(pv.filter(e=>classifyChannel(e.referrer,e.utm_medium,e.utm_source)==='Referral'),'referrer')
+    .map(([r,c])=>[fmtRef(r),c]).slice(0,8);
+  renderTable('table-channel-refs',refDoms);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   VISITOR EXPLORER
+   ══════════════════════════════════════════════════════════════════ */
+let _allVisitors=[];
+function renderVisitorExplorer(){
+  const ev=state.events;
+  const visMap={};
+  ev.forEach(e=>{
+    if(!e.visitor_id)return;
+    if(!visMap[e.visitor_id])visMap[e.visitor_id]={id:e.visitor_id,pv:0,goals:0,sessions:new Set(),last:e.created_at,country:e.country,device:e.device_type,browser:e.browser};
+    if(e.event_type==='pageview')visMap[e.visitor_id].pv++;
+    if(e.event_type==='goal')visMap[e.visitor_id].goals++;
+    visMap[e.visitor_id].sessions.add(e.session_id);
+    if(e.created_at>visMap[e.visitor_id].last)visMap[e.visitor_id].last=e.created_at;
+  });
+  _allVisitors=Object.values(visMap).sort((a,b)=>b.last>a.last?1:-1);
+  document.getElementById('visitors-count').textContent=_allVisitors.length+' visitors';
+  renderVisitorList(_allVisitors);
+}
+
+function renderVisitorList(visitors){
+  const el=document.getElementById('visitors-list');
+  if(!visitors.length){el.innerHTML='<div class="empty">No visitor data</div>';return;}
+  el.innerHTML=visitors.slice(0,50).map(v=>`
+    <div class="visitor-row" onclick="openVisitorTimeline('${v.id}')">
+      <div class="visitor-id">${v.id.slice(0,12)}...</div>
+      <div class="visitor-meta">${v.country||'?'} &middot; ${v.device||'?'} &middot; ${v.browser||'?'} &middot; last: ${fmtAgo(v.last)}</div>
+      <div class="visitor-count">${v.pv} views &middot; ${v.sessions.size} sess &middot; ${v.goals} goals</div>
+      <div style="font-size:10px;color:var(--teal)">&#x276F;</div>
+    </div>`).join('');
+}
+
+function filterVisitors(){
+  const q=document.getElementById('visitor-search').value.toLowerCase();
+  renderVisitorList(q?_allVisitors.filter(v=>v.id.toLowerCase().includes(q)):_allVisitors);
+}
+
+function openVisitorTimeline(vid){
+  const ev=state.events.filter(e=>e.visitor_id===vid).sort((a,b)=>a.created_at<b.created_at?-1:1);
+  const pv=ev.filter(e=>e.event_type==='pageview').length;
+  const sess=new Set(ev.map(e=>e.session_id)).size;
+  const goals=ev.filter(e=>e.event_type==='goal').length;
+  document.getElementById('tl-visitor-id').textContent=vid.slice(0,16)+'...';
+  document.getElementById('tl-pv').textContent=pv;
+  document.getElementById('tl-sess').textContent=sess;
+  document.getElementById('tl-goals').textContent=goals;
+  const typeColors={pageview:'#0D9488',click:'#3B82F6',goal:'#8B5CF6',scroll:'#D97706',search:'#10B981',session_end:'#4A6080'};
+  document.getElementById('visitor-timeline').innerHTML=ev.map(e=>`
+    <div class="timeline-event">
+      <div class="tl-dot" style="background:${typeColors[e.event_type]||'#666'}"></div>
+      <div style="flex:1">
+        <div class="tl-type">${e.event_type}${e.goal_name?' — '+e.goal_name:''}</div>
+        <div class="tl-page">${fmtUrl(e.url||'')}</div>
+        ${e.country?`<div style="font-size:10px;color:var(--text3)">${e.country} &middot; ${e.device_type||''} &middot; ${e.browser||''}</div>`:''}
+      </div>
+      <div class="tl-time">${fmtAgo(e.created_at)}</div>
+    </div>`).join('');
+  document.getElementById('visitor-timeline-wrap').style.display='block';
+  document.getElementById('visitor-timeline-wrap').scrollIntoView({behavior:'smooth'});
+}
+
+function closeTimeline(){document.getElementById('visitor-timeline-wrap').style.display='none';}
+
+/* ══════════════════════════════════════════════════════════════════
+   LANDING PAGES REPORT
+   ══════════════════════════════════════════════════════════════════ */
+function renderLandingPages(){
+  const ev=state.events;
+  const pv=ev.filter(e=>e.event_type==='pageview');
+  const goals=ev.filter(e=>e.event_type==='goal');
+
+  // First page per session
+  const sessFirst={};
+  pv.sort((a,b)=>a.created_at<b.created_at?-1:1).forEach(e=>{
+    if(!sessFirst[e.session_id])sessFirst[e.session_id]=fmtUrl(e.url||'');
+  });
+
+  // Pages per session count
+  const pvPS={};
+  pv.forEach(e=>{pvPS[e.session_id]=(pvPS[e.session_id]||0)+1;});
+
+  // Goals per session
+  const gpS={};
+  goals.forEach(e=>{gpS[e.session_id]=(gpS[e.session_id]||0)+1;});
+
+  // Duration per session
+  const durPS={};
+  ev.filter(e=>e.event_type==='session_end'&&e.duration).forEach(e=>{durPS[e.session_id]=e.duration;});
+
+  // Aggregate per landing page
+  const lpMap={};
+  Object.entries(sessFirst).forEach(([sid,page])=>{
+    if(!lpMap[page])lpMap[page]={entrances:0,bounces:0,goals:0,durs:[]};
+    lpMap[page].entrances++;
+    if((pvPS[sid]||1)===1)lpMap[page].bounces++;
+    if(gpS[sid])lpMap[page].goals+=gpS[sid];
+    if(durPS[sid])lpMap[page].durs.push(durPS[sid]);
+  });
+
+  const lpData=Object.entries(lpMap).map(([page,d])=>({
+    page,entrances:d.entrances,
+    bounce:Math.round(d.bounces/d.entrances*100),
+    avgDur:d.durs.length?Math.round(d.durs.reduce((a,b)=>a+b,0)/d.durs.length):0,
+    goals:d.goals,
+    cvr:Math.round(d.goals/d.entrances*100),
+  })).sort((a,b)=>b.entrances-a.entrances);
+
+  document.getElementById('lp-count').textContent=fmt(lpData.length);
+  document.getElementById('lp-bounce').textContent=lpData.length?Math.round(lpData.reduce((s,d)=>s+d.bounce,0)/lpData.length)+'%':'—';
+  const byConv=[...lpData].sort((a,b)=>b.cvr-a.cvr);
+  document.getElementById('lp-best').textContent=byConv[0]?byConv[0].page.slice(0,20):'—';
+  const byBounce=[...lpData].sort((a,b)=>b.bounce-a.bounce);
+  document.getElementById('lp-worst').textContent=byBounce[0]?byBounce[0].page.slice(0,20):'—';
+
+  const tbody=document.getElementById('landing-tbody');
+  tbody.innerHTML=lpData.slice(0,20).map(d=>`<tr>
+    <td style="padding:8px 14px;border-bottom:1px solid rgba(13,148,136,.07);font-size:12px">${d.page}</td>
+    <td style="padding:8px 14px;border-bottom:1px solid rgba(13,148,136,.07);font-family:'JetBrains Mono',monospace;color:var(--teal)">${fmt(d.entrances)}</td>
+    <td style="padding:8px 14px;border-bottom:1px solid rgba(13,148,136,.07);font-family:'JetBrains Mono',monospace;color:${d.bounce>60?'var(--red)':d.bounce>40?'var(--amber)':'var(--green)'}">${d.bounce}%</td>
+    <td style="padding:8px 14px;border-bottom:1px solid rgba(13,148,136,.07);font-family:'JetBrains Mono',monospace">${fmtD(d.avgDur)}</td>
+    <td style="padding:8px 14px;border-bottom:1px solid rgba(13,148,136,.07);font-family:'JetBrains Mono',monospace">${fmt(d.goals)}</td>
+    <td style="padding:8px 14px;border-bottom:1px solid rgba(13,148,136,.07);font-family:'JetBrains Mono',monospace;color:var(--green)">${d.cvr}%</td>
+  </tr>`).join('');
+
+  const top8=lpData.slice(0,8);
+  kill('lp-entries');
+  charts['lp-entries']=new Chart(document.getElementById('chart-lp-entries'),{
+    type:'bar',data:{labels:top8.map(d=>d.page.length>22?d.page.slice(0,20)+'…':d.page),datasets:[{data:top8.map(d=>d.entrances),backgroundColor:'rgba(13,148,136,.7)',borderRadius:4,borderSkipped:false}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{...G,ticks:{precision:0}},y:{grid:{display:false}}}},
+  });
+  kill('lp-bounce');
+  charts['lp-bounce']=new Chart(document.getElementById('chart-lp-bounce'),{
+    type:'bar',data:{labels:top8.map(d=>d.page.length>22?d.page.slice(0,20)+'…':d.page),datasets:[{data:top8.map(d=>d.bounce),backgroundColor:top8.map(d=>d.bounce>60?'rgba(239,68,68,.7)':d.bounce>40?'rgba(217,119,6,.7)':'rgba(16,185,129,.7)'),borderRadius:4,borderSkipped:false}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{...G,min:0,max:100,ticks:{callback:v=>v+'%'}},y:{grid:{display:false}}}},
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ALERTS CENTER
+   ══════════════════════════════════════════════════════════════════ */
+const ALERT_HISTORY=[];
+
+function openAlertModal(){document.getElementById('alert-modal').style.display='flex';}
+function closeAlertModal(){document.getElementById('alert-modal').style.display='none';}
+
+async function saveAlertRule(){
+  const rule={name:document.getElementById('al-name').value.trim(),metric:document.getElementById('al-metric').value,condition:document.getElementById('al-condition').value,threshold:parseFloat(document.getElementById('al-threshold').value),webhook_url:document.getElementById('al-webhook').value.trim()||null,active:true};
+  if(!rule.name||!rule.threshold)return;
+  try{await sb.from('analytics_alert_rules').insert(rule);}catch(_){}
+  closeAlertModal();
+  renderAlertRules();
+}
+
+async function renderAlertRules(){
+  let rules=[];
+  try{const{data}=await sb.from('analytics_alert_rules').select('*').order('created_at',{ascending:false});rules=data||[];}catch(_){}
+  const el=document.getElementById('alert-rules-list');
+  if(!rules.length){el.innerHTML='<div class="empty">No alert rules yet.</div>';return;}
+  el.innerHTML=rules.map(r=>`
+    <div class="alert-rule">
+      <div class="alert-active ${r.active?'on':'off'}"></div>
+      <div style="flex:1">
+        <div class="alert-rule-name">${r.name}</div>
+        <div class="alert-rule-desc">${r.metric} ${r.condition} ${r.threshold}${r.condition==='change_pct'?'%':''}${r.webhook_url?' &middot; webhook set':''}</div>
+      </div>
+      <button onclick="deleteAlertRule('${r.id}')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px">&#x2715;</button>
+    </div>`).join('');
+
+  // Check rules against current data
+  checkAlertRules(rules);
+
+  // History
+  const hEl=document.getElementById('alert-history');
+  hEl.innerHTML=ALERT_HISTORY.length?ALERT_HISTORY.map(a=>`<div class="alert-rule"><div class="alert-active on"></div><div>${a}</div></div>`).join(''):'<div class="empty">No alerts triggered yet.</div>';
+}
+
+async function deleteAlertRule(id){
+  try{await sb.from('analytics_alert_rules').delete().eq('id',id);}catch(_){}
+  renderAlertRules();
+}
+
+function checkAlertRules(rules){
+  const ev=state.events;
+  const pv=ev.filter(e=>e.event_type==='pageview').length;
+  const vis=new Set(ev.map(e=>e.visitor_id)).size;
+  const goals=ev.filter(e=>e.event_type==='goal').length;
+  const bounce=calcBounce(ev);
+  const metricMap={pageviews:pv,visitors:vis,goals,bounce_rate:bounce};
+
+  rules.forEach(r=>{
+    if(!r.active)return;
+    const val=metricMap[r.metric];
+    let triggered=false;
+    if(r.condition==='above'&&val>r.threshold)triggered=true;
+    if(r.condition==='below'&&val<r.threshold)triggered=true;
+    if(triggered){
+      const msg=`${r.name}: ${r.metric} is ${val} (${r.condition} ${r.threshold})`;
+      if(!ALERT_HISTORY.includes(msg)){
+        ALERT_HISTORY.unshift(msg);
+        if(r.webhook_url){
+          fetch(r.webhook_url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:msg,metric:r.metric,value:val,threshold:r.threshold})}).catch(()=>{});
+        }
+      }
+    }
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SETTINGS — Goal Values, Bot Filters, Share Links
+   ══════════════════════════════════════════════════════════════════ */
+async function renderSettings(){
+  // Goal values
+  try{
+    const{data:gvs}=await sb.from('analytics_goal_values').select('*').order('created_at');
+    const el=document.getElementById('goal-values-list');
+    el.innerHTML=(gvs&&gvs.length)?gvs.map(g=>`<div class="alert-rule">
+      <div style="flex:1"><strong>${g.goal_name}</strong> <span style="color:var(--teal);font-family:'JetBrains Mono',monospace"> $${g.value} ${g.currency}</span></div>
+      <button onclick="deleteGoalValue('${g.id}')" style="background:none;border:none;color:var(--text3);cursor:pointer">&#x2715;</button>
+    </div>`).join(''):'<div class="empty" style="padding:10px 0">No goal values set yet.</div>';
+  }catch(_){}
+
+  // Bot filters
+  try{
+    const{data:bfs}=await sb.from('analytics_bot_filters').select('*').order('created_at');
+    const el=document.getElementById('bot-filters-list');
+    el.innerHTML=(bfs&&bfs.length)?bfs.map(f=>`<div class="alert-rule">
+      <div style="flex:1"><span style="color:var(--text3);font-size:10px;text-transform:uppercase">${f.type}</span> <strong style="font-family:'JetBrains Mono',monospace;font-size:12px;margin-left:8px">${f.pattern}</strong></div>
+      <button onclick="deleteBotFilter('${f.id}')" style="background:none;border:none;color:var(--text3);cursor:pointer">&#x2715;</button>
+    </div>`).join(''):'<div class="empty" style="padding:10px 0">No filters set yet.</div>';
+  }catch(_){}
+
+  // Share tokens
+  try{
+    const{data:tokens}=await sb.from('analytics_share_tokens').select('*').order('created_at',{ascending:false});
+    const el=document.getElementById('share-tokens-list');
+    el.innerHTML=(tokens&&tokens.length)?tokens.map(t=>`<div class="alert-rule">
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600;margin-bottom:4px">${t.label||'Untitled'}</div>
+        <div class="share-token">${location.origin+location.pathname}?share=${t.token}</div>
+      </div>
+      <button onclick="copyShareLink('${t.token}')" class="btn-secondary" style="font-size:11px;padding:5px 10px;margin-left:8px">Copy</button>
+      <button onclick="deleteShareToken('${t.id}')" style="background:none;border:none;color:var(--text3);cursor:pointer;margin-left:4px">&#x2715;</button>
+    </div>`).join(''):'<div class="empty" style="padding:10px 0">No share links generated yet.</div>';
+  }catch(_){}
+}
+
+async function saveGoalValue(){
+  const name=document.getElementById('gv-name').value.trim();
+  const value=parseFloat(document.getElementById('gv-value').value);
+  if(!name||isNaN(value))return;
+  try{await sb.from('analytics_goal_values').upsert({goal_name:name,value,site_id:state.siteId||'all'},{onConflict:'goal_name,site_id'});}catch(_){}
+  document.getElementById('gv-name').value='';document.getElementById('gv-value').value='';
+  renderSettings();
+}
+async function deleteGoalValue(id){try{await sb.from('analytics_goal_values').delete().eq('id',id);}catch(_){}renderSettings();}
+
+async function saveBotFilter(){
+  const type=document.getElementById('bf-type').value;
+  const pattern=document.getElementById('bf-pattern').value.trim();
+  if(!pattern)return;
+  try{await sb.from('analytics_bot_filters').insert({type,pattern});}catch(_){}
+  document.getElementById('bf-pattern').value='';
+  renderSettings();
+}
+async function deleteBotFilter(id){try{await sb.from('analytics_bot_filters').delete().eq('id',id);}catch(_){}renderSettings();}
+
+async function generateShareLink(){
+  const label=document.getElementById('share-label').value.trim()||'Shared Report';
+  const token=Math.random().toString(36).slice(2)+Date.now().toString(36);
+  try{await sb.from('analytics_share_tokens').insert({token,label,site_id:state.siteId||'all'});}catch(_){}
+  document.getElementById('share-label').value='';
+  renderSettings();
+}
+async function deleteShareToken(id){try{await sb.from('analytics_share_tokens').delete().eq('id',id);}catch(_){}renderSettings();}
+function copyShareLink(token){navigator.clipboard.writeText(location.origin+location.pathname+'?share='+token).then(()=>alert('Share link copied!'));}
+
+// Check for share token on load (read-only mode)
+(function(){
+  const p=new URLSearchParams(location.search);
+  const token=p.get('share');
+  if(token){
+    // Read-only mode — hide editing controls
+    document.addEventListener('DOMContentLoaded',()=>{
+      document.querySelectorAll('.btn-ctrl, .btn-teal, #site-select').forEach(el=>{
+        if(!el.textContent.includes('Refresh'))el.style.display='none';
+      });
+      const badge=document.createElement('div');
+      badge.style.cssText='position:fixed;top:10px;right:10px;background:rgba(13,148,136,.2);border:1px solid var(--teal);border-radius:6px;padding:6px 12px;font-size:11px;color:var(--teal);z-index:999';
+      badge.textContent='Read-only view';
+      document.body.appendChild(badge);
+    });
+  }
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   PERIOD-OVER-PERIOD COMPARISON
+   ══════════════════════════════════════════════════════════════════ */
+function setPeriodChange(elId, current, previous, invertGood) {
+  const el = document.getElementById(elId);
+  if (!el || !previous) { if(el) el.textContent = ''; return; }
+  const pct = Math.round(((current - previous) / previous) * 100);
+  const up = pct > 0;
+  const good = invertGood ? !up : up;
+  el.className = 'kpi-change ' + (pct === 0 ? 'neutral' : good ? 'up' : 'down');
+  const arrow = pct > 0 ? '▲' : pct < 0 ? '▼' : '—';
+  el.textContent = arrow + ' ' + Math.abs(pct) + '% vs prev period';
+}
+
+async function loadPreviousPeriod() {
+  try {
+    const days = state.days;
+    const end   = new Date(state.startDate || new Date(Date.now() - days * 86400000));
+    const start = new Date(end.getTime() - days * 86400000);
+    const since = start.toISOString().slice(0, 10) + 'T00:00:00Z';
+    const until = end.toISOString().slice(0, 10) + 'T23:59:59Z';
+    let q = sb.from('analytics_events').select('event_type,visitor_id,session_id,duration,goal_name')
+      .gte('created_at', since).lte('created_at', until).limit(20000);
+    if (state.siteId) q = q.eq('site_id', state.siteId);
+    const { data } = await q;
+    return data || [];
+  } catch(_) { return []; }
+}
+
+function applyPeriodComparisons(current, previous) {
+  const cpv  = current.filter(e=>e.event_type==='pageview').length;
+  const ppv  = previous.filter(e=>e.event_type==='pageview').length;
+  const cvis = new Set(current.map(e=>e.visitor_id)).size;
+  const pvis = new Set(previous.map(e=>e.visitor_id)).size;
+  const csess= new Set(current.map(e=>e.session_id)).size;
+  const psess= new Set(previous.map(e=>e.session_id)).size;
+  const cgoal= current.filter(e=>e.event_type==='goal').length;
+  const pgoal= previous.filter(e=>e.event_type==='goal').length;
+
+  const pvPS={};current.filter(e=>e.event_type==='pageview').forEach(e=>{pvPS[e.session_id]=(pvPS[e.session_id]||0)+1;});
+  const sl=Object.values(pvPS);
+  const cbounce=sl.length?Math.round(sl.filter(c=>c===1).length/sl.length*100):0;
+  const pvPS2={};previous.filter(e=>e.event_type==='pageview').forEach(e=>{pvPS2[e.session_id]=(pvPS2[e.session_id]||0)+1;});
+  const sl2=Object.values(pvPS2);
+  const pbounce=sl2.length?Math.round(sl2.filter(c=>c===1).length/sl2.length*100):0;
+
+  const cdurs=current.filter(e=>e.event_type==='session_end'&&e.duration).map(e=>e.duration);
+  const pdurs=previous.filter(e=>e.event_type==='session_end'&&e.duration).map(e=>e.duration);
+  const cdur=cdurs.length?Math.round(cdurs.reduce((a,b)=>a+b,0)/cdurs.length):0;
+  const pdur=pdurs.length?Math.round(pdurs.reduce((a,b)=>a+b,0)/pdurs.length):0;
+
+  setPeriodChange('kpi-pv-chg',   cpv,    ppv,    false);
+  setPeriodChange('kpi-vis-chg',  cvis,   pvis,   false);
+  setPeriodChange('kpi-sess-chg', csess,  psess,  false);
+  setPeriodChange('kpi-bounce-chg',cbounce,pbounce,true);
+  setPeriodChange('kpi-dur-chg',  cdur,   pdur,   false);
+  setPeriodChange('kpi-goals-chg',cgoal,  pgoal,  false);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   DAU / MAU
+   ══════════════════════════════════════════════════════════════════ */
+function renderDAUMAU(events) {
+  const pv = events.filter(e => e.event_type === 'pageview');
+  const dayMap = {};
+  pv.forEach(e => {
+    const d = e.created_at.slice(0, 10);
+    if (!dayMap[d]) dayMap[d] = new Set();
+    dayMap[d].add(e.visitor_id);
+  });
+  const daus = Object.values(dayMap).map(s => s.size);
+  const avgDAU = daus.length ? Math.round(daus.reduce((a, b) => a + b, 0) / daus.length) : 0;
+  const mau = new Set(pv.map(e => e.visitor_id)).size;
+  const stickiness = mau ? Math.round(avgDAU / mau * 100) : 0;
+  // Update or create DAU/MAU KPI in overview if elements exist
+  const el = document.getElementById('kpi-dau-mau');
+  if (el) el.textContent = stickiness + '%';
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   CHANNELS TAB
+   ══════════════════════════════════════════════════════════════════ */
+function classifyChannel(e) {
+  const med = (e.utm_medium || '').toLowerCase();
+  const src = (e.utm_source || '').toLowerCase();
+  if (/cpc|ppc|paid/.test(med)) return 'Paid Search';
+  if (/paidsocial|paid_social/.test(med)) return 'Paid Social';
+  if (/email|newsletter/.test(med)) return 'Email';
+  if (/social/.test(med)) return 'Social';
+  if (/affiliate/.test(med)) return 'Affiliate';
+  if (src || med) return 'Campaign';
+  if (!e.referrer) return 'Direct';
+  let host = '';
+  try { host = new URL(e.referrer).hostname.toLowerCase(); } catch { host = (e.referrer||'').toLowerCase(); }
+  if (/google|bing|yahoo|duckduckgo|baidu|yandex/.test(host)) return 'Organic Search';
+  if (/facebook|instagram|twitter|x\.com|linkedin|pinterest|tiktok|youtube|reddit/.test(host)) return 'Social';
+  if (/mail\.|gmail|hotmail|outlook\.com/.test(host)) return 'Email';
+  return 'Referral';
+}
+
+const CH_COLORS = {'Organic Search':'#10B981','Direct':'#0D9488','Social':'#8B5CF6',
+  'Paid Search':'#EF4444','Paid Social':'#F97316','Email':'#D97706','Referral':'#3B82F6','Affiliate':'#EC4899','Campaign':'#14B8A6'};
+
+function renderChannels() {
+  const pv = state.events.filter(e => e.event_type === 'pageview');
+  const chMap = {};
+  pv.forEach(e => {
+    const ch = e.channel || classifyChannel(e);
+    chMap[ch] = (chMap[ch] || 0) + 1;
+  });
+  const channels = Object.entries(chMap).sort((a,b) => b[1]-a[1]);
+  const total = channels.reduce((s,[,c])=>s+c, 0) || 1;
+
+  document.getElementById('ch-organic').textContent = fmt(chMap['Organic Search']||0);
+  document.getElementById('ch-direct').textContent  = fmt(chMap['Direct']||0);
+  document.getElementById('ch-social').textContent  = fmt((chMap['Social']||0)+(chMap['Paid Social']||0));
+  document.getElementById('ch-referral').textContent= fmt(chMap['Referral']||0);
+
+  // Distribution doughnut
+  kill('ch-dist');
+  charts['ch-dist'] = new Chart(document.getElementById('chart-ch-dist'), {
+    type: 'doughnut',
+    data: { labels: channels.map(c=>c[0]), datasets: [{ data: channels.map(c=>c[1]),
+      backgroundColor: channels.map(c=>CH_COLORS[c[0]]||COLORS[0]), borderWidth:0, hoverOffset:5 }] },
+    options: { responsive:true, maintainAspectRatio:false, cutout:'60%',
+      plugins: { legend: { position:'right', labels:{ usePointStyle:true, padding:11, boxWidth:8 } } } },
+  });
+
+  // Timeline by channel
+  const { labels } = groupByDay(pv, state.days, state.startDate, state.endDate);
+  const topCh = channels.slice(0, 5);
+  kill('ch-tl');
+  charts['ch-tl'] = new Chart(document.getElementById('chart-ch-tl'), {
+    type: 'line',
+    data: { labels, datasets: topCh.map(([ch]) => {
+      const filtered = pv.filter(e => (e.channel||classifyChannel(e)) === ch);
+      const { values } = groupByDay(filtered, state.days, state.startDate, state.endDate);
+      return { label:ch, data:values, borderColor:CH_COLORS[ch]||'#0D9488',
+        backgroundColor:'transparent', borderWidth:2, pointRadius:0, tension:.3 };
+    }) },
+    options: { responsive:true, maintainAspectRatio:false,
+      plugins: { legend: { labels:{ usePointStyle:true, padding:12, boxWidth:8 } } },
+      scales: { x: { ...G, ticks:{maxTicksLimit:12} }, y: { ...G, beginAtZero:true, ticks:{precision:0} } } },
+  });
+
+  // Table
+  const max = channels[0]?.[1] || 1;
+  const el = document.getElementById('table-channels');
+  el.innerHTML = channels.map(([ch, count]) => {
+    const cls = ch.toLowerCase().replace(/\s+/,'-');
+    return `<div class="table-row">
+      <div class="table-lbl"><span class="channel-pill ch-${cls==='organic-search'?'organic':cls==='paid-search'?'paid':cls==='paid-social'?'paid':cls}">${ch}</span></div>
+      <div class="table-bar"><div class="table-bar-fill" style="width:${Math.round(count/max*100)}%;background:${CH_COLORS[ch]||'#0D9488'}"></div></div>
+      <div class="table-cnt">${fmt(count)} (${Math.round(count/total*100)}%)</div>
+    </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LANDING PAGES TAB
+   ══════════════════════════════════════════════════════════════════ */
+function renderLanding() {
+  const ev = state.events;
+  const pv = ev.filter(e => e.event_type === 'pageview');
+  const goals = ev.filter(e => e.event_type === 'goal');
+
+  // Find first page per session = landing page
+  const sessFirst = {};
+  pv.forEach(e => {
+    if (!sessFirst[e.session_id] || e.created_at < sessFirst[e.session_id].created_at)
+      sessFirst[e.session_id] = e;
+  });
+
+  // Group sessions by landing page
+  const lpMap = {};
+  Object.values(sessFirst).forEach(e => {
+    const page = fmtUrl(e.url || '');
+    if (!lpMap[page]) lpMap[page] = { sessions: [], goals: 0 };
+    lpMap[page].sessions.push(e.session_id);
+  });
+
+  // Count goals per landing-session
+  const sessionToLanding = {};
+  Object.entries(lpMap).forEach(([page, d]) => {
+    d.sessions.forEach(sid => { sessionToLanding[sid] = page; });
+  });
+  goals.forEach(g => {
+    const page = sessionToLanding[g.session_id];
+    if (page && lpMap[page]) lpMap[page].goals++;
+  });
+
+  // Bounce rate per landing page
+  const pvPerSession = {};
+  pv.forEach(e => { pvPerSession[e.session_id] = (pvPerSession[e.session_id]||0)+1; });
+
+  // Duration per session
+  const durPerSession = {};
+  ev.filter(e => e.event_type==='session_end'&&e.duration).forEach(e => { durPerSession[e.session_id] = e.duration; });
+
+  const pages = Object.entries(lpMap).map(([page, d]) => {
+    const bounced = d.sessions.filter(sid => (pvPerSession[sid]||0) <= 1).length;
+    const bounceRate = Math.round(bounced / d.sessions.length * 100);
+    const durs = d.sessions.map(sid => durPerSession[sid]).filter(Boolean);
+    const avgDur = durs.length ? Math.round(durs.reduce((a,b)=>a+b,0)/durs.length) : 0;
+    const cvr = Math.round(d.goals / d.sessions.length * 100);
+    return { page, sessions: d.sessions.length, bounceRate, goals: d.goals, cvr, avgDur };
+  }).sort((a,b) => b.sessions - a.sessions);
+
+  document.getElementById('lp-count').textContent = fmt(pages.length);
+  const bestConv = [...pages].sort((a,b)=>b.cvr-a.cvr)[0];
+  const worstBounce = [...pages].sort((a,b)=>b.bounceRate-a.bounceRate)[0];
+  document.getElementById('lp-best').textContent = bestConv ? bestConv.page.slice(0,18)+'…' : '—';
+  document.getElementById('lp-bounce').textContent = worstBounce ? worstBounce.page.slice(0,18)+'…' : '—';
+  const avgBounce = pages.length ? Math.round(pages.reduce((s,p)=>s+p.bounceRate,0)/pages.length) : 0;
+  document.getElementById('lp-avg-bounce').textContent = avgBounce + '%';
+
+  // Bar chart
+  const top8 = pages.slice(0, 8);
+  kill('landing');
+  charts['landing'] = new Chart(document.getElementById('chart-landing'), {
+    type: 'bar',
+    data: { labels: top8.map(p => p.page.length>20?p.page.slice(0,18)+'…':p.page),
+      datasets: [
+        { label:'Sessions', data:top8.map(p=>p.sessions), backgroundColor:'rgba(13,148,136,.7)', borderRadius:3 },
+        { label:'Bounce%', data:top8.map(p=>p.bounceRate), backgroundColor:'rgba(217,119,6,.6)', borderRadius:3 },
+      ] },
+    options: { responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{labels:{usePointStyle:true,padding:12,boxWidth:8}} },
+      scales:{ x:{grid:{display:false}}, y:{...G,beginAtZero:true,ticks:{precision:0}} } },
+  });
+
+  // Table
+  const tbody = document.getElementById('landing-tbody');
+  tbody.innerHTML = pages.slice(0,20).map(p => `<tr>
+    <td style="padding:8px 14px;font-size:12px;border-bottom:1px solid rgba(13,148,136,.07)">${p.page}</td>
+    <td style="padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);border-bottom:1px solid rgba(13,148,136,.07)">${fmt(p.sessions)}</td>
+    <td style="padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:${p.bounceRate>70?'var(--red)':p.bounceRate>40?'var(--amber)':'var(--green)'};border-bottom:1px solid rgba(13,148,136,.07)">${p.bounceRate}%</td>
+    <td style="padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--purple);border-bottom:1px solid rgba(13,148,136,.07)">${fmt(p.goals)}</td>
+    <td style="padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);border-bottom:1px solid rgba(13,148,136,.07)">${p.cvr}%</td>
+    <td style="padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2);border-bottom:1px solid rgba(13,148,136,.07)">${fmtD(p.avgDur)}</td>
+  </tr>`).join('');
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   VISITOR EXPLORER
+   ══════════════════════════════════════════════════════════════════ */
+function renderVisitorList() {
+  const ev = state.events;
+  const visitorMap = {};
+  ev.forEach(e => {
+    if (!e.visitor_id) return;
+    if (!visitorMap[e.visitor_id]) visitorMap[e.visitor_id] = { pv:0, goals:0, last:e.created_at, country:e.country, device:e.device_type };
+    if (e.event_type==='pageview') visitorMap[e.visitor_id].pv++;
+    if (e.event_type==='goal') visitorMap[e.visitor_id].goals++;
+    if (e.created_at > visitorMap[e.visitor_id].last) visitorMap[e.visitor_id].last = e.created_at;
+  });
+  const visitors = Object.entries(visitorMap).sort((a,b) => b[1].pv - a[1].pv).slice(0, 50);
+  const list = document.getElementById('visitor-list');
+  list.innerHTML = visitors.map(([vid, d]) => `
+    <div class="table-row" style="cursor:pointer" onclick="loadVisitorProfile('${vid}')">
+      <div class="table-lbl" style="font-family:'JetBrains Mono',monospace;font-size:11px;max-width:200px">${vid}</div>
+      <div style="flex:1;display:flex;gap:10px;font-size:11px;color:var(--text2)">
+        <span>${d.country||'?'}</span>
+        <span>${d.device||'?'}</span>
+      </div>
+      <div class="table-cnt">${fmt(d.pv)} pvs${d.goals?' · '+d.goals+' goals':''}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);flex-shrink:0;margin-left:8px">${fmtAgo(d.last)}</div>
+    </div>`).join('');
+}
+
+async function loadVisitorProfile(vid) {
+  vid = vid || document.getElementById('visitor-search').value.trim();
+  if (!vid) return;
+  document.getElementById('visitor-profile').style.display = 'block';
+  try {
+    const { data } = await sb.from('analytics_events').select('*')
+      .eq('visitor_id', vid).order('created_at', { ascending: true }).limit(500);
+    if (!data || !data.length) { alert('No events found for this visitor.'); return; }
+
+    const pv    = data.filter(e=>e.event_type==='pageview');
+    const goals = data.filter(e=>e.event_type==='goal');
+    const se    = data.filter(e=>e.event_type==='session_end'&&e.duration);
+    const sessions = new Set(data.map(e=>e.session_id)).size;
+    const totalTime = se.reduce((s,e)=>s+e.duration,0);
+
+    document.getElementById('vp-sessions').textContent = fmt(sessions);
+    document.getElementById('vp-pv').textContent = fmt(pv.length);
+    document.getElementById('vp-goals').textContent = fmt(goals.length);
+    document.getElementById('vp-time').textContent = fmtD(totalTime);
+    document.getElementById('vp-first').textContent = data[0].created_at.slice(0,10);
+    document.getElementById('visitor-profile-meta').textContent =
+      [data[0].country, data[0].region, data[0].city].filter(Boolean).join(', ') +
+      ' · ' + (data[0].device_type||'?') + ' · ' + (data[0].browser||'?');
+
+    // Timeline
+    const tl = document.getElementById('visitor-timeline');
+    tl.innerHTML = data.map(e => `
+      <div class="visitor-event">
+        <span class="ve-type ${e.event_type}">${e.event_type}</span>
+        <span class="ve-url">${e.event_type==='goal'?(e.goal_name||'goal'):fmtUrl(e.url||'')}</span>
+        <span class="ve-time">${e.created_at.slice(11,16)} ${e.created_at.slice(0,10)}</span>
+      </div>`).join('');
+  } catch(err) { console.error(err); }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   FORM ANALYTICS
+   ══════════════════════════════════════════════════════════════════ */
+function renderForms() {
+  const ff = state.events.filter(e => e.event_type === 'form_field');
+  document.getElementById('form-total').textContent = fmt(ff.length);
+  const forms = [...new Set(ff.map(e=>e.form_id).filter(Boolean))];
+  document.getElementById('form-count').textContent = fmt(forms.length);
+
+  // Populate form select
+  const sel = document.getElementById('form-select');
+  sel.innerHTML = '<option value="">All Forms</option>';
+  forms.forEach(f => { const o=document.createElement('option');o.value=o.textContent=f;sel.appendChild(o); });
+
+  // Most skipped field
+  const skipMap = {};
+  ff.filter(e=>e.field_skipped).forEach(e=>{const k=e.form_field||'?';skipMap[k]=(skipMap[k]||0)+1;});
+  const topSkip = Object.entries(skipMap).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('form-skipped').textContent = topSkip?topSkip[0]:'—';
+
+  const times = ff.map(e=>e.time_on_field).filter(Boolean);
+  document.getElementById('form-avg-time').textContent = times.length?Math.round(times.reduce((a,b)=>a+b,0)/times.length/1000)+'s':'—';
+
+  renderFormDetail();
+}
+
+function renderFormDetail() {
+  const formId = document.getElementById('form-select').value;
+  const ff = state.events.filter(e=>e.event_type==='form_field'&&(!formId||e.form_id===formId));
+  const fieldMap = {};
+  ff.forEach(e => {
+    const k = e.form_field || '?';
+    if (!fieldMap[k]) fieldMap[k] = { total:0, completed:0, skipped:0, times:[] };
+    fieldMap[k].total++;
+    if (e.field_completed) fieldMap[k].completed++;
+    if (e.field_skipped)   fieldMap[k].skipped++;
+    if (e.time_on_field)   fieldMap[k].times.push(e.time_on_field);
+  });
+  const fields = Object.entries(fieldMap).sort((a,b)=>b[1].total-a[1].total);
+  document.getElementById('form-field-badge').textContent = fields.length + ' fields';
+
+  // Viz
+  const viz = document.getElementById('form-fields-viz');
+  viz.innerHTML = fields.map(([name, d]) => {
+    const completionPct = d.total ? Math.round(d.completed/d.total*100) : 0;
+    const skipPct = d.total ? Math.round(d.skipped/d.total*100) : 0;
+    const avgTime = d.times.length ? Math.round(d.times.reduce((a,b)=>a+b,0)/d.times.length/1000) : 0;
+    return `<div class="field-row">
+      <div class="field-name">${name}</div>
+      <div class="field-bar-wrap"><div class="field-bar-fill" style="width:${completionPct}%;background:var(--teal)"></div></div>
+      <div class="field-stat" style="color:var(--green)">${completionPct}% done</div>
+      <div class="field-stat" style="color:var(--red)">${skipPct}% skipped</div>
+      <div class="field-stat" style="color:var(--text2)">${avgTime}s avg</div>
+    </div>`;
+  }).join('');
+
+  // Charts
+  kill('form-completion');
+  kill('form-time');
+  if (fields.length) {
+    charts['form-completion'] = new Chart(document.getElementById('chart-form-completion'), {
+      type: 'bar',
+      data: { labels: fields.map(f=>f[0]),
+        datasets: [
+          { label:'Completed', data:fields.map(([,d])=>d.total?Math.round(d.completed/d.total*100):0), backgroundColor:'rgba(13,148,136,.7)', borderRadius:3 },
+          { label:'Skipped',   data:fields.map(([,d])=>d.total?Math.round(d.skipped/d.total*100):0),  backgroundColor:'rgba(239,68,68,.6)', borderRadius:3 },
+        ] },
+      options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{labels:{usePointStyle:true,padding:10,boxWidth:8}}},
+        scales:{ x:{grid:{display:false}}, y:{...G,beginAtZero:true,max:100,ticks:{callback:v=>v+'%'}} } },
+    });
+    charts['form-time'] = new Chart(document.getElementById('chart-form-time'), {
+      type: 'bar',
+      data: { labels: fields.map(f=>f[0]),
+        datasets:[{ data:fields.map(([,d])=>d.times.length?Math.round(d.times.reduce((a,b)=>a+b,0)/d.times.length/1000):0),
+          backgroundColor:COLORS.map(c=>c+'AA'), borderRadius:3, borderSkipped:false }] },
+      options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+        scales:{ x:{grid:{display:false}}, y:{...G,beginAtZero:true,ticks:{callback:v=>v+'s'}} } },
+    });
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ECOMMERCE TAB
+   ══════════════════════════════════════════════════════════════════ */
+let _goalValues = {};
+
+async function loadGoalValues() {
+  try {
+    const { data } = await sb.from('analytics_goal_values').select('*');
+    if (data) { _goalValues = {}; data.forEach(r => { _goalValues[r.goal_name] = r; }); }
+  } catch(_) {}
+}
+
+async function saveGoalValue() {
+  const name = document.getElementById('gv-goal').value.trim();
+  const val  = parseFloat(document.getElementById('gv-value').value);
+  if (!name || isNaN(val)) { alert('Enter a goal name and value.'); return; }
+  try {
+    await sb.from('analytics_goal_values').upsert({ goal_name:name, value:val }, { onConflict:'goal_name' });
+    document.getElementById('gv-goal').value = '';
+    document.getElementById('gv-value').value = '';
+    await loadGoalValues();
+    renderEcommerce();
+  } catch(e) { alert('Error saving: '+e.message); }
+}
+
+function renderEcommerce() {
+  const ev = state.events;
+  const purchases = ev.filter(e => e.event_type === 'purchase');
+  const goals = ev.filter(e => e.event_type === 'goal');
+
+  // Direct revenue from purchase events
+  const directRev = purchases.reduce((s,e) => s+(e.revenue||0), 0);
+
+  // Attributed revenue from goal values
+  let attrRev = 0;
+  goals.forEach(g => { if (_goalValues[g.goal_name]) attrRev += parseFloat(_goalValues[g.goal_name].value)||0; });
+
+  const totalRev = directRev + attrRev;
+  const txns = purchases.length;
+  const aov = txns ? (directRev / txns).toFixed(2) : 0;
+
+  document.getElementById('ec-revenue').textContent = '$' + totalRev.toFixed(2);
+  document.getElementById('ec-txns').textContent = fmt(txns);
+  document.getElementById('ec-aov').textContent = '$' + aov;
+
+  // Top product
+  const prodMap = {};
+  purchases.forEach(e => { const k=e.product_name||'(unknown)'; prodMap[k]=(prodMap[k]||0)+1; });
+  const topProd = Object.entries(prodMap).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('ec-top').textContent = topProd?topProd[0]:'—';
+
+  // Revenue timeline
+  const revByDay = {};
+  purchases.forEach(e => { const d=e.created_at.slice(0,10); revByDay[d]=(revByDay[d]||0)+(e.revenue||0); });
+  const { labels, dates } = groupByDay(purchases, state.days, state.startDate, state.endDate);
+  const revValues = dates.map(d => revByDay[d]||0);
+  kill('ec-tl');
+  charts['ec-tl'] = new Chart(document.getElementById('chart-ec-tl'), {
+    type: 'bar',
+    data: { labels, datasets:[{ data:revValues, backgroundColor:'rgba(13,148,136,.7)', borderRadius:3, borderSkipped:false }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{ x:{...G,ticks:{maxTicksLimit:12}}, y:{...G,beginAtZero:true,ticks:{callback:v=>'$'+v}} } },
+  });
+
+  // Products chart
+  const products = Object.entries(prodMap).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  kill('ec-products');
+  if (products.length) {
+    charts['ec-products'] = new Chart(document.getElementById('chart-ec-products'), {
+      type: 'bar',
+      data: { labels:products.map(p=>p[0]), datasets:[{ data:products.map(p=>p[1]),
+        backgroundColor:COLORS, borderRadius:4, borderSkipped:false }] },
+      options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+        scales:{ x:{...G,ticks:{precision:0}}, y:{grid:{display:false}} } },
+    });
+  }
+
+  // Goal values table
+  const gvEl = document.getElementById('table-goal-values');
+  if (Object.keys(_goalValues).length) {
+    gvEl.innerHTML = Object.values(_goalValues).map(g=>`
+      <div class="table-row">
+        <div class="table-lbl">${g.goal_name}</div>
+        <div class="table-bar"></div>
+        <div class="table-cnt" style="color:var(--green)">$${parseFloat(g.value).toFixed(2)} ${g.currency}</div>
+      </div>`).join('');
+  }
+
+  // Transactions
+  renderTable('table-transactions', purchases.map(p=>[p.product_name||'purchase','$'+(p.revenue||0)]).slice(0,15));
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ALERTS CENTER
+   ══════════════════════════════════════════════════════════════════ */
+let _alertRules = [];
+
+async function loadAlertRules() {
+  try {
+    const { data } = await sb.from('analytics_alerts').select('*').order('created_at', { ascending:false });
+    _alertRules = data || [];
+  } catch(_) { _alertRules = []; }
+}
+
+async function saveAlertRule() {
+  const rule = {
+    name:        document.getElementById('al-name').value.trim(),
+    metric:      document.getElementById('al-metric').value,
+    condition:   document.getElementById('al-condition').value,
+    threshold:   parseFloat(document.getElementById('al-threshold').value),
+    site_id:     document.getElementById('al-site').value||'all',
+    webhook_url: document.getElementById('al-webhook').value||null,
+    enabled:     true,
+  };
+  if (!rule.name || isNaN(rule.threshold)) { alert('Fill in name and threshold.'); return; }
+  try {
+    await sb.from('analytics_alerts').insert(rule);
+    closeAlertModal();
+    await loadAlertRules();
+    renderAlertsCenter();
+  } catch(e) { alert('Error: '+e.message); }
+}
+
+async function toggleAlert(id, enabled) {
+  await sb.from('analytics_alerts').update({ enabled }).eq('id', id);
+  await loadAlertRules();
+  renderAlertsCenter();
+}
+
+async function deleteAlert(id) {
+  if (!confirm('Delete this alert rule?')) return;
+  await sb.from('analytics_alerts').delete().eq('id', id);
+  await loadAlertRules();
+  renderAlertsCenter();
+}
+
+function checkAlertRules() {
+  const ev = state.events;
+  const pv = ev.filter(e=>e.event_type==='pageview');
+  const dayMap = {};
+  pv.forEach(e => { const d=e.created_at.slice(0,10); dayMap[d]=(dayMap[d]||0)+1; });
+  const days = Object.values(dayMap);
+  if (days.length < 2) return;
+  const today = days[days.length-1];
+  const avg = days.slice(0,-1).reduce((a,b)=>a+b,0)/(days.length-1);
+
+  _alertRules.filter(r=>r.enabled).forEach(r => {
+    let fired = false;
+    const metric = r.metric === 'pageviews' ? today : today; // simplified
+    if (r.condition === 'above' && metric > r.threshold) fired = true;
+    if (r.condition === 'below' && metric < r.threshold) fired = true;
+    if (r.condition === 'change_pct_down' && avg > 5 && today < avg*(1-r.threshold/100)) fired = true;
+    if (r.condition === 'change_pct_up'   && avg > 0 && today > avg*(1+r.threshold/100)) fired = true;
+    if (fired) {
+      // Show in-app banner
+      const banner = document.getElementById('alert-banner');
+      const text   = document.getElementById('alert-text');
+      banner.className = r.condition.includes('down')||r.condition==='below' ? 'drop' : 'spike';
+      banner.style.display = 'flex';
+      text.textContent = `Alert: "${r.name}" — ${r.metric} ${r.condition.replace(/_/g,' ')} ${r.threshold}`;
+      // Fire webhook if set
+      if (r.webhook_url) {
+        fetch(r.webhook_url, { method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ alert:r.name, metric:r.metric, value:metric, threshold:r.threshold }) }).catch(()=>{});
+      }
+    }
+  });
+}
+
+function renderAlertsCenter() {
+  const list = document.getElementById('alert-rules-list');
+  if (!_alertRules.length) {
+    list.innerHTML = '<div class="empty">No alert rules yet.</div>';
+  } else {
+    list.innerHTML = _alertRules.map(r => `
+      <div class="alert-rule${!r.enabled?' alert-fired':''}">
+        <div class="alert-rule-name">${r.name}</div>
+        <div class="alert-rule-desc">${r.metric} ${r.condition.replace(/_/g,' ')} ${r.threshold} · site: ${r.site_id}</div>
+        <span class="alert-rule-status ${r.enabled?'enabled':'disabled'}">${r.enabled?'Active':'Paused'}</span>
+        <button class="btn-secondary" style="font-size:11px;padding:5px 10px" onclick="toggleAlert('${r.id}',${!r.enabled})">${r.enabled?'Pause':'Resume'}</button>
+        <button class="btn-secondary" style="font-size:11px;padding:5px 10px;color:var(--red)" onclick="deleteAlert('${r.id}')">Delete</button>
+      </div>`).join('');
+  }
+
+  // Bot stats
+  const bots = state.events.filter(e=>e.is_bot===true).length;
+  const humans = state.events.filter(e=>e.is_bot!==true).length;
+  document.getElementById('bot-human').textContent = fmt(humans);
+  document.getElementById('bot-flagged').textContent = fmt(bots);
+}
+
+function openAlertModal()  { document.getElementById('alert-modal').style.display='flex'; }
+function closeAlertModal() { document.getElementById('alert-modal').style.display='none'; }
+
+/* ══════════════════════════════════════════════════════════════════
+   PUBLIC SHARE LINK
+   ══════════════════════════════════════════════════════════════════ */
+function copyShareLink() {
+  const token = btoa(JSON.stringify({
+    site: state.siteId, days: state.days,
+    start: state.startDate, end: state.endDate,
+    ts: Date.now(),
+  }));
+  const url = location.origin + location.pathname + '#share=' + token;
+  navigator.clipboard.writeText(url).then(() => alert('Share link copied!\n\nAnyone with this link can view the dashboard with these filters pre-set.'));
+}
+
+function applyShareToken() {
+  const hash = location.hash;
+  if (!hash.startsWith('#share=')) return;
+  try {
+    const params = JSON.parse(atob(hash.slice(7)));
+    if (params.site) { state.siteId = params.site; document.getElementById('site-select').value = params.site; }
+    if (params.days) setPreset(params.days);
+  } catch(_) {}
+}
+
 /* ── Live ─────────────────────────────────────────────────────────── */
 async function updateLive(){
   try{
