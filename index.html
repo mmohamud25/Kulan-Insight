@@ -2236,7 +2236,13 @@ th{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#999;font-we
 <table><tr><th>Country</th><th>Views</th></tr>${tc.map(([c,n])=>`<tr><td>${c}</td><td class="n">${fmt(n)}</td></tr>`).join('')}</table>
 </div>
 <div class="f">Kulan Analytics &mdash; <a href="https://mmohamud.me">mmohamud.me</a></div>
-</div></body></html>`;
+</div>
+  <!-- Kulan Analytics Self-Tracking -->
+  <script src="https://analytics.kulaninstitute.org/tracker.js"
+          data-site="Analytics"
+          data-group="dashboard"
+          defer></script>
+</body></html>`;
   document.getElementById('email-preview').textContent=_rHtml.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,1400)+'...';
   document.getElementById('email-modal').style.display='flex';
 }
@@ -4273,7 +4279,13 @@ button:focus-visible, select:focus-visible, input:focus-visible {
   <table><tr><th>Country</th><th>Views</th></tr>${topCountries.map(([c,n])=>`<tr><td>${c}</td><td class="num">${fmt(n)}</td></tr>`).join('')}</table>
   <div class="footer">Kulan Analytics &mdash; mmohamud.me &mdash; ${now}</div>
   <scr"+"ipt>window.onload=function(){window.print();}</scr"+"ipt>
-  </body></html>`);
+  
+  <!-- Kulan Analytics Self-Tracking -->
+  <script src="https://analytics.kulaninstitute.org/tracker.js"
+          data-site="Analytics"
+          data-group="dashboard"
+          defer></script>
+</body></html>`);
   printWin.document.close();
 }
 
@@ -4289,5 +4301,11 @@ async function updateLive(){
 }
 function startLivePoll(){updateLive();setInterval(updateLive,30000);}
 </script>
+
+  <!-- Kulan Analytics Self-Tracking -->
+  <script src="https://analytics.kulaninstitute.org/tracker.js"
+          data-site="Analytics"
+          data-group="dashboard"
+          defer></script>
 </body>
 </html>
