@@ -863,7 +863,7 @@ main { padding: 14px 16px; max-width: 100%; }
   <div id="tab-heatmap" class="tab-panel">
     <main>
       <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
-        <select id="heatmap-url-select" onchange="renderHeatmap()" style="min-width:260px"><option value="">All Pages</option></select>
+        <select id="heatmap-url-select" onchange="renderHeatmap(this)" style="min-width:260px"><option value="">All Pages</option></select>
         <div style="display:flex;gap:8px">
           <div class="kpi-card" style="padding:10px 14px;min-width:110px"><div class="kpi-label">Total Clicks</div><div class="kpi-value" style="font-size:18px" id="hm-total">0</div></div>
           <div class="kpi-card" style="padding:10px 14px;min-width:110px"><div class="kpi-label">Hottest Zone</div><div class="kpi-value" style="font-size:12px" id="hm-zone">—</div></div>
@@ -1108,7 +1108,7 @@ main { padding: 14px 16px; max-width: 100%; }
         <div class="chart-header"><div class="chart-title">Funnel Results</div><div class="chart-badge" id="funnel-badge">—</div></div>
         <div style="height:260px"><canvas id="chart-funnel"></canvas></div>
       </div>
-      <div id="funnel-detail" style="margin-bottom:16px"></div>
+      <div id="funnel-detail" style="margin-bottom:16px"><div class="empty" style="padding:20px;color:var(--text3)">Define your steps above and click ▶ Run Funnel to see results.</div></div>
     </main>
   </div>
 
@@ -1165,7 +1165,7 @@ main { padding: 14px 16px; max-width: 100%; }
           <div style="display:flex;gap:8px;align-items:center">
             <input id="visitor-search" type="text" placeholder="Search visitor ID..." oninput="filterVisitors()"
               style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 12px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;width:240px">
-            <div class="chart-badge" id="visitors-count">0 visitors</div>
+            <div class="chart-badge" id="visitors-count">Loading...</div>
           </div>
         </div>
         <div id="visitors-list" style="max-height:400px;overflow-y:auto"></div>
@@ -1274,6 +1274,12 @@ main { padding: 14px 16px; max-width: 100%; }
   <!-- ECOMMERCE TAB -->
   <div id="tab-ecommerce" class="tab-panel">
     <main>
+      <!-- Onboarding tip when no purchase events -->
+      <div id="ec-onboarding" style="background:var(--amber-dim);border:1px solid rgba(217,119,6,.3);border-radius:var(--radius);padding:14px 18px;margin-bottom:14px;font-size:12px;display:none">
+        <strong style="color:var(--amber)">💰 Enable Ecommerce Tracking</strong>
+        <div style="color:var(--text2);margin-top:6px">Add purchase events to your checkout flow:</div>
+        <code style="display:block;background:var(--bg);border-radius:6px;padding:10px 14px;margin-top:8px;font-size:11px;color:var(--teal)">&lt;button data-kl-purchase data-kl-props='{"product":"Pro Plan","revenue":49,"currency":"USD"}'&gt;Buy Now&lt;/button&gt;</code>
+      </div>
       <div class="kpi-grid">
         <div class="kpi-card teal"><div class="kpi-label">Total Revenue</div><div class="kpi-value" id="ec-revenue">—</div><div class="kpi-sub">USD</div></div>
         <div class="kpi-card green"><div class="kpi-label">Transactions</div><div class="kpi-value" id="ec-txns">—</div><div class="kpi-sub">purchases</div></div>
@@ -1413,6 +1419,9 @@ main { padding: 14px 16px; max-width: 100%; }
         <div id="ai-output" style="font-size:13px;line-height:1.7;color:var(--text)">
           <div class="empty" style="padding:32px">Click "Analyze" to get AI-powered insights about your traffic, trends, and opportunities.</div>
         </div>
+        <div id="ai-cached-badge" style="display:none;font-size:10px;color:var(--text3);padding:8px 4px;text-align:right">
+          ↑ Cached from last session — click Analyze to refresh
+        </div>
       </div>
       <div id="ai-insights-cards" style="display:none">
         <div class="g3" style="margin-bottom:14px" id="ai-cards-grid"></div>
@@ -1424,7 +1433,7 @@ main { padding: 14px 16px; max-width: 100%; }
   <div id="tab-custom" class="tab-panel">
     <main>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
-        <div style="font-size:13px;color:var(--text2)">Pin your most-used views. Drag to reorder.</div>
+        <div style="font-size:13px;color:var(--text2)">Pin your most-used views. <span id="widget-count-label" style="color:var(--teal)"></span></div>
         <div style="display:flex;gap:8px">
           <button class="btn-teal" onclick="addCustomWidget()" style="font-size:12px;padding:6px 14px">+ Add Widget</button>
           <button class="btn-secondary" onclick="resetCustomDashboard()" style="font-size:12px;padding:6px 14px">Reset</button>
@@ -1501,6 +1510,9 @@ function setPreset(days){
   state.startDate=document.getElementById('date-start').value;
   state.endDate=document.getElementById('date-end').value;
   document.querySelectorAll('.preset-btn').forEach(b=>b.classList.toggle('active',parseInt(b.textContent)===days||(days===365&&b.textContent==='1y')));
+  // Update subtitle immediately
+  const sub=document.getElementById('kpi-pv-sub');
+  if(sub)sub.textContent=days+' day window';
   loadData();
 }
 function onDateChange(){
@@ -1570,6 +1582,16 @@ function switchTab(tab){
   if(tab==='errors')     renderErrors();
   if(tab==='linkedin')   renderLinkedIn();
   if(tab==='custom')     renderCustomDashboard();
+  if(tab==='ai') {
+    try {
+      const cached=JSON.parse(localStorage.getItem('_kl_ai_cache')||'null');
+      if(cached&&cached.html){
+        document.getElementById('ai-output').innerHTML=cached.html;
+        const cb=document.getElementById('ai-cached-badge');
+        if(cb){cb.style.display='block';cb.textContent='↑ Cached '+cached.focus+' analysis from '+new Date(cached.ts).toLocaleDateString()+' — click Analyze to refresh';}
+      }
+    }catch(_){}
+  }
 }
 
 /* ── Init ─────────────────────────────────────────────────────────── */
@@ -1855,6 +1877,12 @@ function renderStatus(){
    REALTIME TAB
    ══════════════════════════════════════════════════════════════════ */
 function initRealtime(){
+  // Reset pause state on each init
+  state.rtPaused = false;
+  const banner = document.getElementById('rt-paused-banner');
+  if(banner) banner.style.display='none';
+  const btn = document.getElementById('rt-pause-btn');
+  if(btn) btn.textContent='⏸ Pause';
   if(rtChannel)return; // already subscribed
   rtChannel=sb.channel('rt-events')
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'analytics_events'},payload=>{
@@ -2079,12 +2107,21 @@ function renderCampaigns(){
   document.getElementById('utmk-src').textContent=srcC[0]?srcC[0][0]:'—';
   document.getElementById('utmk-camp').textContent=campC[0]?campC[0][0]:'—';
   kill('utm-src');
-  if(srcC.length)charts['utm-src']=new Chart(document.getElementById('chart-utm-src'),{
+  const utmSrcEl = document.getElementById('chart-utm-src');
+  if(utmSrcEl) {
+    if(!srcC.length) {
+      utmSrcEl.parentElement.innerHTML = '<div class="empty" style="height:220px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px"><div style="font-size:24px">📡</div><div>No UTM source data yet</div><div style="font-size:11px;color:var(--text3)">Add ?utm_source=X to your links</div></div>';
+    } else {
+  charts['utm-src']=new Chart(utmSrcEl,{
     type:'bar',data:{labels:srcC.map(s=>s[0]),datasets:[{data:srcC.map(s=>s[1]),backgroundColor:COLORS.map(c=>c+'AA'),borderRadius:4,borderSkipped:false}]},
     options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{...G,ticks:{precision:0}},y:{grid:{display:false}}}},
   });
+  } // end else
+  } // end if(utmSrcEl)
   kill('utm-med');
-  if(medC.length)charts['utm-med']=new Chart(document.getElementById('chart-utm-med'),{
+  const utmMedEl = document.getElementById('chart-utm-med');
+  if(utmMedEl && !medC.length) utmMedEl.parentElement.innerHTML = '<div class="empty" style="height:220px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px"><div style="font-size:24px">📣</div><div>No UTM medium data yet</div><div style="font-size:11px;color:var(--text3)">Add ?utm_medium=X to your links</div></div>';
+  if(utmMedEl && medC.length)charts['utm-med']=new Chart(utmMedEl,{
     type:'bar',data:{labels:medC.map(m=>m[0]),datasets:[{data:medC.map(m=>m[1]),backgroundColor:COLORS.slice(2).map(c=>c+'AA'),borderRadius:4,borderSkipped:false}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
   });
@@ -2529,9 +2566,17 @@ function renderDAUMAU(events) {
   if (!events || !events.length) return;
   const pv = events.filter(e => e.event_type === 'pageview');
   if (!pv.length) {
-    ['dau-empty','eng-empty'].forEach(id => { const el=document.getElementById(id); if(el)el.style.display='flex'; });
+    const emptyDAU=document.getElementById('dau-empty');
+    const emptyEng=document.getElementById('eng-empty');
+    if(emptyDAU)emptyDAU.style.display='flex';
+    if(emptyEng)emptyEng.style.display='flex';
     return;
   }
+  // Data available — hide empty states
+  const emptyDAU=document.getElementById('dau-empty');
+  const emptyEng=document.getElementById('eng-empty');
+  if(emptyDAU)emptyDAU.style.display='none';
+  if(emptyEng)emptyEng.style.display='none';
   const dayMap = {};
   pv.forEach(e => { const d=e.created_at.slice(0,10); if(!dayMap[d])dayMap[d]=new Set(); dayMap[d].add(e.visitor_id); });
   const sortedDays = Object.keys(dayMap).sort();
@@ -2640,8 +2685,11 @@ function renderGeoMap(pv){
   pv.forEach(e=>{if(!e.latitude||!e.longitude)return;const key=Number(e.latitude).toFixed(3)+','+Number(e.longitude).toFixed(3);if(!locMap[key])locMap[key]={lat:Number(e.latitude),lng:Number(e.longitude),count:0,country:e.country||'?',region:e.region||'',city:e.city||''};locMap[key].count++;});
   const locations=Object.values(locMap);
   const badge=document.getElementById('map-badge');
+  if(!locations.length){
+    if(badge)badge.textContent='No location data yet';
+    return;
+  }
   if(badge)badge.textContent=locations.length+' locations';
-  if(!locations.length)return;
   const mode=document.getElementById('map-layer')?.value||'dots';
   if(mode==='heat'){
     const maxC=Math.max(...locations.map(l=>l.count));
@@ -2715,9 +2763,13 @@ function renderSearch(){
   const safeSet=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   safeSet('srch-total',fmt(searches.length)); safeSet('srch-unique',fmt(queries.length));
   safeSet('srch-top',queries[0]?queries[0][0]:'—');
+  if(!searches.length){
+    const el=document.getElementById('chart-search-tl');
+    if(el)el.parentElement.innerHTML='<div class="empty" style="height:200px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px"><div style="font-size:28px">🔎</div><div style="font-weight:700">No search tracking yet</div><div style="font-size:11px;color:var(--text3)">Add <code>type=\"search\"</code> or <code>data-kl-search</code> to your search inputs</div></div>';
+  }
   const{labels,values}=groupByDay(searches,state.days,state.startDate,state.endDate);
   kill('search-tl');
-  charts['search-tl']=new Chart(document.getElementById('chart-search-tl'),{type:'bar',data:{labels,datasets:[{data:values,backgroundColor:'rgba(59,130,246,.7)',borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{...G,ticks:{maxTicksLimit:12}},y:{...G,beginAtZero:true,ticks:{precision:0}}}}});
+  if(searches.length)charts['search-tl']=new Chart(document.getElementById('chart-search-tl'),{type:'bar',data:{labels,datasets:[{data:values,backgroundColor:'rgba(59,130,246,.7)',borderRadius:3,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{...G,ticks:{maxTicksLimit:12}},y:{...G,beginAtZero:true,ticks:{precision:0}}}}});
   const topQ=queries.slice(0,8);
   kill('search-top');
   if(topQ.length)charts['search-top']=new Chart(document.getElementById('chart-search-top'),{type:'bar',data:{labels:topQ.map(q=>q[0].length>24?q[0].slice(0,22)+'…':q[0]),datasets:[{data:topQ.map(q=>q[1]),backgroundColor:COLORS.map(c=>c+'AA'),borderRadius:4,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{...G,ticks:{precision:0}},y:{grid:{display:false}}}}});
@@ -2859,8 +2911,10 @@ function renderLanding(){
   safeSet('lp-count',fmt(pages.length));
   const bestConv=[...pages].sort((a,b)=>b.cvr-a.cvr)[0];
   const worstBounce=[...pages].sort((a,b)=>b.bounceRate-a.bounceRate)[0];
-  safeSet('lp-best',bestConv?bestConv.page||'/':'—');
-  safeSet('lp-bounce',worstBounce?worstBounce.page||'/':'—');
+  const lpBestLabel = bestConv ? (bestConv.page === '/' ? '/  (home)' : bestConv.page.length > 16 ? bestConv.page.slice(0,14)+'…' : bestConv.page) : '—';
+  safeSet('lp-best', lpBestLabel);
+  const lpBounceLabel = worstBounce ? (worstBounce.page === '/' ? '/  (home)' : worstBounce.page.length > 16 ? worstBounce.page.slice(0,14)+'…' : worstBounce.page) : '—';
+  safeSet('lp-bounce', lpBounceLabel);
   safeSet('lp-avg-bounce',pages.length?Math.round(pages.reduce((s,p)=>s+p.bounceRate,0)/pages.length)+'%':'—');
   const top8=pages.slice(0,8);
   const lpChart=document.getElementById('chart-lp-entries')||document.getElementById('chart-landing');
@@ -2894,6 +2948,10 @@ function renderFormDetail(){
   const fields=Object.entries(fieldMap).sort((a,b)=>b[1].total-a[1].total);
   const badge=document.getElementById('form-field-badge');if(badge)badge.textContent=fields.length+' fields';
   const viz=document.getElementById('form-fields-viz');
+  if(viz&&!fields.length){
+    viz.innerHTML='<div class="empty" style="padding:24px;text-align:center"><div style="font-size:28px;margin-bottom:8px">📝</div><div style="font-weight:700;margin-bottom:6px">No form tracking yet</div><div style="font-size:11px;color:var(--text3)">Add <code>data-kl-form=\"form-id\"</code> to your &lt;form&gt; elements<br>Fields will appear here automatically when users interact</div></div>';
+    return;
+  }
   if(viz)viz.innerHTML=fields.map(([name,d])=>{const cp=d.total?Math.round(d.completed/d.total*100):0;const sp=d.total?Math.round(d.skipped/d.total*100):0;const at=d.times.length?Math.round(d.times.reduce((a,b)=>a+b,0)/d.times.length/1000):0;return`<div class="field-row"><div class="field-name">${name}</div><div class="field-bar-wrap"><div class="field-bar-fill" style="width:${cp}%;background:var(--teal)"></div></div><div class="field-stat" style="color:var(--green)">${cp}% done</div><div class="field-stat" style="color:var(--red)">${sp}% skip</div><div class="field-stat" style="color:var(--text2)">${at}s</div></div>`;}).join('');
   kill('form-completion');kill('form-time');
   if(fields.length){
@@ -2915,6 +2973,9 @@ async function saveGoalValue(){
 }
 function renderEcommerce(){
   const ev=state.events,purchases=ev.filter(e=>e.event_type==='purchase'),goals=ev.filter(e=>e.event_type==='goal');
+  // Show onboarding tip if no purchase events
+  const ecTip=document.getElementById('ec-onboarding');
+  if(ecTip)ecTip.style.display=purchases.length?'none':'block';
   const directRev=purchases.reduce((s,e)=>s+(e.revenue||0),0);
   let attrRev=0;goals.forEach(g=>{if(_goalValues[g.goal_name])attrRev+=parseFloat(_goalValues[g.goal_name].value)||0;});
   const totalRev=directRev+attrRev,txns=purchases.length,aov=txns?(directRev/txns).toFixed(2):0;
@@ -3006,6 +3067,10 @@ function renderLinkedIn(){
   const liDurs=ev.filter(e=>e.event_type==='session_end'&&e.duration&&liEv.some(l=>l.session_id===e.session_id)).map(e=>e.duration);
   const safeSet=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   safeSet('li-sessions',fmt(liSess)); safeSet('li-goals',fmt(liGoals.length));
+  // Show setup tip if no LinkedIn traffic
+  if(!liSess){
+    addNotification('info','LinkedIn tip','Add ?utm_source=linkedin to your post links to track LinkedIn traffic precisely.');
+  }
   safeSet('li-top-camp',countBy(liPV.filter(e=>e.utm_campaign),'utm_campaign')[0]?.[0]||'—');
   safeSet('li-dur',fmtD(liDurs.length?Math.round(liDurs.reduce((a,b)=>a+b,0)/liDurs.length):null));
   const{labels,values}=groupByDay(liPV,state.days,state.startDate,state.endDate);
@@ -3050,7 +3115,11 @@ async function runAIInsights(){
     const data=await resp.json();
     const text=data.content?.[0]?.text||'No response.';
     const html=text.replace(/## (.+)/g,'<h3 style="font-size:13px;font-weight:800;color:var(--teal);margin:16px 0 6px;text-transform:uppercase">$1</h3>').replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--text)">$1</strong>').replace(/\n\n/g,'</p><p style="margin-bottom:10px">').replace(/\n/g,'<br>').replace(/^/,'<p style="margin-bottom:10px">').replace(/$/,'</p>');
-    loading.style.display='none';output.innerHTML=`<div style="padding:4px 0">${html}</div>`;
+    loading.style.display='none';
+    const htmlResult=`<div style="padding:4px 0">${html}</div>`;
+    output.innerHTML=htmlResult;
+    try{localStorage.setItem('_kl_ai_cache',JSON.stringify({html:htmlResult,focus,days:state.days,ts:new Date().toISOString()}));}catch(_){}
+    const cb=document.getElementById('ai-cached-badge');if(cb)cb.style.display='none';
     addNotification('info','AI analysis complete',focus+' analysis done for '+state.days+'-day period.');
   }catch(e){loading.style.display='none';output.innerHTML=`<div class="empty" style="color:var(--red)">Error: ${e.message}</div>`;}
   btn.disabled=false;
