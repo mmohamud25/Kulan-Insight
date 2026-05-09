@@ -101,7 +101,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(4,12,24,.96);backdrop-fi
 /* Divider */
 .h-sep{width:1px;background:var(--border);height:24px;flex-shrink:0;margin:0 10px}
 /* Scope group */
-.h-scope{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.h-scope{display:flex;align-items:center;gap:5px;flex-shrink:0;overflow:visible}
 /* Actions group */
 .h-actions{display:flex;align-items:center;gap:4px;margin-left:auto}
 /* Export dropdown */
@@ -283,12 +283,12 @@ main{padding:14px 16px;}
 .table-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
 .table-head{padding:12px 16px;border-bottom:1px solid var(--border);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2)}
 .table-body{padding:4px 0}
-.table-row{display:flex;align-items:center;padding:7px 16px;transition:background .15s;gap:8px}
+.table-row{display:flex;align-items:center;padding:8px 16px;transition:background .15s;gap:10px}
 .table-row:hover{background:rgba(13,148,136,.06)}
-.table-lbl{font-size:12px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:0 0 auto;max-width:180px}
-.table-bar{flex:1;height:3px;background:var(--bg2);border-radius:2px}
-.table-bar-fill{height:100%;background:var(--teal);border-radius:2px;transition:width .5s ease}
-.table-cnt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2);flex-shrink:0;min-width:36px;text-align:right}
+.table-lbl{font-size:12px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:0 0 auto;max-width:190px}
+.table-bar{flex:1;height:5px;background:var(--bg2);border-radius:3px;min-width:40px}
+.table-bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),rgba(13,148,136,.6));border-radius:3px;transition:width .6s ease}
+.table-cnt{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2);flex-shrink:0;min-width:40px;text-align:right}
 .empty{text-align:center;padding:24px;color:var(--text3);font-size:12px}
 
 /* ── ANNOTATIONS ───────────────────────────────────────────────────────────── */
@@ -436,6 +436,9 @@ footer a{color:var(--teal);text-decoration:none}
 main { padding: 14px 16px; max-width: 100%; }
 
 
+
+/* Minimum bar height for thin data */
+.chart-card canvas { display: block; }
 </style>
 </head>
 <body>
@@ -693,6 +696,7 @@ main { padding: 14px 16px; max-width: 100%; }
             <div class="chart-title">Pageviews Over Time</div>
             <div class="chart-actions">
               <div class="chart-badge" id="time-badge">—</div>
+              <button class="btn-ctrl" id="overlay-btn" onclick="togglePrevOverlay()" style="font-size:10px;padding:3px 8px;white-space:nowrap" title="Overlay previous period">± Prev</button>
               <button class="btn-ctrl btn-note" onclick="openAnnModal()" aria-label="Add annotation note">+ Note</button>
             </div>
           </div>
@@ -979,8 +983,8 @@ main { padding: 14px 16px; max-width: 100%; }
           <div style="display:flex;gap:6px;align-items:center">
             <div class="chart-badge" id="map-badge">0 locations</div>
             <select id="map-layer" onchange="updateMapLayer()" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:Syne,sans-serif;font-size:11px;padding:4px 8px;outline:none">
-              <option value="dots">Dot markers</option>
-              <option value="heat">Bubble size</option>
+              <option value="dots">Clustered Dots</option>
+              <option value="heat">Bubble Density</option>
             </select>
           </div>
         </div>
@@ -1000,10 +1004,22 @@ main { padding: 14px 16px; max-width: 100%; }
       <div class="g3" style="margin-bottom:16px">
         <div class="table-card"><div class="table-head">Countries</div><div class="table-body" id="geo-table-countries"></div></div>
         <div class="table-card"><div class="table-head">Regions / States</div><div class="table-body" id="geo-table-regions"></div></div>
-        <div class="table-card"><div class="table-head">Cities</div><div class="table-body" id="geo-table-cities"></div></div>
+        <div class="table-card">
+          <div class="table-head" style="display:flex;align-items:center;justify-content:space-between">
+            Cities
+            <input id="geo-city-search" placeholder="Filter..." oninput="filterGeoTable('geo-table-cities','geo-city-search',_geoCities)" style="background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:3px 8px;color:var(--text);font-size:10px;outline:none;width:90px">
+          </div>
+          <div class="table-body" id="geo-table-cities"></div>
+        </div>
       </div>
       <div class="g11" style="margin-bottom:16px">
-        <div class="table-card"><div class="table-head">Postal Codes</div><div class="table-body" id="geo-table-postal"></div></div>
+        <div class="table-card">
+          <div class="table-head" style="display:flex;align-items:center;justify-content:space-between">
+            Postal Codes
+            <input id="geo-postal-search" placeholder="Filter..." oninput="filterGeoTable('geo-table-postal','geo-postal-search',_geoPostals)" style="background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:3px 8px;color:var(--text);font-size:10px;outline:none;width:90px">
+          </div>
+          <div class="table-body" id="geo-table-postal"></div>
+        </div>
         <div class="table-card"><div class="table-head">Coordinate Clusters</div><div class="table-body" id="geo-table-coords"></div></div>
       </div>
     </main>
@@ -1348,10 +1364,11 @@ main { padding: 14px 16px; max-width: 100%; }
             <select id="ai-focus" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:Syne,sans-serif;font-size:11px;padding:5px 9px;outline:none">
               <option value="general">General Overview</option>
               <option value="growth">Growth Opportunities</option>
-              <option value="anomalies">Anomalies & Issues</option>
+              <option value="anomalies">Anomalies & Smart Alerts</option>
               <option value="seo">SEO & Acquisition</option>
               <option value="conversion">Conversion Optimization</option>
               <option value="linkedin">LinkedIn Strategy</option>
+              <option value="regions">Regional Traffic Analysis</option>
             </select>
             <button class="btn-teal" onclick="runAIInsights()" id="ai-run-btn" style="font-size:12px;padding:6px 16px">✨ Analyze</button>
           </div>
@@ -1541,9 +1558,16 @@ async function loadSites(){
   try{
     const{data}=await sb.from('analytics_events').select('site_id').limit(10000);
     if(!data)return;
+    // Normalize known typos in site IDs for display
+    const SITE_LABELS={'porfolio':'Portfolio','soc-sentineliQ':'Soc-SentinelIQ'};
     const sites=[...new Set(data.map(r=>r.site_id))].sort();
     const sel=document.getElementById('site-select');
-    sites.forEach(s=>{const o=document.createElement('option');o.value=o.textContent=s;sel.appendChild(o);});
+    sites.forEach(s=>{
+      const o=document.createElement('option');
+      o.value=s; // keep raw value for querying
+      o.textContent=SITE_LABELS[s]||s; // display cleaned label
+      sel.appendChild(o);
+    });
     sel.addEventListener('change',()=>{state.siteId=sel.value;loadData();});
   }catch(e){console.error(e);}
 }
@@ -1568,6 +1592,7 @@ async function loadData(){
     renderOverview();
     renderDAUMAU(state.events);
     loadPreviousPeriod().then(prev => applyPeriodComparisons(state.events, prev));
+    detectAnomalies();
     if(state.tab==='status')     renderStatus();
     if(state.tab==='flow')       renderFlow();
     if(state.tab==='comparison') renderComparison();
@@ -1681,25 +1706,11 @@ function renderOverview(){
   document.getElementById('kpi-dur').textContent=fmtD(avgDur);
   document.getElementById('kpi-pv-sub').textContent=state.days+' day window';
 
-  // Timeline with annotation lines
+  // Timeline — delegate to overlay-aware renderer
+  renderTimelineWithOverlay();
   const{labels,values,dates}=groupByDay(pv,state.days,state.startDate,state.endDate);
-  document.getElementById('time-badge').textContent=fmt(pv.length)+' views';
-  const annLines=state.annotations.map(a=>{
-    const idx=dates.indexOf(a.date);
-    if(idx<0)return null;
-    return{value:idx,scaleID:'x',borderColor:a.color,borderWidth:1.5,borderDash:[4,3],
-      label:{display:true,content:a.note.slice(0,24),position:'start',font:{size:9},color:a.color,backgroundColor:'rgba(4,12,24,.85)',padding:3}};
-  }).filter(Boolean);
-  kill('timeline');
-  charts.timeline=new Chart(document.getElementById('chart-timeline'),{
-    type:'line',
-    data:{labels,datasets:[{data:values,borderColor:'#0D9488',backgroundColor:'rgba(13,148,136,.1)',borderWidth:2,pointRadius:0,pointHoverRadius:5,fill:true,tension:.35}]},
-    options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false},
-        annotation:{annotations:annLines}},
-      scales:{x:{...G,ticks:{maxTicksLimit:12}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
-  });
-  renderAnnotations(labels,dates);
+  // Annotations handled in renderTimelineWithOverlay
+  // Timeline rendered by renderTimelineWithOverlay() above
 
   // Devices
   const dc=countBy(pv,'device_type');
@@ -2613,9 +2624,9 @@ function renderGeo(){
   kill('regions-bar');
   if(regions.slice(0,8).length)charts['regions-bar']=new Chart(document.getElementById('chart-regions-bar'),{type:'bar',data:{labels:regions.slice(0,8).map(r=>r[0]),datasets:[{data:regions.slice(0,8).map(r=>r[1]),backgroundColor:'rgba(217,119,6,.75)',borderRadius:4,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{...G,ticks:{precision:0}},y:{grid:{display:false}}}}});
   renderTable('geo-table-countries',countries.slice(0,12)); renderTable('geo-table-regions',regions.slice(0,12));
-  renderTable('geo-table-cities',cities.slice(0,12));
+  _geoCities = cities; renderTable('geo-table-cities',cities.slice(0,12));
   const postals=countBy(pv,'postal_code').filter(p=>p[0]!=='(unknown)');
-  renderTable('geo-table-postal',postals.slice(0,10));
+  _geoPostals = postals; renderTable('geo-table-postal',postals.slice(0,10));
   const coordMap={};pv.forEach(e=>{if(e.latitude&&e.longitude){const k=Number(e.latitude).toFixed(1)+', '+Number(e.longitude).toFixed(1);coordMap[k]=(coordMap[k]||0)+1;}});
   renderTable('geo-table-coords',Object.entries(coordMap).sort((a,b)=>b[1]-a[1]).slice(0,10));
 }
@@ -2962,7 +2973,7 @@ async function runAIInsights(){
   const dayMap={};pv.forEach(e=>{const d=e.created_at.slice(0,10);dayMap[d]=(dayMap[d]||0)+1;});
   const days=Object.values(dayMap);
   const trend=days.length>=2?Math.round(((days[days.length-1]-days[0])/Math.max(days[0],1))*100):0;
-  const focusPrompts={general:'Provide a comprehensive overview.',growth:'Focus on growth opportunities.',anomalies:'Look for unusual patterns and anomalies.',seo:'Analyze SEO and organic search.',conversion:'Focus on conversion optimization.',linkedin:`Analyze LinkedIn traffic (${liTraffic} visits).`};
+  const focusPrompts={general:'Provide a comprehensive overview of all metrics.',growth:'Focus on growth opportunities, underperforming channels, and traffic expansion strategies.',anomalies:`Look for unusual patterns, traffic spikes or drops, geographic anomalies, and smart alert opportunities. Note that today shows ${days.length?days[days.length-1]:0} pageviews vs avg ${days.length>1?Math.round(days.slice(0,-1).reduce((a,b)=>a+b,0)/(days.length-1)):0}/day.`,seo:'Analyze SEO, organic search performance, referral sources, and acquisition quality.',conversion:'Focus on conversion rate optimization, goal performance, funnel drop-off, and revenue opportunities.',linkedin:`Specifically analyze the LinkedIn traffic (${liTraffic} visits) — post timing, UTM campaigns, and content strategy.`,regions:'Analyze geographic distribution, identify high-potential regions, and flag any unusual regional traffic patterns.'};
   const prompt=`Analytics expert. ${focusPrompts[focus]||''}\n\nData (${state.days} days${state.siteId?' — '+state.siteId:''}):\nViews: ${pv.length}, Visitors: ${visitors}, Sessions: ${sessions}, Bounce: ${bounce}%, Avg Duration: ${fmtD(avgDur)}, Trend: ${trend>0?'+':''}${trend}%\nGoals: ${goals.length}, CVR: ${sessions?Math.round(goals.length/sessions*100):0}%\nTop goals: ${countBy(goals,'goal_name').slice(0,3).map(([g,c])=>g+': '+c).join(', ')||'none'}\nTop pages: ${countBy(pv,'url').slice(0,5).map(([u,c])=>fmtUrl(u)+': '+c).join(', ')}\nChannels: ${Object.entries(channels).map(([k,v])=>k+': '+v).join(', ')}\nCountries: ${countBy(pv,'country').slice(0,5).map(([c,n])=>c+': '+n).join(', ')}\nErrors: ${errors.length}, LinkedIn: ${liTraffic} visits\n\nProvide: 1) Executive summary (2-3 sentences) 2) 3-4 key insights with data 3) 2-3 recommendations 4) Red flags\nFormat with ## headers and **bold**. Be specific and actionable.`;
   try{
     const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
@@ -3045,6 +3056,97 @@ function runFunnel(){
   const max=stepCounts[0]||1;
   if(detail)detail.innerHTML=stepCounts.map((count,i)=>{const prev=i===0?count:stepCounts[i-1]||1;const dropPct=i===0?0:Math.round((1-count/prev)*100);return`<div class="funnel-bar"><div class="funnel-name">${labels[i]}</div><div class="funnel-track"><div class="funnel-fill" style="width:${Math.round(count/max*100)}%"></div></div><div class="funnel-num">${fmt(count)}</div><div class="funnel-rate">${i===0?'entry':dropPct+'% drop'}</div></div>`;}).join('');
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   GEO SEARCH FILTER
+   ══════════════════════════════════════════════════════════════════ */
+let _geoCities = [], _geoPostals = [];
+
+function filterGeoTable(tableId, inputId, data) {
+  const q = (document.getElementById(inputId)?.value || '').toLowerCase();
+  const filtered = q ? data.filter(([label]) => label.toLowerCase().includes(q)) : data.slice(0, 12);
+  renderTable(tableId, filtered);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SMART ANOMALY DETECTION (AI Insights enhanced)
+   ══════════════════════════════════════════════════════════════════ */
+function detectAnomalies() {
+  const pv = state.events.filter(e => e.event_type === 'pageview');
+  if (pv.length < 10) return;
+
+  // Day-over-day anomaly check
+  const dayMap = {};
+  pv.forEach(e => { const d = e.created_at.slice(0,10); dayMap[d] = (dayMap[d]||0)+1; });
+  const days = Object.entries(dayMap).sort((a,b)=>a[0]<b[0]?-1:1);
+  if (days.length < 3) return;
+
+  const today = days[days.length-1];
+  const yesterday = days[days.length-2];
+  const avgPrev = days.slice(0,-1).reduce((s,[,v])=>s+v,0) / (days.length-1);
+
+  if (avgPrev < 3) return; // not enough baseline
+
+  const todayPct = Math.round((today[1] - avgPrev) / avgPrev * 100);
+  if (today[1] > avgPrev * 2)
+    addNotification('warning', '🚀 Traffic Spike Detected', `${today[1]} pageviews today vs avg ${Math.round(avgPrev)}/day (+${todayPct}%)`);
+  else if (today[1] < avgPrev * 0.3 && avgPrev > 5)
+    addNotification('error', '📉 Traffic Drop Detected', `Only ${today[1]} pageviews today vs avg ${Math.round(avgPrev)}/day (${todayPct}%)`);
+
+  // Region drop detection
+  const regionDay = {};
+  pv.forEach(e => {
+    if (!e.region) return;
+    const d = e.created_at.slice(0,10);
+    if (!regionDay[e.region]) regionDay[e.region] = {};
+    regionDay[e.region][d] = (regionDay[e.region][d]||0)+1;
+  });
+  Object.entries(regionDay).forEach(([region, dayData]) => {
+    const dvals = Object.entries(dayData).sort((a,b)=>a[0]<b[0]?-1:1);
+    if (dvals.length < 3) return;
+    const last = dvals[dvals.length-1][1];
+    const avg = dvals.slice(0,-1).reduce((s,[,v])=>s+v,0)/(dvals.length-1);
+    if (avg > 5 && last < avg * 0.2)
+      addNotification('warning', `📍 ${region} traffic dropped`, `Only ${last} visits today vs avg ${Math.round(avg)}/day`);
+  });
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   PREVIOUS PERIOD OVERLAY ON TIMELINE
+   ══════════════════════════════════════════════════════════════════ */
+let _showPrevOverlay = false;
+function togglePrevOverlay() {
+  _showPrevOverlay = !_showPrevOverlay;
+  const btn = document.getElementById('overlay-btn');
+  if (btn) { btn.style.background = _showPrevOverlay ? 'var(--teal-dim)' : ''; btn.style.color = _showPrevOverlay ? 'var(--teal)' : ''; btn.style.borderColor = _showPrevOverlay ? 'var(--teal)' : ''; }
+  renderTimelineWithOverlay();
+}
+
+function renderTimelineWithOverlay() {
+  const pv = state.events.filter(e => e.event_type === 'pageview');
+  const { labels, values, dates } = groupByDay(pv, state.days, state.startDate, state.endDate);
+  document.getElementById('time-badge').textContent = fmt(pv.length) + ' views';
+  const datasets = [{ data:values, borderColor:'#0D9488', backgroundColor:'rgba(13,148,136,.1)', borderWidth:2, pointRadius:0, pointHoverRadius:5, fill:true, tension:.35, label:'Current' }];
+  if (_showPrevOverlay && state.prevEvents && state.prevEvents.length) {
+    const ppv = state.prevEvents.filter(e => e.event_type === 'pageview');
+    const { values: pvals } = groupByDay(ppv, state.days, '', '');
+    // Align to same length
+    const aligned = labels.map((_, i) => pvals[i] || 0);
+    datasets.push({ data:aligned, borderColor:'rgba(139,92,246,.6)', backgroundColor:'transparent', borderWidth:1.5, borderDash:[4,3], pointRadius:0, tension:.35, label:'Previous period' });
+  }
+  const annLines = (state.annotations || []).map(a => { const idx = dates.indexOf(a.date); if(idx<0)return null; return{value:idx,scaleID:'x',borderColor:a.color,borderWidth:1.5,borderDash:[4,3],label:{display:true,content:a.note.slice(0,24),position:'start',font:{size:9},color:a.color,backgroundColor:'rgba(4,12,24,.85)',padding:3}};}).filter(Boolean);
+  kill('timeline');
+  charts.timeline = new Chart(document.getElementById('chart-timeline'), {
+    type:'line', data:{labels, datasets},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:_showPrevOverlay,labels:{usePointStyle:true,padding:12,boxWidth:8}}, tooltip:{mode:'index',intersect:false},
+        annotation:{annotations:annLines} },
+      scales:{ x:{...G,ticks:{maxTicksLimit:12}}, y:{...G,beginAtZero:true,ticks:{precision:0}} } },
+  });
+  renderAnnotations(labels, dates);
+}
+
 function startLivePoll(){updateLive();setInterval(updateLive,30000);}
 </script>
 
