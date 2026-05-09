@@ -57,11 +57,6 @@ body::before{content:'';position:fixed;inset:0;
 #login-error{color:var(--red);font-size:12px;margin-top:10px;text-align:center;min-height:16px}
 
 /* ── ALERTS BANNER ─────────────────────────────────────────────────────────── */
-#alert-banner{display:none;position:sticky;top:0;z-index:60;padding:10px 20px;
-  font-size:12px;font-weight:600;display:none;align-items:center;justify-content:space-between;gap:12px}
-#alert-banner.spike{background:rgba(16,185,129,.15);border-bottom:1px solid rgba(16,185,129,.3);color:#10B981}
-#alert-banner.drop{background:rgba(217,119,6,.12);border-bottom:1px solid rgba(217,119,6,.3);color:#D97706}
-.alert-dismiss{background:none;border:none;color:inherit;cursor:pointer;font-size:16px;opacity:.7;padding:0 4px}
 .alert-dismiss:hover{opacity:1}
 
 /* ── LOADING ───────────────────────────────────────────────────────────────── */
@@ -186,12 +181,11 @@ select:hover,.btn-ctrl:hover{border-color:var(--teal)}
 }
 
 /* ── MAIN ──────────────────────────────────────────────────────────────────── */
-main{padding:16px 20px;max-width:1400px;margin:0 auto}
+main{padding:14px 16px;}
 
 /* ── KPI ───────────────────────────────────────────────────────────────────── */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
-@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:600px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+
 .kpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;position:relative;overflow:hidden;transition:border-color .2s}
 .kpi-card:hover{border-color:rgba(13,148,136,.4)}
 .kpi-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--teal),transparent);opacity:0;transition:opacity .2s}
@@ -214,9 +208,6 @@ main{padding:16px 20px;max-width:1400px;margin:0 auto}
 .tl-type{font-size:10px;font-weight:700;text-transform:uppercase;color:var(--text2)}
 .tl-page{font-size:12px;color:var(--text)}
 .tl-time{font-size:10px;color:var(--text3);flex-shrink:0;font-family:"JetBrains Mono",monospace}
-.alert-rule{background:var(--card2);border-radius:8px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
-.alert-rule-name{font-size:13px;font-weight:600;flex:1}
-.alert-rule-desc{font-size:11px;color:var(--text2)}
 .alert-active{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .alert-active.on{background:var(--green);box-shadow:0 0 6px var(--green)}
 .alert-active.off{background:var(--text3)}
@@ -241,7 +232,7 @@ main{padding:16px 20px;max-width:1400px;margin:0 auto}
 .g11{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .g13{display:grid;grid-template-columns:1fr 2fr;gap:12px;margin-bottom:12px}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
-@media(max-width:900px){.g21,.g11,.g13,.g3{grid-template-columns:1fr}}
+
 
 /* ── TABLES ────────────────────────────────────────────────────────────────── */
 .table-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
@@ -338,13 +329,6 @@ main{padding:16px 20px;max-width:1400px;margin:0 auto}
 .ve-url{flex:1;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ve-time{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--text3);flex-shrink:0}
 /* ALERTS */
-.alert-rule{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.alert-rule-name{font-size:13px;font-weight:700;min-width:140px}
-.alert-rule-desc{flex:1;font-size:12px;color:var(--text2)}
-.alert-rule-status{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px}
-.alert-rule-status.enabled{background:rgba(16,185,129,.15);color:var(--green)}
-.alert-rule-status.disabled{background:rgba(74,96,128,.2);color:var(--text3)}
-.alert-fired{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3)}
 /* CHANNEL */
 .channel-pill{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600}
 .ch-organic{background:rgba(16,185,129,.15);color:var(--green)}
@@ -378,6 +362,37 @@ main{padding:16px 20px;max-width:1400px;margin:0 auto}
 
 footer{text-align:center;padding:14px;color:var(--text3);font-size:11px;letter-spacing:.5px;border-top:1px solid var(--border)}
 footer a{color:var(--teal);text-decoration:none}
+
+/* ── RESPONSIVE LAYOUT (authoritative, no overrides) ──────────── */
+/* KPI grids */
+.kpi-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important; }
+
+/* Chart grids */
+.g21, .g11, .g13, .g3 { display: grid; gap: 12px; margin-bottom: 12px; }
+.g21  { grid-template-columns: 2fr 1fr; }
+.g11  { grid-template-columns: 1fr 1fr; }
+.g13  { grid-template-columns: 1fr 2fr; }
+.g3   { grid-template-columns: repeat(3, 1fr); }
+
+@media (max-width: 1100px) {
+  .g21  { grid-template-columns: 1fr; }
+  .g13  { grid-template-columns: 1fr; }
+}
+@media (max-width: 860px) {
+  .g11, .g3  { grid-template-columns: 1fr; }
+  .sidebar   { width: 200px; }
+}
+@media (max-width: 640px) {
+  .sidebar   { width: 52px; }
+  .kpi-grid  { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+/* Make main content full width within content-area */
+main { padding: 14px 16px; max-width: 100%; }
+
+/* Ensure header rows don't overflow */
+.header-row1, .header-row2 { min-height: 34px; }
+
 </style>
 </head>
 <body>
@@ -386,13 +401,6 @@ footer a{color:var(--teal);text-decoration:none}
 
 <!-- LOADING -->
 <div id="loading" style="display:none"><div class="spinner"></div></div>
-
-<!-- ALERT BANNER -->
-<div id="alert-banner">
-  <span id="alert-text"></span>
-  <button class="alert-dismiss" onclick="dismissAlert()">&#x2715;</button>
-</div>
-
 <!-- ANNOTATION MODAL -->
 <div id="ann-modal" style="display:none">
   <div class="modal-backdrop" onclick="if(event.target===this)closeAnnModal()">
@@ -434,38 +442,6 @@ footer a{color:var(--teal);text-decoration:none}
     </div>
   </div>
 </div>
-
-
-<!-- ALERT MODAL -->
-<div id="alert-modal" style="display:none">
-  <div class="modal-backdrop" onclick="if(event.target===this)closeAlertModal()">
-    <div class="modal">
-      <div class="modal-title">New Alert Rule <button class="modal-close" onclick="closeAlertModal()">&#x2715;</button></div>
-      <label>Alert Name</label>
-      <input type="text" id="al-name" placeholder="e.g. Traffic Drop Alert">
-      <label>Metric</label>
-      <select id="al-metric">
-        <option value="pageviews">Page Views</option>
-        <option value="visitors">Unique Visitors</option>
-        <option value="goals">Goal Conversions</option>
-        <option value="bounce_rate">Bounce Rate</option>
-      </select>
-      <label>Condition</label>
-      <select id="al-condition">
-        <option value="above">Goes above</option>
-        <option value="below">Falls below</option>
-        <option value="change_pct">Changes by % (vs yesterday)</option>
-      </select>
-      <label>Threshold</label>
-      <input type="number" id="al-threshold" placeholder="e.g. 100 or 30 (for %)">
-      <label>Webhook URL (optional — Slack, Discord, etc.)</label>
-      <input type="url" id="al-webhook" placeholder="https://hooks.slack.com/...">
-      <div class="modal-actions">
-        <button class="btn-teal" onclick="saveAlertRule()">Save Rule</button>
-        <button class="btn-secondary" onclick="closeAlertModal()">Cancel</button>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- APP -->
@@ -490,19 +466,19 @@ footer a{color:var(--teal);text-decoration:none}
           <span>to</span>
           <input type="date" id="date-end" onchange="onDateChange()">
         </div>
-        <button class="btn-ctrl" onclick="loadData()">&#x21BB; Refresh</button>
+        <button class="btn-ctrl" onclick="loadData()" aria-label="Refresh data">↻ Refresh</button>
         <div class="live-badge"><div class="live-dot"></div><span id="live-count">0</span> live</div>
       </div>
     </div>
     <!-- Row 2: Actions -->
     <div class="header-row2">
-      <button class="btn-ctrl" onclick="exportCSV()">&#x2193; CSV</button>
+      <button class="btn-ctrl" onclick="exportCSV()" aria-label="Export CSV">↓ CSV</button>
       <button class="btn-ctrl" onclick="openEmailReport()">&#x2709; Report</button>
-      <button class="btn-ctrl" onclick="exportPDF()">📄 PDF</button>
-      <button class="btn-ctrl" onclick="copyShareLink()">&#x1F517; Share</button>
-      <button class="btn-ctrl" onclick="toggleTheme()" id="theme-btn" title="Toggle dark/light mode">🌙</button>
+      <button class="btn-ctrl" onclick="exportPDF()" aria-label="Export PDF">📄 PDF</button>
+      <button class="btn-ctrl" onclick="copyShareLink()" aria-label="Copy share link">🔗 Share</button>
+      <button class="btn-ctrl" onclick="toggleTheme()" id="theme-btn" aria-label="Toggle dark/light mode" title="Toggle dark/light mode">🌙</button>
       <div style="position:relative">
-        <button class="btn-ctrl" onclick="toggleNotifications()" id="notif-btn" style="position:relative">
+        <button class="btn-ctrl" onclick="toggleNotifications()" id="notif-btn" aria-label="Notifications" style="position:relative">
           🔔 <span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700">0</span>
         </button>
         <div id="notif-dropdown" style="display:none;position:absolute;right:0;top:36px;width:320px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);z-index:100;box-shadow:0 8px 32px rgba(0,0,0,.4);max-height:400px;overflow-y:auto">
@@ -518,75 +494,82 @@ footer a{color:var(--teal);text-decoration:none}
   <!-- Sidebar overlay for mobile -->
   <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
   <div class="app-body">
-  <nav class="sidebar" id="sidebar">
-    <button class="sb-toggle" onclick="toggleSidebar()" title="Toggle sidebar">
+  <nav class="sidebar" id="sidebar" aria-label="Analytics navigation">
+    <button class="sb-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar" title="Toggle sidebar">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
       </svg>
     </button>
     <div class="sb-section" id="sec-dashboard">
-      <div class="sb-section-header" onclick="toggleSection('dashboard')"><span class="sb-icon">🏠</span><span>Dashboard</span><span class="sb-chevron">▾</span></div>
+      <div class="sb-section-header" onclick="toggleSection('dashboard')"><span class="sb-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span><span>Dashboard</span><span class="sb-chevron">▾</span></div>
       <div class="sb-items">
-        <button class="sb-item active" data-tab="overview" onclick="switchTab('overview')"><span class="sb-item-icon">📊</span><span class="sb-item-label">Overview</span></button>
-        <button class="sb-item" data-tab="realtime" onclick="switchTab('realtime')"><span class="sb-item-icon">⚡</span><span class="sb-item-label">Realtime</span></button>
-        <button class="sb-item" data-tab="status" onclick="switchTab('status')"><span class="sb-item-icon">🟢</span><span class="sb-item-label">Site Health</span></button>
+        <button class="sb-item active" data-tab="overview" onclick="switchTab('overview')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="18" y="3" width="4" height="18"/><rect x="10" y="8" width="4" height="13"/><rect x="2" y="13" width="4" height="8"/></svg></span><span class="sb-item-label">Overview</span></button>
+        <button class="sb-item" data-tab="realtime" onclick="switchTab('realtime')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span class="sb-item-label">Realtime</span></button>
+        <button class="sb-item" data-tab="status" onclick="switchTab('status')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="16 12 12 8 8 12"/><line x1="12" y1="16" x2="12" y2="8"/></svg></span><span class="sb-item-label">Site Health</span></button>
       </div>
     </div>
     <div class="sb-section" id="sec-acquisition">
-      <div class="sb-section-header" onclick="toggleSection('acquisition')"><span class="sb-icon">📈</span><span>Acquisition</span><span class="sb-chevron">▾</span></div>
+      <div class="sb-section-header" onclick="toggleSection('acquisition')"><span class="sb-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span><span>Acquisition</span><span class="sb-chevron">▾</span></div>
       <div class="sb-items">
-        <button class="sb-item" data-tab="channels" onclick="switchTab('channels')"><span class="sb-item-icon">📡</span><span class="sb-item-label">Channels</span></button>
-        <button class="sb-item" data-tab="campaigns" onclick="switchTab('campaigns')"><span class="sb-item-icon">🎯</span><span class="sb-item-label">Campaigns</span></button>
-        <button class="sb-item" data-tab="landing" onclick="switchTab('landing')"><span class="sb-item-icon">🛬</span><span class="sb-item-label">Landing Pages</span></button>
-        <button class="sb-item" data-tab="linkedin" onclick="switchTab('linkedin')"><span class="sb-item-icon">💼</span><span class="sb-item-label">LinkedIn</span></button>
+        <button class="sb-item" data-tab="channels" onclick="switchTab('channels')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12" y2="20"/></svg></span><span class="sb-item-label">Channels</span></button>
+        <button class="sb-item" data-tab="campaigns" onclick="switchTab('campaigns')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span><span class="sb-item-label">Campaigns</span></button>
+        <button class="sb-item" data-tab="landing" onclick="switchTab('landing')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg></span><span class="sb-item-label">Landing Pages</span></button>
+        <button class="sb-item" data-tab="linkedin" onclick="switchTab('linkedin')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span><span class="sb-item-label">LinkedIn</span></button>
       </div>
     </div>
     <div class="sb-section" id="sec-audience">
-      <div class="sb-section-header" onclick="toggleSection('audience')"><span class="sb-icon">👥</span><span>Audience</span><span class="sb-chevron">▾</span></div>
+      <div class="sb-section-header" onclick="toggleSection('audience')"><span class="sb-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span>Audience</span><span class="sb-chevron">▾</span></div>
       <div class="sb-items">
-        <button class="sb-item" data-tab="audience" onclick="switchTab('audience')"><span class="sb-item-icon">👤</span><span class="sb-item-label">Visitors</span></button>
-        <button class="sb-item" data-tab="geo" onclick="switchTab('geo')"><span class="sb-item-icon">🌍</span><span class="sb-item-label">Geographic</span></button>
-        <button class="sb-item" data-tab="visitors" onclick="switchTab('visitors')"><span class="sb-item-icon">🔍</span><span class="sb-item-label">Visitor Explorer</span></button>
-        <button class="sb-item" data-tab="cohort" onclick="switchTab('cohort')"><span class="sb-item-icon">📅</span><span class="sb-item-label">Cohort</span></button>
+        <button class="sb-item" data-tab="audience" onclick="switchTab('audience')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span class="sb-item-label">Visitors</span></button>
+        <button class="sb-item" data-tab="geo" onclick="switchTab('geo')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span><span class="sb-item-label">Geographic</span></button>
+        <button class="sb-item" data-tab="visitors" onclick="switchTab('visitors')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><span class="sb-item-label">Visitor Explorer</span></button>
+        <button class="sb-item" data-tab="cohort" onclick="switchTab('cohort')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span><span class="sb-item-label">Cohort</span></button>
       </div>
     </div>
     <div class="sb-section" id="sec-behavior">
-      <div class="sb-section-header" onclick="toggleSection('behavior')"><span class="sb-icon">📊</span><span>Behavior</span><span class="sb-chevron">▾</span></div>
+      <div class="sb-section-header" onclick="toggleSection('behavior')"><span class="sb-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="18" y="3" width="4" height="18"/><rect x="10" y="8" width="4" height="13"/><rect x="2" y="13" width="4" height="8"/></svg></span><span>Behavior</span><span class="sb-chevron">▾</span></div>
       <div class="sb-items">
-        <button class="sb-item" data-tab="flow" onclick="switchTab('flow')"><span class="sb-item-icon">🗺️</span><span class="sb-item-label">Pages &amp; Flow</span></button>
-        <button class="sb-item" data-tab="scroll" onclick="switchTab('scroll')"><span class="sb-item-icon">📜</span><span class="sb-item-label">Scroll Depth</span></button>
-        <button class="sb-item" data-tab="heatmap" onclick="switchTab('heatmap')"><span class="sb-item-icon">🔥</span><span class="sb-item-label">Heatmap</span></button>
-        <button class="sb-item" data-tab="forms" onclick="switchTab('forms')"><span class="sb-item-icon">📝</span><span class="sb-item-label">Forms</span></button>
-        <button class="sb-item" data-tab="search" onclick="switchTab('search')"><span class="sb-item-icon">🔎</span><span class="sb-item-label">Search</span></button>
-        <button class="sb-item" data-tab="performance" onclick="switchTab('performance')"><span class="sb-item-icon">⚡</span><span class="sb-item-label">Performance</span></button>
-        <button class="sb-item" data-tab="errors" onclick="switchTab('errors')"><span class="sb-item-icon">🚨</span><span class="sb-item-label">Errors</span></button>
+        <button class="sb-item" data-tab="flow" onclick="switchTab('flow')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg></span><span class="sb-item-label">Pages &amp; Flow</span></button>
+        <button class="sb-item" data-tab="scroll" onclick="switchTab('scroll')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span><span class="sb-item-label">Scroll Depth</span></button>
+        <button class="sb-item" data-tab="heatmap" onclick="switchTab('heatmap')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></span><span class="sb-item-label">Heatmap</span></button>
+        <button class="sb-item" data-tab="forms" onclick="switchTab('forms')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></span><span class="sb-item-label">Forms</span></button>
+        <button class="sb-item" data-tab="search" onclick="switchTab('search')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><span class="sb-item-label">Search</span></button>
+        <button class="sb-item" data-tab="performance" onclick="switchTab('performance')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span class="sb-item-label">Performance</span></button>
+        <button class="sb-item" data-tab="errors" onclick="switchTab('errors')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span class="sb-item-label">Errors</span></button>
       </div>
     </div>
     <div class="sb-section" id="sec-conversions">
-      <div class="sb-section-header" onclick="toggleSection('conversions')"><span class="sb-icon">🎯</span><span>Conversions</span><span class="sb-chevron">▾</span></div>
+      <div class="sb-section-header" onclick="toggleSection('conversions')"><span class="sb-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span><span>Conversions</span><span class="sb-chevron">▾</span></div>
       <div class="sb-items">
-        <button class="sb-item" data-tab="goals" onclick="switchTab('goals')"><span class="sb-item-icon">✅</span><span class="sb-item-label">Goals</span></button>
-        <button class="sb-item" data-tab="funnel" onclick="switchTab('funnel')"><span class="sb-item-icon">📉</span><span class="sb-item-label">Funnel Builder</span></button>
-        <button class="sb-item" data-tab="ecommerce" onclick="switchTab('ecommerce')"><span class="sb-item-icon">💰</span><span class="sb-item-label">Ecommerce</span></button>
-        <button class="sb-item" data-tab="comparison" onclick="switchTab('comparison')"><span class="sb-item-icon">⚖️</span><span class="sb-item-label">Comparison</span></button>
+        <button class="sb-item" data-tab="goals" onclick="switchTab('goals')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span class="sb-item-label">Goals</span></button>
+        <button class="sb-item" data-tab="funnel" onclick="switchTab('funnel')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 17 13.5 8.5 8.5 13.5 2 7"/><polyline points="16 17 22 17 22 11"/></svg></span><span class="sb-item-label">Funnel Builder</span></button>
+        <button class="sb-item" data-tab="ecommerce" onclick="switchTab('ecommerce')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span><span class="sb-item-label">Ecommerce</span></button>
+        <button class="sb-item" data-tab="comparison" onclick="switchTab('comparison')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="21"/><path d="M3 6l9 6 9-6"/><path d="M3 18l9-6 9 6"/></svg></span><span class="sb-item-label">Comparison</span></button>
       </div>
     </div>
     <hr class="sb-divider">
     <div class="sb-section" id="sec-settings">
-      <div class="sb-section-header" onclick="toggleSection('settings')"><span class="sb-icon">⚙️</span><span>Settings</span><span class="sb-chevron">▾</span></div>
+      <div class="sb-section-header" onclick="toggleSection('settings')"><span class="sb-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span><span>Settings</span><span class="sb-chevron">▾</span></div>
       <div class="sb-items">
-        <button class="sb-item" data-tab="snippet" onclick="switchTab('snippet')"><span class="sb-item-icon">🧩</span><span class="sb-item-label">Snippet</span></button>
-        <button class="sb-item" data-tab="alertsctr" onclick="switchTab('alertsctr')"><span class="sb-item-icon">🔔</span><span class="sb-item-label">Alerts</span></button>
-        <button class="sb-item" data-tab="ai" onclick="switchTab('ai')"><span class="sb-item-icon">🤖</span><span class="sb-item-label">AI Insights</span></button>
-        <button class="sb-item" data-tab="custom" onclick="switchTab('custom')"><span class="sb-item-icon">📌</span><span class="sb-item-label">My Dashboard</span></button>
+        <button class="sb-item" data-tab="snippet" onclick="switchTab('snippet')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span><span class="sb-item-label">Snippet</span></button>
+        <button class="sb-item" data-tab="ai" onclick="switchTab('ai')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15"/><line x1="16" y1="15" x2="16" y2="15"/></svg></span><span class="sb-item-label">AI Insights</span></button>
+        <button class="sb-item" data-tab="custom" onclick="switchTab('custom')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span><span class="sb-item-label">My Dashboard</span></button>
       </div>
     </div>
   </nav>
-  <div class="content-area">
+  <div class="content-area" role="main">
 
   <!-- OVERVIEW -->
   <div id="tab-overview" class="tab-panel active">
     <main>
+      <!-- KPI color legend -->
+      <div class="kpi-legend">
+        <span>Metric color guide:</span>
+        <span><span class="kpi-legend-dot" style="background:#0D9488;display:inline-block"></span> Traffic</span>
+        <span><span class="kpi-legend-dot" style="background:#D97706;display:inline-block"></span> Engagement</span>
+        <span><span class="kpi-legend-dot" style="background:#10B981;display:inline-block"></span> Performance</span>
+        <span><span class="kpi-legend-dot" style="background:#8B5CF6;display:inline-block"></span> Conversions</span>
+      </div>
       <div class="kpi-grid">
         <div class="kpi-card teal"><div class="kpi-label">Page Views</div><div class="kpi-value" id="kpi-pv">—</div><div id="kpi-pv-chg"></div><div class="kpi-sub" id="kpi-pv-sub">loading...</div></div>
         <div class="kpi-card"><div class="kpi-label">Unique Visitors</div><div class="kpi-value" id="kpi-vis">—</div><div id="kpi-vis-chg"></div><div class="kpi-sub">distinct IDs</div></div>
@@ -603,14 +586,24 @@ footer a{color:var(--teal);text-decoration:none}
             <div class="chart-title">DAU / MAU Stickiness</div>
             <div id="dau-mau-badge" class="chart-badge">—</div>
           </div>
-          <div style="height:160px"><canvas id="chart-dau-mau"></canvas></div>
+          <div style="height:160px;position:relative">
+            <canvas id="chart-dau-mau"></canvas>
+            <div id="dau-empty" class="empty-state" style="display:none;position:absolute;inset:0;border:none">
+              <strong>No daily data yet</strong>Deploy tracker v5 to collect DAU/MAU data
+            </div>
+          </div>
         </div>
         <div class="chart-card">
           <div class="chart-header">
             <div class="chart-title">Engagement Rate</div>
             <div id="eng-badge" class="chart-badge">—</div>
           </div>
-          <div style="height:160px"><canvas id="chart-engagement"></canvas></div>
+          <div style="height:160px;position:relative">
+            <canvas id="chart-engagement"></canvas>
+            <div id="eng-empty" class="empty-state" style="display:none;position:absolute;inset:0;border:none">
+              <strong>No session data yet</strong>Engagement rate requires session events
+            </div>
+          </div>
         </div>
       </div>
 
@@ -620,7 +613,7 @@ footer a{color:var(--teal);text-decoration:none}
             <div class="chart-title">Pageviews Over Time</div>
             <div class="chart-actions">
               <div class="chart-badge" id="time-badge">—</div>
-              <button class="btn-ctrl" style="font-size:10px;padding:3px 8px" onclick="openAnnModal()">+ Note</button>
+              <button class="btn-ctrl btn-note" onclick="openAnnModal()" aria-label="Add annotation note">+ Note</button>
             </div>
           </div>
           <div style="height:200px"><canvas id="chart-timeline"></canvas></div>
@@ -745,7 +738,7 @@ footer a{color:var(--teal);text-decoration:none}
   <!-- CAMPAIGNS -->
   <div id="tab-campaigns" class="tab-panel">
     <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+      <div class="kpi-grid">
         <div class="kpi-card teal"><div class="kpi-label">UTM Sessions</div><div class="kpi-value" id="utmk-sess">—</div><div class="kpi-sub">from campaigns</div></div>
         <div class="kpi-card"><div class="kpi-label">Organic</div><div class="kpi-value" id="utmk-org">—</div><div class="kpi-sub">no UTM params</div></div>
         <div class="kpi-card amber"><div class="kpi-label">Top Source</div><div class="kpi-value" id="utmk-src" style="font-size:13px">—</div><div class="kpi-sub">most traffic</div></div>
@@ -765,7 +758,7 @@ footer a{color:var(--teal);text-decoration:none}
   <!-- GOALS -->
   <div id="tab-goals" class="tab-panel">
     <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+      <div class="kpi-grid">
         <div class="kpi-card purple"><div class="kpi-label">Total Conversions</div><div class="kpi-value" id="gk-total">—</div><div class="kpi-sub">all goal events</div></div>
         <div class="kpi-card green"><div class="kpi-label">Conversion Rate</div><div class="kpi-value" id="gk-rate">—</div><div class="kpi-sub">goals / sessions</div></div>
         <div class="kpi-card"><div class="kpi-label">Unique Goals</div><div class="kpi-value" id="gk-unique">—</div><div class="kpi-sub">distinct names</div></div>
@@ -849,7 +842,7 @@ footer a{color:var(--teal);text-decoration:none}
   <!-- AUDIENCE TAB -->
   <div id="tab-audience" class="tab-panel">
     <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(6,1fr);margin-bottom:14px">
+      <div class="kpi-grid">
         <div class="kpi-card teal"><div class="kpi-label">New Visitors</div><div class="kpi-value" id="aud-new">—</div><div class="kpi-sub">first-time</div></div>
         <div class="kpi-card amber"><div class="kpi-label">Returning</div><div class="kpi-value" id="aud-ret">—</div><div class="kpi-sub">came back</div></div>
         <div class="kpi-card green"><div class="kpi-label">Return Rate</div><div class="kpi-value" id="aud-rate">—</div><div class="kpi-sub">of all visitors</div></div>
@@ -892,7 +885,7 @@ footer a{color:var(--teal);text-decoration:none}
   <!-- GEOGRAPHIC TAB -->
   <div id="tab-geo" class="tab-panel">
     <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+      <div class="kpi-grid">
         <div class="kpi-card teal"><div class="kpi-label">Countries</div><div class="kpi-value" id="geo-countries">—</div><div class="kpi-sub">distinct</div></div>
         <div class="kpi-card"><div class="kpi-label">Regions</div><div class="kpi-value" id="geo-regions">—</div><div class="kpi-sub">states / provinces</div></div>
         <div class="kpi-card"><div class="kpi-label">Cities</div><div class="kpi-value" id="geo-cities">—</div><div class="kpi-sub">distinct</div></div>
@@ -939,7 +932,7 @@ footer a{color:var(--teal);text-decoration:none}
   <!-- SCROLL DEPTH TAB -->
   <div id="tab-scroll" class="tab-panel">
     <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+      <div class="kpi-grid">
         <div class="kpi-card teal"><div class="kpi-label">Reached 25%</div><div class="kpi-value" id="scr-25">—</div><div class="kpi-sub">of sessions</div></div>
         <div class="kpi-card"><div class="kpi-label">Reached 50%</div><div class="kpi-value" id="scr-50">—</div><div class="kpi-sub">of sessions</div></div>
         <div class="kpi-card amber"><div class="kpi-label">Reached 75%</div><div class="kpi-value" id="scr-75">—</div><div class="kpi-sub">of sessions</div></div>
@@ -965,7 +958,7 @@ footer a{color:var(--teal);text-decoration:none}
   <!-- SEARCH TAB -->
   <div id="tab-search" class="tab-panel">
     <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px">
+      <div class="kpi-grid">
         <div class="kpi-card teal"><div class="kpi-label">Total Searches</div><div class="kpi-value" id="srch-total">—</div><div class="kpi-sub">search events</div></div>
         <div class="kpi-card"><div class="kpi-label">Unique Queries</div><div class="kpi-value" id="srch-unique">—</div><div class="kpi-sub">distinct terms</div></div>
         <div class="kpi-card amber"><div class="kpi-label">Top Query</div><div class="kpi-value" id="srch-top" style="font-size:13px">—</div><div class="kpi-sub">most searched</div></div>
@@ -1027,7 +1020,7 @@ footer a{color:var(--teal);text-decoration:none}
   <!-- CHANNELS TAB -->
   <div id="tab-channels" class="tab-panel">
     <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:14px">
+      <div class="kpi-grid">
         <div class="kpi-card teal"><div class="kpi-label">Organic Search</div><div class="kpi-value" id="ch-organic">—</div></div>
         <div class="kpi-card"><div class="kpi-label">Direct</div><div class="kpi-value" id="ch-direct">—</div></div>
         <div class="kpi-card"><div class="kpi-label">Referral</div><div class="kpi-value" id="ch-referral">—</div></div>
@@ -1083,7 +1076,7 @@ footer a{color:var(--teal);text-decoration:none}
   <!-- LANDING PAGES TAB -->
   <div id="tab-landing" class="tab-panel">
     <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+      <div class="kpi-grid">
         <div class="kpi-card teal"><div class="kpi-label">Landing Pages</div><div class="kpi-value" id="lp-count">—</div></div>
         <div class="kpi-card"><div class="kpi-label">Avg Bounce Rate</div><div class="kpi-value" id="lp-bounce">—</div></div>
         <div class="kpi-card green"><div class="kpi-label">Best Converter</div><div class="kpi-value" id="lp-best" style="font-size:12px">—</div></div>
@@ -1108,161 +1101,20 @@ footer a{color:var(--teal);text-decoration:none}
         <div class="chart-card"><div class="chart-header"><div class="chart-title">Bounce Rate by Page</div></div><div style="height:220px"><canvas id="chart-lp-bounce"></canvas></div></div>
       </div>
     </main>
-  </div>
-          <button class="btn-teal" style="font-size:12px;padding:6px 14px" onclick="openAlertModal()">+ New Alert</button>
-        </div>
-        <div id="alert-rules-list"><div class="empty">No alert rules yet. Create one to get notified of traffic changes.</div></div>
-      </div>
-      <div class="chart-card" style="margin-bottom:16px">
-        <div class="chart-header"><div class="chart-title">Alert History (This Session)</div></div>
-        <div id="alert-history"><div class="empty">No alerts triggered yet.</div></div>
-      </div>
-    </main>
-  </div>
-        <p style="font-size:12px;color:var(--text2);margin-bottom:14px">Assign a dollar value to each goal to calculate estimated revenue.</p>
-        <div id="goal-values-list" style="margin-bottom:12px"></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <input id="gv-name" placeholder="Goal name" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;color:var(--text);font-family:'Syne',sans-serif;font-size:12px;outline:none;width:180px">
-          <input id="gv-value" type="number" placeholder="Value ($)" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;width:120px">
-          <button class="btn-teal" style="font-size:12px;padding:8px 16px" onclick="saveGoalValue()">Save</button>
-        </div>
-      </div>
-
-      <!-- Bot Filters -->
-      <div class="chart-card settings-section" style="margin-bottom:14px">
-        <div class="settings-title">Bot & Spam Filters</div>
-        <p style="font-size:12px;color:var(--text2);margin-bottom:14px">Block known bot IPs, user agents, or referrer domains from appearing in your data.</p>
-        <div id="bot-filters-list" style="margin-bottom:12px"></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <select id="bf-type" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'Syne',sans-serif;font-size:12px;padding:8px 10px;outline:none">
-            <option value="ip">IP Address</option>
-            <option value="ua">User Agent</option>
-            <option value="referrer">Referrer</option>
-          </select>
-          <input id="bf-pattern" placeholder="e.g. 123.456.789 or Googlebot" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;flex:1;min-width:180px">
-          <button class="btn-teal" style="font-size:12px;padding:8px 16px" onclick="saveBotFilter()">Add Filter</button>
-        </div>
-      </div>
-
-      <!-- Share Link -->
-      <div class="chart-card settings-section" style="margin-bottom:14px">
-        <div class="settings-title">Public Share Link</div>
-        <p style="font-size:12px;color:var(--text2);margin-bottom:14px">Generate a read-only link you can share with clients or collaborators.</p>
-        <div id="share-tokens-list" style="margin-bottom:12px"></div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <input id="share-label" placeholder="Label (e.g. Client Report)" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;color:var(--text);font-family:'Syne',sans-serif;font-size:12px;outline:none;width:200px">
-          <button class="btn-teal" style="font-size:12px;padding:8px 16px" onclick="generateShareLink()">Generate Link</button>
-        </div>
-      </div>
-
-      <!-- API Reference -->
-      <div class="chart-card settings-section" style="margin-bottom:16px">
-        <div class="settings-title">REST API Access</div>
-        <p style="font-size:12px;color:var(--text2);margin-bottom:14px">Query your analytics data directly via the Supabase REST API.</p>
-        <pre style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;font-size:11px;color:var(--text2);font-family:'JetBrains Mono',monospace;overflow-x:auto;white-space:pre-wrap">// Fetch last 30 days of pageviews
-fetch("https://xkadqvmqxdyqoddiypet.supabase.co/rest/v1/analytics_events?event_type=eq.pageview&created_at=gte.2025-01-01&limit=1000", {
-  headers: {
-    "apikey": "YOUR_ANON_KEY",
-    "Authorization": "Bearer YOUR_ANON_KEY"
-  }
-})
-
-// Filter by site
-?site_id=eq.Portfolio&event_type=eq.pageview
-
-// Count pageviews
-?select=count&event_type=eq.pageview
-
-// Supabase Docs: https://supabase.com/docs/guides/api</pre>
-      </div>
-    </main>
-  </div>
-
 
   <!-- CHANNELS TAB -->
-  <div id="tab-channels" class="tab-panel">
-    <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
-        <div class="kpi-card teal"><div class="kpi-label">Organic Search</div><div class="kpi-value" id="ch-organic">—</div><div class="kpi-sub">search engines</div></div>
-        <div class="kpi-card"><div class="kpi-label">Direct</div><div class="kpi-value" id="ch-direct">—</div><div class="kpi-sub">typed / bookmarked</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Social</div><div class="kpi-value" id="ch-social">—</div><div class="kpi-sub">social platforms</div></div>
-        <div class="kpi-card purple"><div class="kpi-label">Referral</div><div class="kpi-value" id="ch-referral">—</div><div class="kpi-sub">other sites</div></div>
-      </div>
-      <div class="g21">
-        <div class="chart-card"><div class="chart-header"><div class="chart-title">Traffic by Channel Over Time</div></div><div style="height:220px"><canvas id="chart-ch-tl"></canvas></div></div>
-        <div class="chart-card"><div class="chart-header"><div class="chart-title">Channel Distribution</div></div><div style="height:220px"><canvas id="chart-ch-dist"></canvas></div></div>
-      </div>
-      <div class="table-card" style="margin-bottom:16px">
-        <div class="table-head">Channel Performance</div>
-        <div class="table-body" id="table-channels"></div>
-      </div>
-    </main>
-  </div>
+  
 
   <!-- LANDING PAGES TAB -->
-  <div id="tab-landing" class="tab-panel">
-    <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
-        <div class="kpi-card teal"><div class="kpi-label">Landing Pages</div><div class="kpi-value" id="lp-count">—</div><div class="kpi-sub">distinct entry pages</div></div>
-        <div class="kpi-card green"><div class="kpi-label">Best Converting</div><div class="kpi-value" id="lp-best" style="font-size:12px">—</div><div class="kpi-sub">most goals</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Highest Bounce</div><div class="kpi-value" id="lp-bounce" style="font-size:12px">—</div><div class="kpi-sub">worst landing page</div></div>
-        <div class="kpi-card"><div class="kpi-label">Avg Bounce Rate</div><div class="kpi-value" id="lp-avg-bounce">—</div><div class="kpi-sub">across all landings</div></div>
-      </div>
-      <div class="chart-card" style="margin-bottom:14px">
-        <div class="chart-header"><div class="chart-title">Landing Page Performance</div><div class="chart-badge">bounce rate + conversions per page</div></div>
-        <div style="height:260px"><canvas id="chart-landing"></canvas></div>
-      </div>
-      <div class="chart-card" style="margin-bottom:16px;overflow-x:auto">
-        <table style="width:100%;border-collapse:collapse;font-size:12px" id="landing-table">
-          <thead><tr>
-            <th style="padding:9px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">Landing Page</th>
-            <th style="padding:9px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">Sessions</th>
-            <th style="padding:9px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">Bounce %</th>
-            <th style="padding:9px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">Goals</th>
-            <th style="padding:9px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">CVR</th>
-            <th style="padding:9px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">Avg Duration</th>
-          </tr></thead>
-          <tbody id="landing-tbody"><tr><td colspan="6" class="empty">Loading...</td></tr></tbody>
-        </table>
-      </div>
-    </main>
-  </div>
+  
 
   <!-- VISITOR EXPLORER TAB -->
-  <div id="tab-visitors" class="tab-panel">
-    <main>
-      <div class="chart-card" style="margin-bottom:14px">
-        <div class="chart-header"><div class="chart-title">Visitor Explorer</div><div class="chart-badge">click any visitor to see full timeline</div></div>
-        <div style="display:flex;gap:8px;margin-bottom:14px">
-          <input id="visitor-search" type="text" placeholder="Search visitor ID or enter one directly..."
-            style="flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 14px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none">
-          <button class="btn-teal" onclick="loadVisitorProfile()">View Profile</button>
-        </div>
-        <div class="table-body" id="visitor-list" style="max-height:280px;overflow-y:auto"></div>
-      </div>
-      <div id="visitor-profile" style="display:none">
-        <div class="chart-card" style="margin-bottom:14px">
-          <div class="chart-header">
-            <div class="chart-title">Visitor Profile</div>
-            <div id="visitor-profile-meta" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2)"></div>
-          </div>
-          <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:14px">
-            <div class="kpi-card"><div class="kpi-label">Sessions</div><div class="kpi-value" id="vp-sessions">—</div></div>
-            <div class="kpi-card teal"><div class="kpi-label">Page Views</div><div class="kpi-value" id="vp-pv">—</div></div>
-            <div class="kpi-card purple"><div class="kpi-label">Goals</div><div class="kpi-value" id="vp-goals">—</div></div>
-            <div class="kpi-card green"><div class="kpi-label">Total Time</div><div class="kpi-value" id="vp-time">—</div></div>
-            <div class="kpi-card amber"><div class="kpi-label">First Seen</div><div class="kpi-value" id="vp-first" style="font-size:12px">—</div></div>
-          </div>
-          <div id="visitor-timeline" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:8px"></div>
-        </div>
-      </div>
-    </main>
-  </div>
+  
 
   <!-- FORM ANALYTICS TAB -->
   <div id="tab-forms" class="tab-panel">
     <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+      <div class="kpi-grid">
         <div class="kpi-card teal"><div class="kpi-label">Form Interactions</div><div class="kpi-value" id="form-total">—</div><div class="kpi-sub">field events</div></div>
         <div class="kpi-card"><div class="kpi-label">Forms Tracked</div><div class="kpi-value" id="form-count">—</div><div class="kpi-sub">distinct forms</div></div>
         <div class="kpi-card amber"><div class="kpi-label">Most Skipped</div><div class="kpi-value" id="form-skipped" style="font-size:12px">—</div><div class="kpi-sub">highest abandon field</div></div>
@@ -1288,7 +1140,7 @@ fetch("https://xkadqvmqxdyqoddiypet.supabase.co/rest/v1/analytics_events?event_t
   <!-- ECOMMERCE TAB -->
   <div id="tab-ecommerce" class="tab-panel">
     <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+      <div class="kpi-grid">
         <div class="kpi-card teal"><div class="kpi-label">Total Revenue</div><div class="kpi-value" id="ec-revenue">—</div><div class="kpi-sub">USD</div></div>
         <div class="kpi-card green"><div class="kpi-label">Transactions</div><div class="kpi-value" id="ec-txns">—</div><div class="kpi-sub">purchases</div></div>
         <div class="kpi-card amber"><div class="kpi-label">Avg Order Value</div><div class="kpi-value" id="ec-aov">—</div><div class="kpi-sub">per transaction</div></div>
@@ -1315,16 +1167,6 @@ fetch("https://xkadqvmqxdyqoddiypet.supabase.co/rest/v1/analytics_events?event_t
       </div>
     </main>
   </div>
-
-  <!-- ALERTS CENTER TAB -->
-  <div id="tab-alertsctr" class="tab-panel">
-    <main>
-      <div class="chart-card" style="margin-bottom:14px">
-        <div class="chart-header">
-          <div class="chart-title">Alert Rules</div>
-          <button class="btn-teal" onclick="openAlertModal()" style="font-size:12px;padding:6px 14px">+ New Alert</button>
-        </div>
-        <div id="alert-rules-list"><div class="empty">No alert rules yet. Create one to get notified of traffic changes.</div></div>
       </div>
       <div class="chart-card" style="margin-bottom:14px">
         <div class="chart-header"><div class="chart-title">Alert History</div><div class="chart-badge" id="alert-history-badge">—</div></div>
@@ -1334,7 +1176,7 @@ fetch("https://xkadqvmqxdyqoddiypet.supabase.co/rest/v1/analytics_events?event_t
       <div class="chart-card" style="margin-bottom:16px">
         <div class="chart-header"><div class="chart-title">Bot &amp; Spam Filtering</div></div>
         <div style="font-size:12px;color:var(--text2);margin-bottom:14px">Tracker v4 automatically excludes known bots. Known bot patterns are filtered before any data is sent.</div>
-        <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr)">
+        <div class="kpi-grid">
           <div class="kpi-card"><div class="kpi-label">Bot Events Blocked</div><div class="kpi-value" id="bot-blocked">0</div><div class="kpi-sub">client-side filtered</div></div>
           <div class="kpi-card teal"><div class="kpi-label">Human Sessions</div><div class="kpi-value" id="bot-human">—</div><div class="kpi-sub">is_bot = false</div></div>
           <div class="kpi-card amber"><div class="kpi-label">Flagged Sessions</div><div class="kpi-value" id="bot-flagged">—</div><div class="kpi-sub">is_bot = true</div></div>
@@ -1343,46 +1185,11 @@ fetch("https://xkadqvmqxdyqoddiypet.supabase.co/rest/v1/analytics_events?event_t
     </main>
   </div>
 
-  <!-- ALERT MODAL -->
-  <div id="alert-modal" style="display:none">
-    <div class="modal-backdrop" onclick="if(event.target===this)closeAlertModal()">
-      <div class="modal">
-        <div class="modal-title">New Alert Rule <button class="modal-close" onclick="closeAlertModal()">&#x2715;</button></div>
-        <label>Alert Name</label>
-        <input type="text" id="al-name" placeholder="e.g. Traffic Drop Alert">
-        <label>Metric</label>
-        <select id="al-metric">
-          <option value="pageviews">Page Views</option>
-          <option value="sessions">Sessions</option>
-          <option value="goals">Goal Conversions</option>
-          <option value="revenue">Revenue</option>
-        </select>
-        <label>Condition</label>
-        <select id="al-condition">
-          <option value="above">Goes above</option>
-          <option value="below">Falls below</option>
-          <option value="change_pct_up">Increases by % vs previous period</option>
-          <option value="change_pct_down">Decreases by % vs previous period</option>
-        </select>
-        <label>Threshold</label>
-        <input type="number" id="al-threshold" placeholder="e.g. 100">
-        <label>Site (optional)</label>
-        <input type="text" id="al-site" placeholder="all">
-        <label>Webhook URL (optional)</label>
-        <input type="text" id="al-webhook" placeholder="https://hooks.slack.com/...">
-        <div class="modal-actions">
-          <button class="btn-teal" onclick="saveAlertRule()">Save Rule</button>
-          <button class="btn-secondary" onclick="closeAlertModal()">Cancel</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
 
   <!-- PERFORMANCE TAB -->
   <div id="tab-performance" class="tab-panel">
     <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:14px">
+      <div class="kpi-grid">
         <div class="kpi-card teal"><div class="kpi-label">Avg TTFB</div><div class="kpi-value" id="perf-ttfb">—</div><div class="kpi-sub">time to first byte</div></div>
         <div class="kpi-card green"><div class="kpi-label">Avg Page Load</div><div class="kpi-value" id="perf-load">—</div><div class="kpi-sub">full load time</div></div>
         <div class="kpi-card"><div class="kpi-label">Avg DOM Ready</div><div class="kpi-value" id="perf-dom">—</div><div class="kpi-sub">interactive</div></div>
@@ -1418,7 +1225,7 @@ fetch("https://xkadqvmqxdyqoddiypet.supabase.co/rest/v1/analytics_events?event_t
   <!-- ERRORS TAB -->
   <div id="tab-errors" class="tab-panel">
     <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+      <div class="kpi-grid">
         <div class="kpi-card red" style="--teal:var(--red)"><div class="kpi-label">Total Errors</div><div class="kpi-value" id="err-total" style="color:var(--red)">—</div><div class="kpi-sub">all error events</div></div>
         <div class="kpi-card"><div class="kpi-label">JS Errors</div><div class="kpi-value" id="err-js">—</div><div class="kpi-sub">script errors</div></div>
         <div class="kpi-card amber"><div class="kpi-label">Broken Resources</div><div class="kpi-value" id="err-res">—</div><div class="kpi-sub">404 images/scripts</div></div>
@@ -1442,7 +1249,7 @@ fetch("https://xkadqvmqxdyqoddiypet.supabase.co/rest/v1/analytics_events?event_t
   <!-- LINKEDIN TAB -->
   <div id="tab-linkedin" class="tab-panel">
     <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+      <div class="kpi-grid">
         <div class="kpi-card teal"><div class="kpi-label">LinkedIn Sessions</div><div class="kpi-value" id="li-sessions">—</div><div class="kpi-sub">from LinkedIn</div></div>
         <div class="kpi-card green"><div class="kpi-label">Goals from LinkedIn</div><div class="kpi-value" id="li-goals">—</div><div class="kpi-sub">conversions</div></div>
         <div class="kpi-card amber"><div class="kpi-label">Top Campaign</div><div class="kpi-value" id="li-top-camp" style="font-size:12px">—</div><div class="kpi-sub">utm_campaign</div></div>
@@ -1618,7 +1425,7 @@ function switchTab(tab){
     snippet:'Snippet',audience:'Visitors',geo:'Geographic',scroll:'Scroll Depth',
     search:'Search',funnel:'Funnel Builder',cohort:'Cohort',channels:'Channels',
     landing:'Landing Pages',visitors:'Visitor Explorer',forms:'Forms',
-    ecommerce:'Ecommerce',alertsctr:'Alerts',performance:'Performance',
+    ecommerce:'Ecommerce',performance:'Performance',
     errors:'Error Tracking',linkedin:'LinkedIn',ai:'AI Insights',custom:'My Dashboard'};
   document.title=(titles[tab]||tab)+' — Kulan Analytics';
   document.querySelectorAll('.sb-item').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
@@ -1641,7 +1448,6 @@ function switchTab(tab){
   if(tab==='channels')   renderChannels();
   if(tab==='visitors')   renderVisitorList();
   if(tab==='landing')    renderLanding();
-  if(tab==='alertsctr')  renderAlertsCenter();
   if(tab==='performance') renderPerformance();
   if(tab==='errors')     renderErrors();
   if(tab==='linkedin')   renderLinkedIn();
@@ -1657,7 +1463,7 @@ async function initApp(){
   loadPinnedWidgets();
   applyShareToken();
   await loadSites();
-  await Promise.all([loadGoalValues(), loadAlertRules()]);
+  await loadGoalValues();
   await loadData();
   startLivePoll();
 }
@@ -1692,7 +1498,6 @@ async function loadData(){
     }catch(_){ state.annotations=[]; }
     renderOverview();
     renderDAUMAU(state.events);
-    checkAlerts();
     loadPreviousPeriod().then(prev => applyPeriodComparisons(state.events, prev));
     if(state.tab==='status')     renderStatus();
     if(state.tab==='flow')       renderFlow();
@@ -1740,7 +1545,7 @@ function checkAlerts(){
     text.textContent=`Traffic drop detected: only ${today} pageviews today vs avg ${Math.round(avg)}/day`;
   }
 }
-function dismissAlert(){document.getElementById('alert-banner').style.display='none';}
+
 
 /* ══════════════════════════════════════════════════════════════════
    ANNOTATIONS
@@ -3024,34 +2829,6 @@ function closeTimeline(){document.getElementById('visitor-timeline-wrap').style.
 const ALERT_HISTORY=[];
 
 
-async function renderAlertsCenter(){
-  let rules=[];
-  try{const{data}=await sb.from('analytics_alert_rules').select('*').order('created_at',{ascending:false});rules=data||[];}catch(_){}
-  const el=document.getElementById('alert-rules-list');
-  if(!rules.length){el.innerHTML='<div class="empty">No alert rules yet.</div>';return;}
-  el.innerHTML=rules.map(r=>`
-    <div class="alert-rule">
-      <div class="alert-active ${r.active?'on':'off'}"></div>
-      <div style="flex:1">
-        <div class="alert-rule-name">${r.name}</div>
-        <div class="alert-rule-desc">${r.metric} ${r.condition} ${r.threshold}${r.condition==='change_pct'?'%':''}${r.webhook_url?' &middot; webhook set':''}</div>
-      </div>
-      <button onclick="deleteAlertRule('${r.id}')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px">&#x2715;</button>
-    </div>`).join('');
-
-  // Check rules against current data
-  checkAlertRules(rules);
-
-  // History
-  const hEl=document.getElementById('alert-history');
-  hEl.innerHTML=ALERT_HISTORY.length?ALERT_HISTORY.map(a=>`<div class="alert-rule"><div class="alert-active on"></div><div>${a}</div></div>`).join(''):'<div class="empty">No alerts triggered yet.</div>';
-}
-
-async function deleteAlertRule(id){
-  try{await sb.from('analytics_alert_rules').delete().eq('id',id);}catch(_){}
-  renderAlertsCenter();
-}
-
 
 /* ══════════════════════════════════════════════════════════════════
    SETTINGS — Goal Values, Bot Filters, Share Links
@@ -3195,20 +2972,84 @@ function applyPeriodComparisons(current, previous) {
    DAU / MAU
    ══════════════════════════════════════════════════════════════════ */
 function renderDAUMAU(events) {
+  if (!events || !events.length) return;
   const pv = events.filter(e => e.event_type === 'pageview');
+  if (!pv.length) {
+    const badge = document.getElementById('dau-mau-badge');
+    if (badge) badge.textContent = 'No data yet';
+    const emptyDAU = document.getElementById('dau-empty');
+    const emptyEng = document.getElementById('eng-empty');
+    if (emptyDAU) emptyDAU.style.display = 'flex';
+    if (emptyEng) emptyEng.style.display = 'flex';
+    return;
+  }
+
+  // Build daily unique visitors
   const dayMap = {};
   pv.forEach(e => {
     const d = e.created_at.slice(0, 10);
     if (!dayMap[d]) dayMap[d] = new Set();
     dayMap[d].add(e.visitor_id);
   });
-  const daus = Object.values(dayMap).map(s => s.size);
+  const sortedDays = Object.keys(dayMap).sort();
+  const daus = sortedDays.map(d => dayMap[d].size);
   const avgDAU = daus.length ? Math.round(daus.reduce((a, b) => a + b, 0) / daus.length) : 0;
   const mau = new Set(pv.map(e => e.visitor_id)).size;
   const stickiness = mau ? Math.round(avgDAU / mau * 100) : 0;
-  // Update or create DAU/MAU KPI in overview if elements exist
-  const el = document.getElementById('kpi-dau-mau');
-  if (el) el.textContent = stickiness + '%';
+
+  const badge = document.getElementById('dau-mau-badge');
+  if (badge) badge.textContent = stickiness + '% sticky · avg ' + fmt(avgDAU) + ' DAU';
+
+  // DAU/MAU chart
+  kill('chart-dau-mau');
+  const canvas = document.getElementById('chart-dau-mau');
+  if (canvas && sortedDays.length) {
+    charts['chart-dau-mau'] = new Chart(canvas, {
+      type: 'line',
+      data: {
+        labels: sortedDays.map(d => d.slice(5)),
+        datasets: [
+          { label:'DAU', data:daus, borderColor:'#0D9488', backgroundColor:'rgba(13,148,136,.1)',
+            borderWidth:2, pointRadius:0, fill:true, tension:.35 },
+        ]
+      },
+      options: { responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{labels:{usePointStyle:true,padding:10,boxWidth:8}} },
+        scales:{ x:{...G,ticks:{maxTicksLimit:10}}, y:{...G,beginAtZero:true,ticks:{precision:0}} } },
+    });
+  }
+
+  // Engagement Rate card
+  const sessions = new Set(events.map(e=>e.session_id)).size;
+  const pvPerSess = {};
+  pv.forEach(e => { pvPerSess[e.session_id] = (pvPerSess[e.session_id]||0)+1; });
+  const durs = events.filter(e=>e.event_type==='session_end'&&e.duration).map(e=>e.duration);
+  const goals = events.filter(e=>e.event_type==='goal');
+  // Engaged = 2+ pages OR 10+ seconds OR a goal
+  const engagedSessions = new Set([
+    ...Object.entries(pvPerSess).filter(([,c])=>c>=2).map(([s])=>s),
+    ...events.filter(e=>e.event_type==='session_end'&&(e.duration||0)>=10).map(e=>e.session_id),
+    ...goals.map(e=>e.session_id),
+  ]).size;
+  const engRate = sessions ? Math.round(engagedSessions/sessions*100) : 0;
+
+  const engBadge = document.getElementById('eng-badge');
+  if (engBadge) engBadge.textContent = engRate + '% engaged';
+
+  kill('chart-engagement');
+  const engCanvas = document.getElementById('chart-engagement');
+  if (engCanvas) {
+    charts['chart-engagement'] = new Chart(engCanvas, {
+      type: 'doughnut',
+      data: {
+        labels: ['Engaged', 'Bounced'],
+        datasets: [{ data:[engagedSessions, Math.max(0,sessions-engagedSessions)],
+          backgroundColor:['#10B981','#EF4444'], borderWidth:0, hoverOffset:5 }]
+      },
+      options: { responsive:true, maintainAspectRatio:false, cutout:'60%',
+        plugins:{ legend:{position:'right',labels:{usePointStyle:true,padding:10,boxWidth:8}} } },
+    });
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -3613,84 +3454,6 @@ function renderEcommerce() {
 /* ══════════════════════════════════════════════════════════════════
    ALERTS CENTER
    ══════════════════════════════════════════════════════════════════ */
-let _alertRules = [];
-
-async function loadAlertRules() {
-  try {
-    const { data } = await sb.from('analytics_alerts').select('*').order('created_at', { ascending:false });
-    _alertRules = data || [];
-  } catch(_) { _alertRules = []; }
-}
-
-async function saveAlertRule() {
-  const rule = {
-    name:        document.getElementById('al-name').value.trim(),
-    metric:      document.getElementById('al-metric').value,
-    condition:   document.getElementById('al-condition').value,
-    threshold:   parseFloat(document.getElementById('al-threshold').value),
-    site_id:     document.getElementById('al-site').value||'all',
-    webhook_url: document.getElementById('al-webhook').value||null,
-    enabled:     true,
-  };
-  if (!rule.name || isNaN(rule.threshold)) { alert('Fill in name and threshold.'); return; }
-  try {
-    await sb.from('analytics_alerts').insert(rule);
-    closeAlertModal();
-    await loadAlertRules();
-    renderAlertsCenter();
-  } catch(e) { alert('Error: '+e.message); }
-}
-
-async function toggleAlert(id, enabled) {
-  await sb.from('analytics_alerts').update({ enabled }).eq('id', id);
-  await loadAlertRules();
-  renderAlertsCenter();
-}
-
-async function deleteAlert(id) {
-  if (!confirm('Delete this alert rule?')) return;
-  await sb.from('analytics_alerts').delete().eq('id', id);
-  await loadAlertRules();
-  renderAlertsCenter();
-}
-
-function checkAlertRules() {
-  const ev = state.events;
-  const pv = ev.filter(e=>e.event_type==='pageview');
-  const dayMap = {};
-  pv.forEach(e => { const d=e.created_at.slice(0,10); dayMap[d]=(dayMap[d]||0)+1; });
-  const days = Object.values(dayMap);
-  if (days.length < 2) return;
-  const today = days[days.length-1];
-  const avg = days.slice(0,-1).reduce((a,b)=>a+b,0)/(days.length-1);
-
-  _alertRules.filter(r=>r.enabled).forEach(r => {
-    let fired = false;
-    const metric = r.metric === 'pageviews' ? today : today; // simplified
-    if (r.condition === 'above' && metric > r.threshold) fired = true;
-    if (r.condition === 'below' && metric < r.threshold) fired = true;
-    if (r.condition === 'change_pct_down' && avg > 5 && today < avg*(1-r.threshold/100)) fired = true;
-    if (r.condition === 'change_pct_up'   && avg > 0 && today > avg*(1+r.threshold/100)) fired = true;
-    if (fired) {
-      // Show in-app banner
-      const banner = document.getElementById('alert-banner');
-      const text   = document.getElementById('alert-text');
-      banner.className = r.condition.includes('down')||r.condition==='below' ? 'drop' : 'spike';
-      banner.style.display = 'flex';
-      text.textContent = `Alert: "${r.name}" — ${r.metric} ${r.condition.replace(/_/g,' ')} ${r.threshold}`;
-      // Fire webhook if set
-      if (r.webhook_url) {
-        fetch(r.webhook_url, { method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ alert:r.name, metric:r.metric, value:metric, threshold:r.threshold }) }).catch(()=>{});
-      }
-    }
-  });
-}
-
-
-function openAlertModal()  { document.getElementById('alert-modal').style.display='flex'; }
-function closeAlertModal() { document.getElementById('alert-modal').style.display='none'; }
-
 /* ══════════════════════════════════════════════════════════════════
    PUBLIC SHARE LINK
    ══════════════════════════════════════════════════════════════════ */
@@ -4311,7 +4074,92 @@ function exportPDF() {
     .num{font-family:monospace;color:#0D9488;font-weight:700}
     .footer{text-align:center;font-size:11px;color:#a0aec0;margin-top:40px;padding-top:16px;border-top:1px solid #e2e8f0}
     @media print{body{padding:20px}}
-  </style></head><body>
+  
+/* ════════════════════════════════════════════════════════════════
+   COMPREHENSIVE LAYOUT & POLISH FIXES
+   ════════════════════════════════════════════════════════════════ */
+
+/* Full-width content — no wasted whitespace */
+main { padding: 14px 16px; width: 100%; box-sizing: border-box; }
+.content-area { flex: 1; min-width: 0; overflow-x: hidden; }
+
+/* Chart cards full width */
+.chart-card, .table-card { width: 100%; }
+
+/* KPI grid — always fills full width, never overflows */
+.kpi-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)) !important;
+  gap: 10px;
+  margin-bottom: 14px;
+  width: 100%;
+}
+
+/* Responsive grid helpers — fluid, no fixed breakpoints */
+.g21 { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-bottom: 12px; }
+.g11 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.g13 { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; margin-bottom: 12px; }
+.g3  { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px; }
+
+@media (max-width: 1050px) {
+  .g21, .g13 { grid-template-columns: 1fr; }
+}
+@media (max-width: 780px) {
+  .g11, .g3  { grid-template-columns: 1fr; }
+  .kpi-grid  { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+/* KPI card — prevent text truncation */
+.kpi-card { overflow: hidden; min-width: 0; }
+.kpi-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .8px; color: var(--text2); margin-bottom: 6px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.kpi-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(16px, 2vw, 24px);
+  font-weight: 600; color: var(--text); line-height: 1;
+}
+
+/* Sidebar chevron — always consistent */
+.sb-chevron { transition: transform .2s; display: inline-block; }
+.sb-section.collapsed .sb-chevron { transform: rotate(-90deg); }
+
+/* Tab panels — airtight hiding */
+.tab-panel { display: none !important; }
+.tab-panel.active { display: block !important; }
+
+/* Empty state */
+.empty-state {
+  text-align: center; padding: 32px 20px; color: var(--text3);
+  font-size: 12px; border: 1px dashed var(--border);
+  border-radius: var(--radius); margin: 8px 0;
+}
+.empty-state strong { display: block; font-size: 14px; color: var(--text2); margin-bottom: 6px; }
+
+/* Color legend in KPI area */
+.kpi-legend {
+  display: flex; gap: 14px; flex-wrap: wrap; font-size: 10px;
+  color: var(--text3); margin-bottom: 10px; align-items: center;
+}
+.kpi-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* Alert banner fix — keep sticky below header */
+#alert-banner { position: sticky; top: 0; z-index: 45; }
+
+/* + Note button full label */
+.btn-note { font-size: 11px !important; padding: 3px 10px !important; white-space: nowrap; }
+
+/* Accessibility focus rings */
+button:focus-visible, select:focus-visible, input:focus-visible {
+  outline: 2px solid var(--teal); outline-offset: 2px;
+}
+
+/* Muted text — improved contrast */
+.kpi-sub { font-size: 10px; color: var(--text2); margin-top: 4px; }
+
+</style></head><body>
   <h1>Kulan Analytics Report</h1>
   <div class="subtitle">Last ${state.days} days${state.siteId?' — '+state.siteId:' — All Sites'} &nbsp;·&nbsp; Generated ${now}</div>
   <div class="kpis">
