@@ -89,6 +89,8 @@
     try{const ctrl=new AbortController();setTimeout(()=>ctrl.abort(),4000);const r=await fetch(GEO_API,{signal:ctrl.signal});const d=await r.json();_geo={
         country:d.country_name||null,
         country_code:d.country_code||null,
+        country_code_iso3:d.country_code_iso3||null,
+        country_tld:d.country_tld||null,
         city:d.city||null,
         region:d.region||null,
         postal_code:d.postal||null,
@@ -98,13 +100,15 @@
         org:d.org||null,
         asn:d.asn||null,
         currency:d.currency||null,
+        currency_name:d.currency_name||null,
         timezone:d.timezone||null,
         utc_offset:d.utc_offset||null,
         in_eu:d.in_eu||false,
         continent_code:d.continent_code||null,
         calling_code:d.country_calling_code||null,
+        ip_languages:d.languages||null,
       };}
-    catch{_geo={country:null,country_code:null,city:null,region:null,postal_code:null,latitude:null,longitude:null,ip_address:null,org:null,asn:null,currency:null,timezone:null,utc_offset:null,in_eu:false,continent_code:null,calling_code:null};}
+    catch{_geo={country:null,country_code:null,country_code_iso3:null,country_tld:null,city:null,region:null,postal_code:null,latitude:null,longitude:null,ip_address:null,org:null,asn:null,currency:null,currency_name:null,timezone:null,utc_offset:null,in_eu:false,continent_code:null,calling_code:null,ip_languages:null};}
     sessionStorage.setItem('_kl_geo',JSON.stringify(_geo));return _geo;
   }
   let _battery=null;
