@@ -1524,16 +1524,17 @@ function switchTab(tab){
 
 /* ── Init ─────────────────────────────────────────────────────────── */
 async function initApp(){
-  sb=supabase.createClient(CFG.SUPABASE_URL,CFG.ANON_KEY);
-  initDates();
-  initTheme();
-  restoreSidebarState();
-  loadPinnedWidgets();
-  applyShareToken();
-  await loadSites();
-  await loadGoalValues();
-  await loadData();
-  startLivePoll();
+  try{
+    sb=supabase.createClient(CFG.SUPABASE_URL,CFG.ANON_KEY);
+    initDates();initTheme();restoreSidebarState();loadPinnedWidgets();applyShareToken();
+    await loadSites();
+    try{await loadGoalValues();}catch(_){}
+    await loadData();
+    startLivePoll();
+  }catch(e){
+    console.error('initApp failed:',e);
+    document.getElementById('loading').style.display='none';
+  }
 }
 
 async function loadSites(){
@@ -2239,13 +2240,11 @@ th{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#999;font-we
 </div>
 <div class="f">Kulan Analytics &mdash; <a href="https://mmohamud.me">mmohamud.me</a></div>
 </div>
-  <!-- Kulan Analytics Self-Tracking -->
-  <script src="https://analytics.kulaninstitute.org/tracker.js"
-          data-site="Analytics"
-          data-group="dashboard"
-          defer></script>
+
 </body></html>`;
-  document.getElementById('email-preview').textContent=_rHtml.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,1400)+'...';
+  // Show safe text-only preview (never inject raw HTML into DOM)
+  const previewText = _rHtml.replace(/<style[^>]*>[\s\S]*?<\/style>/gi,'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,1200)+'...';
+  document.getElementById('email-preview').textContent=previewText;
   document.getElementById('email-modal').style.display='flex';
 }
 function closeEmailModal(){document.getElementById('email-modal').style.display='none';}
@@ -2275,5 +2274,8 @@ async function updateLive(){
 }
 function startLivePoll(){updateLive();setInterval(updateLive,30000);}
 </script>
+
+  <!-- Kulan Analytics -->
+  <script src="https://analytics.kulaninstitute.org/tracker.js" data-site="Analytics" data-group="dashboard" defer></script>
 </body>
 </html>
