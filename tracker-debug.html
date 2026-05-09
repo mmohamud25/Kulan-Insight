@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Tracker Debug</title></head>
+<body style="font-family:monospace;padding:20px;background:#040C18;color:#E8F0FE">
+<h2 style="color:#0D9488">Kulan Analytics — Tracker Test</h2>
+<div id="log" style="font-size:13px;line-height:2"></div>
+
+<script>
+// Intercept fetch to log all tracker calls
+const _fetch = window.fetch;
+window.fetch = function(url, opts) {
+  if (url && url.includes('analytics_events')) {
+    try {
+      const body = JSON.parse(opts?.body || '{}');
+      log('✅ EVENT SENT', `type=${body.event_type} site=${body.site_id} url=${body.url}`);
+    } catch(e) {
+      log('✅ FETCH to Supabase', url.slice(0, 60));
+    }
+  } else if (url && url.includes('ipapi')) {
+    log('🌍 GEO LOOKUP', url);
+  }
+  return _fetch.apply(this, arguments);
+};
+
+function log(label, msg) {
+  const d = document.getElementById('log');
+  d.innerHTML += `<div><span style="color:#0D9488">${label}</span> — ${msg}</div>`;
+}
+
+log('🚀 Loading tracker...', '');
+</script>
+
+<!-- Load your actual tracker -->
+<script src="https://analytics.kulaninstitute.org/tracker.js"
+        data-site="Debug-Test"
+        defer></script>
+
+<p style="margin-top:20px;color:#8BA3C7">
+  Open browser Console (F12) for full detail.<br>
+  If you see "✅ EVENT SENT" above, the tracker is working.<br>
+  If nothing appears, check Console for errors.
+</p>
+
+<h3 style="color:#D97706;margin-top:20px">Common fixes:</h3>
+<ul style="color:#8BA3C7;line-height:2">
+  <li>CORS error → Supabase anon key wrong or table doesn't exist</li>
+  <li>ipapi.co blocked → site has strict CSP (add ipapi.co to connect-src)</li>
+  <li>No events → debounce bug (now fixed in latest tracker.js)</li>
+  <li>Rate limited → ipapi.co free tier = 1,000 req/day</li>
+</ul>
+</body>
+</html>
