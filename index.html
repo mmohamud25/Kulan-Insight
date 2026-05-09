@@ -1160,10 +1160,14 @@ main { padding: 14px 16px; max-width: 100%; }
         <div class="kpi-card teal"><div class="kpi-label">Landing Pages</div><div class="kpi-value" id="lp-count">—</div></div>
         <div class="kpi-card"><div class="kpi-label">Avg Bounce Rate</div><div class="kpi-value" id="lp-bounce">—</div></div>
         <div class="kpi-card green"><div class="kpi-label">Best Converter</div><div class="kpi-value" id="lp-best" style="font-size:12px">—</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Highest Bounce</div><div class="kpi-value" id="lp-worst" style="font-size:12px">—</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Highest Bounce</div><div class="kpi-value" id="lp-avg-bounce" style="font-size:12px">—</div></div>
       </div>
       <div class="chart-card" style="margin-bottom:14px;overflow-x:auto">
         <div class="chart-header"><div class="chart-title">Landing Page Performance</div></div>
+        <div class="g11" style="margin-bottom:12px">
+          <div class="chart-card"><div class="chart-header"><div class="chart-title">Entrances by Page</div></div><div style="height:200px"><canvas id="chart-landing"></canvas></div></div>
+          <div class="chart-card"><div class="chart-header"><div class="chart-title">Bounce Rate by Page</div></div><div style="height:200px"><canvas id="chart-lp-bounce"></canvas></div></div>
+        </div>
         <table style="width:100%;border-collapse:collapse;font-size:12px" id="landing-table">
           <thead><tr>
             <th style="padding:9px 14px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);border-bottom:1px solid var(--border)">Page</th>
@@ -1181,6 +1185,7 @@ main { padding: 14px 16px; max-width: 100%; }
         <div class="chart-card"><div class="chart-header"><div class="chart-title">Bounce Rate by Page</div></div><div style="height:220px"><canvas id="chart-lp-bounce"></canvas></div></div>
       </div>
     </main>
+  </div>
 
   <!-- CHANNELS TAB -->
   
@@ -1243,23 +1248,6 @@ main { padding: 14px 16px; max-width: 100%; }
         <div class="table-card">
           <div class="table-head">All Transactions</div>
           <div class="table-body" id="table-transactions"><div class="empty">No purchase events yet</div></div>
-        </div>
-      </div>
-    </main>
-  </div>
-      </div>
-      <div class="chart-card" style="margin-bottom:14px">
-        <div class="chart-header"><div class="chart-title">Alert History</div><div class="chart-badge" id="alert-history-badge">—</div></div>
-        <div id="alert-history"><div class="empty">No alerts have fired yet</div></div>
-      </div>
-      <!-- Bot Filter Settings -->
-      <div class="chart-card" style="margin-bottom:16px">
-        <div class="chart-header"><div class="chart-title">Bot &amp; Spam Filtering</div></div>
-        <div style="font-size:12px;color:var(--text2);margin-bottom:14px">Tracker v4 automatically excludes known bots. Known bot patterns are filtered before any data is sent.</div>
-        <div class="kpi-grid">
-          <div class="kpi-card"><div class="kpi-label">Bot Events Blocked</div><div class="kpi-value" id="bot-blocked">0</div><div class="kpi-sub">client-side filtered</div></div>
-          <div class="kpi-card teal"><div class="kpi-label">Human Sessions</div><div class="kpi-value" id="bot-human">—</div><div class="kpi-sub">is_bot = false</div></div>
-          <div class="kpi-card amber"><div class="kpi-label">Flagged Sessions</div><div class="kpi-value" id="bot-flagged">—</div><div class="kpi-sub">is_bot = true</div></div>
         </div>
       </div>
     </main>
@@ -1521,7 +1509,7 @@ function switchTab(tab){
   if(tab==='goals')      renderGoals();
   if(tab==='heatmap')    {populateHeatmapUrls();renderHeatmap();}
   if(tab==='audience')   renderAudience();
-  if(tab==='geo')        renderGeo();
+  if(tab==='geo')        { renderGeo(); setTimeout(()=>{ if(_map) _map.invalidateSize(); }, 200); }
   if(tab==='scroll')     renderScroll();
   if(tab==='search')     renderSearch();
   if(tab==='cohort')     renderCohort();
@@ -3157,58 +3145,57 @@ const CH_COLORS = {'Organic Search':'#10B981','Direct':'#0D9488','Social':'#8B5C
   'Paid Search':'#EF4444','Paid Social':'#F97316','Email':'#D97706','Referral':'#3B82F6','Affiliate':'#EC4899','Campaign':'#14B8A6'};
 
 function renderChannels() {
+  if(!state.events.length)return;
   const pv = state.events.filter(e => e.event_type === 'pageview');
   const chMap = {};
-  pv.forEach(e => {
-    const ch = e.channel || classifyChannel(e);
-    chMap[ch] = (chMap[ch] || 0) + 1;
-  });
+  pv.forEach(e => { const ch=e.channel||classifyChannel(e); chMap[ch]=(chMap[ch]||0)+1; });
   const channels = Object.entries(chMap).sort((a,b) => b[1]-a[1]);
   const total = channels.reduce((s,[,c])=>s+c, 0) || 1;
+  const safeSet = (id,val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+  safeSet('ch-organic', fmt(chMap['Organic Search']||0));
+  safeSet('ch-direct',  fmt(chMap['Direct']||0));
+  safeSet('ch-social',  fmt((chMap['Social']||0)+(chMap['Paid Social']||0)));
+  safeSet('ch-referral',fmt(chMap['Referral']||0));
+  safeSet('ch-other',   fmt((chMap['Email']||0)+(chMap['Campaign']||0)+(chMap['Paid Search']||0)));
 
-  document.getElementById('ch-organic').textContent = fmt(chMap['Organic Search']||0);
-  document.getElementById('ch-direct').textContent  = fmt(chMap['Direct']||0);
-  document.getElementById('ch-social').textContent  = fmt((chMap['Social']||0)+(chMap['Paid Social']||0));
-  document.getElementById('ch-referral').textContent= fmt(chMap['Referral']||0);
+  // Doughnut — try both possible canvas IDs
+  const pieEl = document.getElementById('chart-channels-pie') || document.getElementById('chart-ch-dist');
+  const pieId = pieEl ? pieEl.id : null;
+  if(pieEl && channels.length){ kill(pieId);
+    charts[pieId]=new Chart(pieEl,{type:'doughnut',
+      data:{labels:channels.map(c=>c[0]),datasets:[{data:channels.map(c=>c[1]),
+        backgroundColor:channels.map(c=>CH_COLORS[c[0]]||COLORS[0]),borderWidth:0,hoverOffset:5}]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'60%',
+        plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:11,boxWidth:8}}}}});
+  }
 
-  // Distribution doughnut
-  kill('ch-dist');
-  charts['ch-dist'] = new Chart(document.getElementById('chart-ch-dist'), {
-    type: 'doughnut',
-    data: { labels: channels.map(c=>c[0]), datasets: [{ data: channels.map(c=>c[1]),
-      backgroundColor: channels.map(c=>CH_COLORS[c[0]]||COLORS[0]), borderWidth:0, hoverOffset:5 }] },
-    options: { responsive:true, maintainAspectRatio:false, cutout:'60%',
-      plugins: { legend: { position:'right', labels:{ usePointStyle:true, padding:11, boxWidth:8 } } } },
-  });
+  // Timeline — try both possible canvas IDs
+  const trendEl = document.getElementById('chart-channels-trend') || document.getElementById('chart-ch-tl');
+  const trendId = trendEl ? trendEl.id : null;
+  const {labels} = groupByDay(pv,state.days,state.startDate,state.endDate);
+  if(trendEl){ kill(trendId);
+    charts[trendId]=new Chart(trendEl,{type:'line',
+      data:{labels,datasets:channels.slice(0,5).map(([ch])=>{
+        const filtered=pv.filter(e=>(e.channel||classifyChannel(e))===ch);
+        const{values}=groupByDay(filtered,state.days,state.startDate,state.endDate);
+        return{label:ch,data:values,borderColor:CH_COLORS[ch]||'#0D9488',backgroundColor:'transparent',borderWidth:2,pointRadius:0,tension:.3};
+      })},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{usePointStyle:true,padding:12,boxWidth:8}}},
+        scales:{x:{...G,ticks:{maxTicksLimit:12}},y:{...G,beginAtZero:true,ticks:{precision:0}}}}});
+  }
 
-  // Timeline by channel
-  const { labels } = groupByDay(pv, state.days, state.startDate, state.endDate);
-  const topCh = channels.slice(0, 5);
-  kill('ch-tl');
-  charts['ch-tl'] = new Chart(document.getElementById('chart-ch-tl'), {
-    type: 'line',
-    data: { labels, datasets: topCh.map(([ch]) => {
-      const filtered = pv.filter(e => (e.channel||classifyChannel(e)) === ch);
-      const { values } = groupByDay(filtered, state.days, state.startDate, state.endDate);
-      return { label:ch, data:values, borderColor:CH_COLORS[ch]||'#0D9488',
-        backgroundColor:'transparent', borderWidth:2, pointRadius:0, tension:.3 };
-    }) },
-    options: { responsive:true, maintainAspectRatio:false,
-      plugins: { legend: { labels:{ usePointStyle:true, padding:12, boxWidth:8 } } },
-      scales: { x: { ...G, ticks:{maxTicksLimit:12} }, y: { ...G, beginAtZero:true, ticks:{precision:0} } } },
-  });
-
-  // Table
-  const max = channels[0]?.[1] || 1;
-  const el = document.getElementById('table-channels');
-  el.innerHTML = channels.map(([ch, count]) => {
-    const cls = ch.toLowerCase().replace(/\s+/,'-');
-    return `<div class="table-row">
-      <div class="table-lbl"><span class="channel-pill ch-${cls==='organic-search'?'organic':cls==='paid-search'?'paid':cls==='paid-social'?'paid':cls}">${ch}</span></div>
+  // Tables
+  const max=channels[0]?.[1]||1;
+  const perfEl=document.getElementById('table-channel-perf')||document.getElementById('table-channels');
+  if(perfEl) perfEl.innerHTML=channels.map(([ch,count])=>`
+    <div class="table-row">
+      <div class="table-lbl">${ch}</div>
       <div class="table-bar"><div class="table-bar-fill" style="width:${Math.round(count/max*100)}%;background:${CH_COLORS[ch]||'#0D9488'}"></div></div>
       <div class="table-cnt">${fmt(count)} (${Math.round(count/total*100)}%)</div>
-    </div>`;
-  }).join('');
+    </div>`).join('');
+  const refs=countBy(pv.filter(e=>e.referrer),'referrer').map(([r,c])=>[fmtRef(r),c]).filter(([r])=>r!=='(direct)').slice(0,8);
+  if(document.getElementById('table-channel-refs')) renderTable('table-channel-refs',refs);
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -3261,13 +3248,14 @@ function renderLanding() {
     return { page, sessions: d.sessions.length, bounceRate, goals: d.goals, cvr, avgDur };
   }).sort((a,b) => b.sessions - a.sessions);
 
-  document.getElementById('lp-count').textContent = fmt(pages.length);
-  const bestConv = [...pages].sort((a,b)=>b.cvr-a.cvr)[0];
+  const safeSet = (id, val) => { const el=document.getElementById(id); if(el) el.textContent=val; };
+  safeSet('lp-count', fmt(pages.length));
+  const bestConv = [...pages].sort((a,b)=>b.cvr-a.bounceRate)[0];
   const worstBounce = [...pages].sort((a,b)=>b.bounceRate-a.bounceRate)[0];
-  document.getElementById('lp-best').textContent = bestConv ? bestConv.page.slice(0,18)+'…' : '—';
-  document.getElementById('lp-bounce').textContent = worstBounce ? worstBounce.page.slice(0,18)+'…' : '—';
+  safeSet('lp-best', bestConv ? (bestConv.page||'/') : '—');
+  safeSet('lp-bounce', worstBounce ? (worstBounce.page.length>16?worstBounce.page.slice(0,14)+'…':worstBounce.page) : '—');
   const avgBounce = pages.length ? Math.round(pages.reduce((s,p)=>s+p.bounceRate,0)/pages.length) : 0;
-  document.getElementById('lp-avg-bounce').textContent = avgBounce + '%';
+  safeSet('lp-avg-bounce', avgBounce + '%');
 
   // Bar chart
   const top8 = pages.slice(0, 8);
@@ -3286,6 +3274,7 @@ function renderLanding() {
 
   // Table
   const tbody = document.getElementById('landing-tbody');
+  if(!tbody) return;
   tbody.innerHTML = pages.slice(0,20).map(p => `<tr>
     <td style="padding:8px 14px;font-size:12px;border-bottom:1px solid rgba(13,148,136,.07)">${p.page}</td>
     <td style="padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);border-bottom:1px solid rgba(13,148,136,.07)">${fmt(p.sessions)}</td>
@@ -3300,6 +3289,7 @@ function renderLanding() {
    VISITOR EXPLORER
    ══════════════════════════════════════════════════════════════════ */
 function renderVisitorList() {
+  if (!state.events.length) return;
   const ev = state.events;
   const visitorMap = {};
   ev.forEach(e => {
@@ -3310,7 +3300,11 @@ function renderVisitorList() {
     if (e.created_at > visitorMap[e.visitor_id].last) visitorMap[e.visitor_id].last = e.created_at;
   });
   const visitors = Object.entries(visitorMap).sort((a,b) => b[1].pv - a[1].pv).slice(0, 50);
-  const list = document.getElementById('visitor-list');
+  // Support both old and new HTML element IDs
+  const list = document.getElementById('visitors-list') || document.getElementById('visitor-list');
+  const countEl = document.getElementById('visitors-count');
+  if (!list) return;
+  if (countEl) countEl.textContent = visitors.length + ' visitors';
   list.innerHTML = visitors.map(([vid, d]) => `
     <div class="table-row" style="cursor:pointer" onclick="loadVisitorProfile('${vid}')">
       <div class="table-lbl" style="font-family:'JetBrains Mono',monospace;font-size:11px;max-width:200px">${vid}</div>
@@ -3320,7 +3314,7 @@ function renderVisitorList() {
       </div>
       <div class="table-cnt">${fmt(d.pv)} pvs${d.goals?' · '+d.goals+' goals':''}</div>
       <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);flex-shrink:0;margin-left:8px">${fmtAgo(d.last)}</div>
-    </div>`).join('');
+    </div>`).join('') || '<div class="empty">No visitor data</div>';
 }
 
 async function loadVisitorProfile(vid) {
