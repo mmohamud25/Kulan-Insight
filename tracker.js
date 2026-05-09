@@ -18,6 +18,9 @@
   const GEO_API      = 'https://ipapi.co/json/';
   const HOVER_SAMPLE = 50;
 
+  /* ── Utils (must be first — used by hover IIFE below) ────── */
+  function debounce(fn,ms){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);};}
+
   const script        = document.currentScript;
   const SITE_ID       = script?.getAttribute('data-site')  || 'default';
   const CONTENT_GROUP = script?.getAttribute('data-group') || null;
@@ -261,12 +264,14 @@
   /* ── SPA ────────────────────────────────────────────────────── */
   const _push=history.pushState.bind(history);history.pushState=function(){_push.apply(history,arguments);setTimeout(trackPageView,50);};window.addEventListener('popstate',()=>setTimeout(trackPageView,50));
 
-  /* ── Utils ──────────────────────────────────────────────────── */
-  function debounce(fn,ms){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);};}
+
 
   /* ── Boot ───────────────────────────────────────────────────── */
   trackPerformance();
   initErrorTracking();
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',trackPageView);
   else trackPageView();
+
+  /* ── Utils ─────────────────────────────────────────────────── */
+  function debounce(fn,ms){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);}};
 })();
