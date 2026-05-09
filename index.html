@@ -1192,6 +1192,8 @@ main { padding: 14px 16px; max-width: 100%; }
             <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Location</span><div style="color:var(--text);margin-top:2px" id="tl-location">—</div></div>
             <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Timezone / Offset</span><div style="font-family:'JetBrains Mono',monospace;color:var(--text2);margin-top:2px" id="tl-tz">—</div></div>
             <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Currency</span><div style="color:var(--text);margin-top:2px" id="tl-currency">—</div></div>
+            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Country TLD</span><div style="font-family:'JetBrains Mono',monospace;color:var(--text2);margin-top:2px" id="tl-tld">—</div></div>
+            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">ISO3 Code</span><div style="font-family:'JetBrains Mono',monospace;color:var(--text2);margin-top:2px" id="tl-iso3">—</div></div>
             <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">EU Visitor</span><div style="margin-top:2px" id="tl-eu">—</div></div>
           </div>
           <div id="visitor-timeline" style="max-height:380px;overflow-y:auto;padding:0 4px"></div>
@@ -2607,7 +2609,7 @@ function renderAudience(){
   renderTable('table-viewports',Object.entries(vpMap).sort((a,b)=>b[1]-a[1]).slice(0,10));
   // Org / ISP / B2B data
   renderTable('table-orgs', countBy(pv.filter(e=>e.org),'org').slice(0,10));
-  renderTable('table-currencies', countBy(pv.filter(e=>e.currency),'currency').slice(0,8));
+  renderTable('table-currencies', countBy(pv.filter(e=>e.currency),'currency').map(([c,n])=>[c+(pv.find(e=>e.currency===c)?.currency_name?' ('+pv.find(e=>e.currency===c).currency_name+')':''),n]).slice(0,8));
   // EU breakdown
   const euCount=pv.filter(e=>e.in_eu===true).length;
   const nonEuCount=pv.filter(e=>e.in_eu===false).length;
@@ -2822,11 +2824,13 @@ function openVisitorTimeline(vid){
     if(detail)detail.style.display='flex';
     safeSet('tl-ip',ref.ip_address||'—');
     safeSet('tl-org',ref.org||'—');
-    const loc=[ref.city,ref.region,ref.country_code||ref.country].filter(Boolean).join(', ');
+    const loc=[ref.city,ref.region,ref.country_code_iso3||ref.country_code||ref.country].filter(Boolean).join(', ');
     safeSet('tl-location',loc||'—');
     const tz=[ref.timezone,ref.utc_offset?'(UTC'+ref.utc_offset+')':''].filter(Boolean).join(' ');
     safeSet('tl-tz',tz||'—');
-    safeSet('tl-currency',ref.currency||'—');
+    safeSet('tl-currency',(ref.currency||'')+(ref.currency_name?' — '+ref.currency_name:'')||'—');
+    safeSet('tl-tld',ref.country_tld||'—');
+    safeSet('tl-iso3',ref.country_code_iso3||'—');
     const euEl=document.getElementById('tl-eu');
     if(euEl){euEl.textContent=ref.in_eu?'Yes ⚠️ GDPR':'No';euEl.style.color=ref.in_eu?'var(--amber)':'var(--text2)';}
   }
