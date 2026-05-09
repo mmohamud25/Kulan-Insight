@@ -958,10 +958,32 @@ main { padding: 14px 16px; max-width: 100%; }
       </div>
       <!-- User Preferences Section -->
       <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">🌐 User Preferences & Network</div>
-      <div class="g3" style="margin-bottom:16px">
+      <div class="g3" style="margin-bottom:14px">
         <div class="table-card"><div class="table-head">Languages</div><div class="table-body" id="table-languages"></div></div>
         <div class="table-card"><div class="table-head">Timezones</div><div class="table-body" id="table-timezones"></div></div>
         <div class="table-card"><div class="table-head">Platforms</div><div class="table-body" id="table-platforms"></div></div>
+      </div>
+      <!-- B2B / Org Section -->
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">🏢 Organizations & ISPs</div>
+      <div class="g3" style="margin-bottom:14px">
+        <div class="table-card"><div class="table-head">Top Organizations / ISPs</div><div class="table-body" id="table-orgs"></div></div>
+        <div class="table-card"><div class="table-head">Currencies</div><div class="table-body" id="table-currencies"></div></div>
+        <div class="table-card">
+          <div class="table-head">EU vs Non-EU</div>
+          <div class="table-body" id="table-eu">
+            <div class="table-row">
+              <div class="table-lbl">EU Visitors</div>
+              <div class="table-bar"><div class="table-bar-fill" id="eu-bar" style="width:0%"></div></div>
+              <div class="table-cnt" id="eu-count">—</div>
+            </div>
+            <div class="table-row">
+              <div class="table-lbl">Non-EU Visitors</div>
+              <div class="table-bar"><div class="table-bar-fill" id="non-eu-bar" style="width:0%;background:var(--text3)"></div></div>
+              <div class="table-cnt" id="non-eu-count">—</div>
+            </div>
+            <div style="padding:8px 16px;font-size:10px;color:var(--text3)">GDPR applies to EU visitors</div>
+          </div>
+        </div>
       </div>
     </main>
   </div>
@@ -1162,6 +1184,15 @@ main { padding: 14px 16px; max-width: 100%; }
             <div class="kpi-card" style="padding:10px 14px"><div class="kpi-label">Page Views</div><div class="kpi-value" style="font-size:18px" id="tl-pv">—</div></div>
             <div class="kpi-card" style="padding:10px 14px"><div class="kpi-label">Sessions</div><div class="kpi-value" style="font-size:18px" id="tl-sess">—</div></div>
             <div class="kpi-card" style="padding:10px 14px"><div class="kpi-label">Goals</div><div class="kpi-value" style="font-size:18px" id="tl-goals">—</div></div>
+          </div>
+          <!-- Visitor geo + org detail -->
+          <div id="tl-visitor-detail" style="display:none;background:var(--card2);border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:12px;font-size:12px;display:flex;flex-wrap:wrap;gap:16px">
+            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">IP</span><div style="font-family:'JetBrains Mono',monospace;color:var(--teal);margin-top:2px" id="tl-ip">—</div></div>
+            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Organization / ISP</span><div style="color:var(--text);margin-top:2px" id="tl-org">—</div></div>
+            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Location</span><div style="color:var(--text);margin-top:2px" id="tl-location">—</div></div>
+            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Timezone / Offset</span><div style="font-family:'JetBrains Mono',monospace;color:var(--text2);margin-top:2px" id="tl-tz">—</div></div>
+            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Currency</span><div style="color:var(--text);margin-top:2px" id="tl-currency">—</div></div>
+            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">EU Visitor</span><div style="margin-top:2px" id="tl-eu">—</div></div>
           </div>
           <div id="visitor-timeline" style="max-height:380px;overflow-y:auto;padding:0 4px"></div>
         </div>
@@ -2574,6 +2605,19 @@ function renderAudience(){
   renderTable('table-resolutions',Object.entries(resMap).sort((a,b)=>b[1]-a[1]).slice(0,10));
   const vpMap={};pv.forEach(e=>{if(e.viewport_width&&e.viewport_height){const k=e.viewport_width+'x'+e.viewport_height;vpMap[k]=(vpMap[k]||0)+1;}});
   renderTable('table-viewports',Object.entries(vpMap).sort((a,b)=>b[1]-a[1]).slice(0,10));
+  // Org / ISP / B2B data
+  renderTable('table-orgs', countBy(pv.filter(e=>e.org),'org').slice(0,10));
+  renderTable('table-currencies', countBy(pv.filter(e=>e.currency),'currency').slice(0,8));
+  // EU breakdown
+  const euCount=pv.filter(e=>e.in_eu===true).length;
+  const nonEuCount=pv.filter(e=>e.in_eu===false).length;
+  const euTotal=euCount+nonEuCount||1;
+  const safeBar=(id,pct)=>{const el=document.getElementById(id);if(el)el.style.width=pct+'%';};
+  safeBar('eu-bar',Math.round(euCount/euTotal*100));
+  safeBar('non-eu-bar',Math.round(nonEuCount/euTotal*100));
+  const safeSet2=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  safeSet2('eu-count',fmt(euCount)+' ('+Math.round(euCount/euTotal*100)+'%)');
+  safeSet2('non-eu-count',fmt(nonEuCount)+' ('+Math.round(nonEuCount/euTotal*100)+'%)');
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -2629,6 +2673,13 @@ function renderGeo(){
   _geoPostals = postals; renderTable('geo-table-postal',postals.slice(0,10));
   const coordMap={};pv.forEach(e=>{if(e.latitude&&e.longitude){const k=Number(e.latitude).toFixed(1)+', '+Number(e.longitude).toFixed(1);coordMap[k]=(coordMap[k]||0)+1;}});
   renderTable('geo-table-coords',Object.entries(coordMap).sort((a,b)=>b[1]-a[1]).slice(0,10));
+  // Also render continent breakdown if present
+  const continents=countBy(pv.filter(e=>e.continent_code),'continent_code');
+  const contMap={'NA':'North America','EU':'Europe','AS':'Asia','AF':'Africa','OC':'Oceania','SA':'South America','AN':'Antarctica'};
+  if(continents.length){
+    const el=document.getElementById('geo-table-countries');
+    // prepend continent summary if there's space
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -2764,6 +2815,21 @@ function openVisitorTimeline(vid){
   const goals=ev.filter(e=>e.event_type==='goal').length;
   const safeSet=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   safeSet('tl-visitor-id',vid.slice(0,16)+'...');safeSet('tl-pv',pv);safeSet('tl-sess',sess);safeSet('tl-goals',goals);
+  // Populate geo + org detail from first event that has ip data
+  const ref=ev.find(e=>e.ip_address||e.org||e.country)||ev[0];
+  if(ref){
+    const detail=document.getElementById('tl-visitor-detail');
+    if(detail)detail.style.display='flex';
+    safeSet('tl-ip',ref.ip_address||'—');
+    safeSet('tl-org',ref.org||'—');
+    const loc=[ref.city,ref.region,ref.country_code||ref.country].filter(Boolean).join(', ');
+    safeSet('tl-location',loc||'—');
+    const tz=[ref.timezone,ref.utc_offset?'(UTC'+ref.utc_offset+')':''].filter(Boolean).join(' ');
+    safeSet('tl-tz',tz||'—');
+    safeSet('tl-currency',ref.currency||'—');
+    const euEl=document.getElementById('tl-eu');
+    if(euEl){euEl.textContent=ref.in_eu?'Yes ⚠️ GDPR':'No';euEl.style.color=ref.in_eu?'var(--amber)':'var(--text2)';}
+  }
   const typeColors={pageview:'#0D9488',click:'#3B82F6',goal:'#8B5CF6',scroll:'#D97706',search:'#10B981',session_end:'#4A6080'};
   const tl=document.getElementById('visitor-timeline');
   if(tl)tl.innerHTML=ev.map(e=>`<div class="timeline-event"><div class="tl-dot" style="background:${typeColors[e.event_type]||'#666'}"></div><div style="flex:1"><div class="tl-type">${e.event_type}${e.goal_name?' — '+e.goal_name:''}</div><div class="tl-page">${fmtUrl(e.url||'')}</div>${e.country?`<div style="font-size:10px;color:var(--text3)">${e.country} · ${e.device_type||''} · ${e.browser||''}</div>`:''}</div><div class="tl-time">${fmtAgo(e.created_at)}</div></div>`).join('');
