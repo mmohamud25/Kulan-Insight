@@ -86,15 +86,60 @@ body::before{content:'';position:fixed;inset:0;
 #app{position:relative;z-index:1;min-height:100vh}
 
 /* ── HEADER ────────────────────────────────────────────────────────────────── */
-header{position:sticky;top:0;z-index:50;background:rgba(4,12,24,.95);backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);padding:8px 16px;display:flex;flex-direction:column;gap:6px}
-.header-row1{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%}
-.header-row2{display:flex;align-items:center;gap:6px;flex-wrap:wrap;width:100%}
-.header-brand{display:flex;align-items:center;gap:9px;flex-shrink:0}
-.brand-pulse{width:8px;height:8px;background:var(--teal);border-radius:50%;box-shadow:0 0 8px var(--teal);animation:pulse 2s infinite}
-.brand-name{font-size:15px;font-weight:700;letter-spacing:.5px}
+header{position:sticky;top:0;z-index:50;background:rgba(4,12,24,.96);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);padding:0 14px;height:52px;
+  display:flex;align-items:center;gap:0}
+.header-brand{display:flex;align-items:center;gap:8px;flex-shrink:0;padding-right:14px}
+.brand-name{font-size:14px;font-weight:700;letter-spacing:.4px;white-space:nowrap}
 .brand-name span{color:var(--teal)}
-.header-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+/* Live pulse near brand */
+.live-pill{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;
+  color:var(--teal);background:var(--teal-dim);border:1px solid rgba(13,148,136,.25);
+  border-radius:20px;padding:3px 9px;flex-shrink:0}
+.live-dot{width:6px;height:6px;background:var(--teal);border-radius:50%;
+  box-shadow:0 0 6px var(--teal);animation:pulse 1.8s infinite}
+/* Divider */
+.h-sep{width:1px;background:var(--border);height:24px;flex-shrink:0;margin:0 10px}
+/* Scope group */
+.h-scope{display:flex;align-items:center;gap:5px;flex-shrink:0}
+/* Actions group */
+.h-actions{display:flex;align-items:center;gap:4px;margin-left:auto}
+/* Export dropdown */
+.export-wrap{position:relative}
+.export-menu{display:none;position:absolute;top:calc(100% + 6px);right:0;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  min-width:140px;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,.4);overflow:hidden}
+.export-menu.open{display:block}
+.export-menu button{display:flex;align-items:center;gap:8px;width:100%;background:none;
+  border:none;color:var(--text);font-family:'Syne',sans-serif;font-size:12px;font-weight:600;
+  padding:10px 14px;cursor:pointer;text-align:left;transition:background .15s}
+.export-menu button:hover{background:var(--teal-dim);color:var(--teal)}
+/* Notification bell */
+#notif-btn{position:relative}
+/* Utility buttons */
+select,.btn-ctrl{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);
+  color:var(--text);font-family:'Syne',sans-serif;font-size:11px;padding:4px 8px;
+  cursor:pointer;outline:none;transition:border-color .2s;white-space:nowrap}
+select:hover,.btn-ctrl:hover{border-color:var(--teal)}
+.btn-ctrl{display:flex;align-items:center;gap:4px;font-weight:600}
+.preset-btn{background:var(--card);border:1px solid var(--border);color:var(--text2);
+  border-radius:5px;padding:4px 7px;font-size:11px;font-weight:700;cursor:pointer;
+  transition:all .15s;font-family:'Syne',sans-serif}
+.preset-btn:hover,.preset-btn.active{background:var(--teal-dim);border-color:rgba(13,148,136,.4);color:var(--teal)}
+.date-range{display:flex;align-items:center;gap:3px;background:var(--card);
+  border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px 8px}
+.date-range input[type=date]{background:none;border:none;color:var(--text);
+  font-family:'JetBrains Mono',monospace;font-size:11px;outline:none;width:96px;cursor:pointer}
+.date-range input[type=date]::-webkit-calendar-picker-indicator{filter:invert(.5);cursor:pointer}
+.date-range span{color:var(--text3);font-size:11px}
+/* Theme toggle at sidebar bottom */
+.sb-footer{margin-top:auto;padding:10px 8px;border-top:1px solid var(--border);flex-shrink:0}
+.sb-theme-btn{display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;
+  color:var(--text2);font-family:'Syne',sans-serif;font-size:12px;font-weight:600;
+  padding:8px 10px;cursor:pointer;border-radius:7px;transition:background .15s}
+.sb-theme-btn:hover{background:rgba(13,148,136,.08);color:var(--text)}
+.sidebar.collapsed .sb-theme-btn span{display:none}
+.sidebar.collapsed .sb-footer{padding:10px 6px}
 
 /* Date range picker */
 .date-range{display:flex;align-items:center;gap:4px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:4px 8px}
@@ -116,7 +161,7 @@ select:hover,.btn-ctrl:hover{border-color:var(--teal)}
 
 /* ── SIDEBAR ────────────────────────────────────────────────────────────────── */
 .sidebar{width:228px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);
-  position:sticky;top:0;height:calc(100vh);overflow-y:auto;overflow-x:hidden;
+  position:sticky;top:0;height:100vh;overflow-y:auto;overflow-x:hidden;
   display:flex;flex-direction:column;transition:width .2s;z-index:30}
 .sidebar::-webkit-scrollbar{width:3px}
 .sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
@@ -390,8 +435,6 @@ footer a{color:var(--teal);text-decoration:none}
 /* Make main content full width within content-area */
 main { padding: 14px 16px; max-width: 100%; }
 
-/* Ensure header rows don't overflow */
-.header-row1, .header-row2 { min-height: 34px; }
 
 </style>
 </head>
@@ -447,45 +490,75 @@ main { padding: 14px 16px; max-width: 100%; }
 <!-- APP -->
 <div id="app">
   <header>
-    <!-- Row 1: Brand + filters -->
-    <div class="header-row1">
-      <div class="header-brand">
-        <div class="brand-pulse"></div>
-        <div class="brand-name">Kulan <span>Analytics</span></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-        <select id="site-select"><option value="">All Sites</option></select>
-        <div class="presets">
-          <button class="preset-btn" onclick="setPreset(7)">7d</button>
-          <button class="preset-btn active" onclick="setPreset(30)">30d</button>
-          <button class="preset-btn" onclick="setPreset(90)">90d</button>
-          <button class="preset-btn" onclick="setPreset(365)">1y</button>
-        </div>
-        <div class="date-range">
-          <input type="date" id="date-start" onchange="onDateChange()">
-          <span>to</span>
-          <input type="date" id="date-end" onchange="onDateChange()">
-        </div>
-        <button class="btn-ctrl" onclick="loadData()" aria-label="Refresh data">↻ Refresh</button>
-        <div class="live-badge"><div class="live-dot"></div><span id="live-count">0</span> live</div>
-      </div>
+    <!-- IDENTITY -->
+    <div class="header-brand">
+      <div class="brand-pulse"></div>
+      <div class="brand-name">Kulan <span>Analytics</span></div>
     </div>
-    <!-- Row 2: Actions -->
-    <div class="header-row2">
-      <button class="btn-ctrl" onclick="exportCSV()" aria-label="Export CSV">↓ CSV</button>
-      <button class="btn-ctrl" onclick="openEmailReport()">&#x2709; Report</button>
-      <button class="btn-ctrl" onclick="exportPDF()" aria-label="Export PDF">📄 PDF</button>
-      <button class="btn-ctrl" onclick="copyShareLink()" aria-label="Copy share link">🔗 Share</button>
-      <button class="btn-ctrl" onclick="toggleTheme()" id="theme-btn" aria-label="Toggle dark/light mode" title="Toggle dark/light mode">🌙</button>
-      <div style="position:relative">
-        <button class="btn-ctrl" onclick="toggleNotifications()" id="notif-btn" aria-label="Notifications" style="position:relative">
-          🔔 <span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700">0</span>
+    <div class="live-pill">
+      <div class="live-dot"></div>
+      <span id="live-count">0</span> live
+    </div>
+
+    <div class="h-sep"></div>
+
+    <!-- SCOPE GROUP -->
+    <div class="h-scope">
+      <select id="site-select" aria-label="Select site"><option value="">All Sites</option></select>
+      <div class="presets">
+        <button class="preset-btn" onclick="setPreset(7)">7d</button>
+        <button class="preset-btn active" onclick="setPreset(30)">30d</button>
+        <button class="preset-btn" onclick="setPreset(90)">90d</button>
+        <button class="preset-btn" onclick="setPreset(365)">1y</button>
+      </div>
+      <div class="date-range">
+        <input type="date" id="date-start" onchange="onDateChange()" aria-label="Start date">
+        <span>→</span>
+        <input type="date" id="date-end" onchange="onDateChange()" aria-label="End date">
+      </div>
+      <button class="btn-ctrl" onclick="loadData()" aria-label="Refresh data">↻</button>
+    </div>
+
+    <div class="h-sep"></div>
+
+    <!-- ACTIONS GROUP -->
+    <div class="h-actions">
+      <!-- Export dropdown -->
+      <div class="export-wrap">
+        <button class="btn-ctrl" onclick="toggleExportMenu()" aria-label="Export options">
+          ↓ Export ▾
         </button>
-        <div id="notif-dropdown" style="display:none;position:absolute;right:0;top:36px;width:320px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);z-index:100;box-shadow:0 8px 32px rgba(0,0,0,.4);max-height:400px;overflow-y:auto">
-          <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);display:flex;justify-content:space-between;align-items:center">
-            Notifications <button onclick="clearNotifications()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px">Clear all</button>
+        <div class="export-menu" id="export-menu">
+          <button onclick="exportCSV();closeExportMenu()" aria-label="Export CSV">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            CSV
+          </button>
+          <button onclick="openEmailReport();closeExportMenu()" aria-label="Email report">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Email Report
+          </button>
+          <button onclick="exportPDF();closeExportMenu()" aria-label="Export PDF">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            PDF
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-ctrl" onclick="copyShareLink()" aria-label="Copy share link">🔗 Share</button>
+
+      <div class="h-sep"></div>
+
+      <!-- Notifications -->
+      <div style="position:relative">
+        <button class="btn-ctrl" onclick="toggleNotifications()" id="notif-btn" aria-label="Notifications" style="padding:4px 8px">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span id="notif-badge" style="display:none;position:absolute;top:-3px;right:-3px;background:var(--red);color:#fff;border-radius:50%;width:14px;height:14px;font-size:8px;align-items:center;justify-content:center;font-weight:700">0</span>
+        </button>
+        <div id="notif-dropdown" style="display:none;position:absolute;right:0;top:calc(100% + 6px);width:300px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);z-index:100;box-shadow:0 8px 32px rgba(0,0,0,.4);max-height:360px;overflow-y:auto">
+          <div style="padding:10px 14px;border-bottom:1px solid var(--border);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);display:flex;justify-content:space-between;align-items:center">
+            Notifications <button onclick="clearNotifications()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px">Clear</button>
           </div>
-          <div id="notif-list"><div class="empty" style="padding:20px">No notifications yet</div></div>
+          <div id="notif-list"><div class="empty" style="padding:16px">No notifications</div></div>
         </div>
       </div>
     </div>
@@ -555,6 +628,13 @@ main { padding: 14px 16px; max-width: 100%; }
         <button class="sb-item" data-tab="ai" onclick="switchTab('ai')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="15" x2="8" y2="15"/><line x1="16" y1="15" x2="16" y2="15"/></svg></span><span class="sb-item-label">AI Insights</span></button>
         <button class="sb-item" data-tab="custom" onclick="switchTab('custom')"><span class="sb-item-icon"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span><span class="sb-item-label">My Dashboard</span></button>
       </div>
+    </div>
+    <!-- Theme toggle at sidebar bottom -->
+    <div class="sb-footer">
+      <button class="sb-theme-btn" onclick="toggleTheme()" id="theme-btn" aria-label="Toggle dark/light mode">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <span id="theme-label">Dark Mode</span>
+      </button>
     </div>
   </nav>
   <div class="content-area" role="main">
@@ -3530,9 +3610,28 @@ function restoreSidebarState() {
 /* ══════════════════════════════════════════════════════════════════
    DARK / LIGHT MODE
    ══════════════════════════════════════════════════════════════════ */
+function toggleExportMenu() {
+  const m = document.getElementById('export-menu');
+  m.classList.toggle('open');
+}
+function closeExportMenu() {
+  document.getElementById('export-menu').classList.remove('open');
+}
+// Close export menu when clicking outside
+document.addEventListener('click', e => {
+  const wrap = document.querySelector('.export-wrap');
+  if (wrap && !wrap.contains(e.target)) closeExportMenu();
+});
+
 function toggleTheme() {
   const isLight = document.documentElement.classList.toggle('light');
-  document.getElementById('theme-btn').textContent = isLight ? '🌙' : '☀️';
+  const label = document.getElementById('theme-label');
+  const btn = document.getElementById('theme-btn');
+  if (label) label.textContent = isLight ? 'Light Mode' : 'Dark Mode';
+  // Swap moon/sun icon
+  btn.querySelector('svg').innerHTML = isLight
+    ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
+    : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
   localStorage.setItem('_kl_theme', isLight ? 'light' : 'dark');
   // Redraw charts with new colors
   Chart.defaults.color = isLight ? '#4A5568' : '#8BA3C7';
@@ -3541,8 +3640,8 @@ function toggleTheme() {
 function initTheme() {
   if (localStorage.getItem('_kl_theme') === 'light') {
     document.documentElement.classList.add('light');
-    const btn = document.getElementById('theme-btn');
-    if (btn) btn.textContent = '☀️';
+    const label = document.getElementById('theme-label');
+    if (label) label.textContent = 'Light Mode';
   }
 }
 
