@@ -28,6 +28,13 @@
   --green:#10B981;--red:#EF4444;--purple:#8B5CF6;--orange:#F97316;
   --radius:12px;--radius-sm:7px;
 }
+html.light{
+  --bg:#F0F4F8;--bg2:#E2E8F0;--card:#FFFFFF;--card2:#F7FAFC;
+  --border:rgba(0,0,0,.1);--teal:#0D9488;--teal-dim:rgba(13,148,136,.1);
+  --amber:#D97706;--amber-dim:rgba(217,119,6,.08);
+  --text:#0B2545;--text2:#4A5568;--text3:#A0AEC0;
+  --green:#10B981;--red:#EF4444;--purple:#8B5CF6;--orange:#F97316;
+}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;line-height:1.5;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;
   background-image:linear-gradient(rgba(13,148,136,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(13,148,136,.04) 1px,transparent 1px);
@@ -482,7 +489,20 @@ footer a{color:var(--teal);text-decoration:none}
       <button class="btn-ctrl" onclick="loadData()">&#x21BB; Refresh</button>
       <button class="btn-ctrl" onclick="exportCSV()">&#x2193; CSV</button>
       <button class="btn-ctrl" onclick="openEmailReport()">&#x2709; Report</button>
+      <button class="btn-ctrl" onclick="exportPDF()">📄 PDF</button>
       <button class="btn-ctrl" onclick="copyShareLink()">&#x1F517; Share</button>
+      <button class="btn-ctrl" onclick="toggleTheme()" id="theme-btn" title="Toggle dark/light mode">🌙</button>
+      <div style="position:relative">
+        <button class="btn-ctrl" onclick="toggleNotifications()" id="notif-btn" style="position:relative">
+          🔔 <span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700">0</span>
+        </button>
+        <div id="notif-dropdown" style="display:none;position:absolute;right:0;top:36px;width:320px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);z-index:100;box-shadow:0 8px 32px rgba(0,0,0,.4);max-height:400px;overflow-y:auto">
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);display:flex;justify-content:space-between;align-items:center">
+            Notifications <button onclick="clearNotifications()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px">Clear all</button>
+          </div>
+          <div id="notif-list"><div class="empty" style="padding:20px">No notifications yet</div></div>
+        </div>
+      </div>
       <div class="live-badge"><div class="live-dot"></div><span id="live-count">0</span> live</div>
     </div>
   </header>
@@ -510,6 +530,7 @@ footer a{color:var(--teal);text-decoration:none}
         <button class="sb-item" data-tab="channels" onclick="switchTab('channels')"><span class="sb-item-icon">📡</span><span class="sb-item-label">Channels</span></button>
         <button class="sb-item" data-tab="campaigns" onclick="switchTab('campaigns')"><span class="sb-item-icon">🎯</span><span class="sb-item-label">Campaigns</span></button>
         <button class="sb-item" data-tab="landing" onclick="switchTab('landing')"><span class="sb-item-icon">🛬</span><span class="sb-item-label">Landing Pages</span></button>
+        <button class="sb-item" data-tab="linkedin" onclick="switchTab('linkedin')"><span class="sb-item-icon">💼</span><span class="sb-item-label">LinkedIn</span></button>
       </div>
     </div>
     <div class="sb-section" id="sec-audience">
@@ -529,6 +550,8 @@ footer a{color:var(--teal);text-decoration:none}
         <button class="sb-item" data-tab="heatmap" onclick="switchTab('heatmap')"><span class="sb-item-icon">🔥</span><span class="sb-item-label">Heatmap</span></button>
         <button class="sb-item" data-tab="forms" onclick="switchTab('forms')"><span class="sb-item-icon">📝</span><span class="sb-item-label">Forms</span></button>
         <button class="sb-item" data-tab="search" onclick="switchTab('search')"><span class="sb-item-icon">🔎</span><span class="sb-item-label">Search</span></button>
+        <button class="sb-item" data-tab="performance" onclick="switchTab('performance')"><span class="sb-item-icon">⚡</span><span class="sb-item-label">Performance</span></button>
+        <button class="sb-item" data-tab="errors" onclick="switchTab('errors')"><span class="sb-item-icon">🚨</span><span class="sb-item-label">Errors</span></button>
       </div>
     </div>
     <div class="sb-section" id="sec-conversions">
@@ -546,6 +569,8 @@ footer a{color:var(--teal);text-decoration:none}
       <div class="sb-items">
         <button class="sb-item" data-tab="snippet" onclick="switchTab('snippet')"><span class="sb-item-icon">🧩</span><span class="sb-item-label">Snippet</span></button>
         <button class="sb-item" data-tab="alertsctr" onclick="switchTab('alertsctr')"><span class="sb-item-icon">🔔</span><span class="sb-item-label">Alerts</span></button>
+        <button class="sb-item" data-tab="ai" onclick="switchTab('ai')"><span class="sb-item-icon">🤖</span><span class="sb-item-label">AI Insights</span></button>
+        <button class="sb-item" data-tab="custom" onclick="switchTab('custom')"><span class="sb-item-icon">📌</span><span class="sb-item-label">My Dashboard</span></button>
       </div>
     </div>
   </nav>
@@ -816,24 +841,42 @@ footer a{color:var(--teal);text-decoration:none}
   <!-- AUDIENCE TAB -->
   <div id="tab-audience" class="tab-panel">
     <main>
-      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+      <div class="kpi-grid" style="grid-template-columns:repeat(6,1fr);margin-bottom:14px">
         <div class="kpi-card teal"><div class="kpi-label">New Visitors</div><div class="kpi-value" id="aud-new">—</div><div class="kpi-sub">first-time</div></div>
         <div class="kpi-card amber"><div class="kpi-label">Returning</div><div class="kpi-value" id="aud-ret">—</div><div class="kpi-sub">came back</div></div>
         <div class="kpi-card green"><div class="kpi-label">Return Rate</div><div class="kpi-value" id="aud-rate">—</div><div class="kpi-sub">of all visitors</div></div>
         <div class="kpi-card purple"><div class="kpi-label">Languages</div><div class="kpi-value" id="aud-langs">—</div><div class="kpi-sub">distinct</div></div>
+        <div class="kpi-card"><div class="kpi-label">Device Models</div><div class="kpi-value" id="aud-models">—</div><div class="kpi-sub">distinct</div></div>
+        <div class="kpi-card"><div class="kpi-label">OS Versions</div><div class="kpi-value" id="aud-os-vers">—</div><div class="kpi-sub">distinct</div></div>
       </div>
       <div class="g11">
-        <div class="chart-card"><div class="chart-header"><div class="chart-title">New vs Returning</div></div><div style="height:220px"><canvas id="chart-nv-ret"></canvas></div></div>
-        <div class="chart-card"><div class="chart-header"><div class="chart-title">Device Details</div></div><div style="height:220px"><canvas id="chart-dev-detail"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">New vs Returning</div></div><div style="height:200px"><canvas id="chart-nv-ret"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Pixel Ratio Distribution</div></div><div style="height:200px"><canvas id="chart-dev-detail"></canvas></div></div>
       </div>
+      <!-- Device Section -->
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">📱 Device Details</div>
+      <div class="g3" style="margin-bottom:14px">
+        <div class="table-card"><div class="table-head">Device Models</div><div class="table-body" id="table-device-models"></div></div>
+        <div class="table-card"><div class="table-head">OS Versions</div><div class="table-body" id="table-os-versions"></div></div>
+        <div class="table-card"><div class="table-head">Browser Versions</div><div class="table-body" id="table-browser-versions"></div></div>
+      </div>
+      <div class="g3" style="margin-bottom:14px">
+        <div class="table-card"><div class="table-head">Screen Resolutions</div><div class="table-body" id="table-resolutions"></div></div>
+        <div class="table-card"><div class="table-head">Viewport Sizes</div><div class="table-body" id="table-viewports"></div></div>
+        <div class="table-card"><div class="table-head">Connection Types</div><div class="table-body" id="table-connections"></div></div>
+      </div>
+      <!-- GPU Section -->
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">🎮 GPU & Hardware</div>
+      <div class="g11" style="margin-bottom:14px">
+        <div class="table-card"><div class="table-head">GPU Renderers</div><div class="table-body" id="table-gpu-renderers"></div></div>
+        <div class="table-card"><div class="table-head">GPU Vendors</div><div class="table-body" id="table-gpu-vendors"></div></div>
+      </div>
+      <!-- User Preferences Section -->
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin:16px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">🌐 User Preferences & Network</div>
       <div class="g3" style="margin-bottom:16px">
         <div class="table-card"><div class="table-head">Languages</div><div class="table-body" id="table-languages"></div></div>
         <div class="table-card"><div class="table-head">Timezones</div><div class="table-body" id="table-timezones"></div></div>
         <div class="table-card"><div class="table-head">Platforms</div><div class="table-body" id="table-platforms"></div></div>
-      </div>
-      <div class="g11" style="margin-bottom:16px">
-        <div class="table-card"><div class="table-head">Screen Resolutions</div><div class="table-body" id="table-resolutions"></div></div>
-        <div class="table-card"><div class="table-head">Connection Types</div><div class="table-body" id="table-connections"></div></div>
       </div>
     </main>
   </div>
@@ -1341,6 +1384,145 @@ fetch("https://xkadqvmqxdyqoddiypet.supabase.co/rest/v1/analytics_events?event_t
     </div>
   </div>
 
+
+  <!-- PERFORMANCE TAB -->
+  <div id="tab-performance" class="tab-panel">
+    <main>
+      <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);margin-bottom:14px">
+        <div class="kpi-card teal"><div class="kpi-label">Avg TTFB</div><div class="kpi-value" id="perf-ttfb">—</div><div class="kpi-sub">time to first byte</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Avg Page Load</div><div class="kpi-value" id="perf-load">—</div><div class="kpi-sub">full load time</div></div>
+        <div class="kpi-card"><div class="kpi-label">Avg DOM Ready</div><div class="kpi-value" id="perf-dom">—</div><div class="kpi-sub">interactive</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">LCP Score</div><div class="kpi-value" id="perf-lcp">—</div><div class="kpi-sub">largest contentful paint</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">CLS Score</div><div class="kpi-value" id="perf-cls">—</div><div class="kpi-sub">layout shift</div></div>
+      </div>
+      <!-- Web Vitals Score Cards -->
+      <div class="g3" style="margin-bottom:14px">
+        <div class="chart-card" id="vital-lcp-card">
+          <div class="chart-header"><div class="chart-title">LCP — Largest Contentful Paint</div><div class="chart-badge" id="vital-lcp-badge">—</div></div>
+          <div style="height:180px"><canvas id="chart-vital-lcp"></canvas></div>
+        </div>
+        <div class="chart-card" id="vital-cls-card">
+          <div class="chart-header"><div class="chart-title">CLS — Cumulative Layout Shift</div><div class="chart-badge" id="vital-cls-badge">—</div></div>
+          <div style="height:180px"><canvas id="chart-vital-cls"></canvas></div>
+        </div>
+        <div class="chart-card" id="vital-fid-card">
+          <div class="chart-header"><div class="chart-title">FID — First Input Delay</div><div class="chart-badge" id="vital-fid-badge">—</div></div>
+          <div style="height:180px"><canvas id="chart-vital-fid"></canvas></div>
+        </div>
+      </div>
+      <div class="g21">
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Page Load Over Time</div></div><div style="height:200px"><canvas id="chart-perf-tl"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Load by Device Type</div></div><div style="height:200px"><canvas id="chart-perf-device"></canvas></div></div>
+      </div>
+      <div class="g11" style="margin-bottom:16px">
+        <div class="table-card"><div class="table-head">Slowest Pages (avg load ms)</div><div class="table-body" id="table-slow-pages"></div></div>
+        <div class="table-card"><div class="table-head">Performance by Page</div><div class="table-body" id="table-perf-pages"></div></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ERRORS TAB -->
+  <div id="tab-errors" class="tab-panel">
+    <main>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+        <div class="kpi-card red" style="--teal:var(--red)"><div class="kpi-label">Total Errors</div><div class="kpi-value" id="err-total" style="color:var(--red)">—</div><div class="kpi-sub">all error events</div></div>
+        <div class="kpi-card"><div class="kpi-label">JS Errors</div><div class="kpi-value" id="err-js">—</div><div class="kpi-sub">script errors</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Broken Resources</div><div class="kpi-value" id="err-res">—</div><div class="kpi-sub">404 images/scripts</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">Affected Pages</div><div class="kpi-value" id="err-pages">—</div><div class="kpi-sub">distinct URLs</div></div>
+      </div>
+      <div class="g21">
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Errors Over Time</div></div><div style="height:200px"><canvas id="chart-err-tl"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Error Types</div></div><div style="height:200px"><canvas id="chart-err-types"></canvas></div></div>
+      </div>
+      <div class="table-card" style="margin-bottom:14px">
+        <div class="table-head">Error Log</div>
+        <div class="table-body" id="error-log" style="max-height:400px;overflow-y:auto"></div>
+      </div>
+      <div class="g11" style="margin-bottom:16px">
+        <div class="table-card"><div class="table-head">Most Affected Pages</div><div class="table-body" id="table-err-pages"></div></div>
+        <div class="table-card"><div class="table-head">Top Error Messages</div><div class="table-body" id="table-err-msgs"></div></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- LINKEDIN TAB -->
+  <div id="tab-linkedin" class="tab-panel">
+    <main>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px">
+        <div class="kpi-card teal"><div class="kpi-label">LinkedIn Sessions</div><div class="kpi-value" id="li-sessions">—</div><div class="kpi-sub">from LinkedIn</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Goals from LinkedIn</div><div class="kpi-value" id="li-goals">—</div><div class="kpi-sub">conversions</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Top Campaign</div><div class="kpi-value" id="li-top-camp" style="font-size:12px">—</div><div class="kpi-sub">utm_campaign</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">Avg Session Duration</div><div class="kpi-value" id="li-dur">—</div><div class="kpi-sub">LinkedIn visitors</div></div>
+      </div>
+      <div class="g21">
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">LinkedIn Traffic Over Time</div></div><div style="height:200px"><canvas id="chart-li-tl"></canvas></div></div>
+        <div class="chart-card"><div class="chart-header"><div class="chart-title">Top Landing Pages from LinkedIn</div></div><div style="height:200px"><canvas id="chart-li-pages"></canvas></div></div>
+      </div>
+      <div class="chart-card" style="margin-bottom:14px">
+        <div class="chart-header"><div class="chart-title">Campaign Performance</div><div class="chart-badge">tag LinkedIn posts with ?utm_campaign=post-title</div></div>
+        <div class="table-body" id="table-li-campaigns"><div class="empty">No LinkedIn campaigns yet. Add <code>?utm_source=linkedin&utm_campaign=your-post-title</code> to links in your LinkedIn posts.</div></div>
+      </div>
+      <div class="g11" style="margin-bottom:16px">
+        <div class="table-card"><div class="table-head">LinkedIn Visitor Locations</div><div class="table-body" id="table-li-countries"></div></div>
+        <div class="table-card"><div class="table-head">LinkedIn Visitor Devices</div><div class="table-body" id="table-li-devices"></div></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- AI INSIGHTS TAB -->
+  <div id="tab-ai" class="tab-panel">
+    <main>
+      <div class="chart-card" style="margin-bottom:14px">
+        <div class="chart-header">
+          <div class="chart-title">AI Analysis</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select id="ai-focus" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:Syne,sans-serif;font-size:11px;padding:5px 9px;outline:none">
+              <option value="general">General Overview</option>
+              <option value="growth">Growth Opportunities</option>
+              <option value="anomalies">Anomalies & Issues</option>
+              <option value="seo">SEO & Acquisition</option>
+              <option value="conversion">Conversion Optimization</option>
+              <option value="linkedin">LinkedIn Strategy</option>
+            </select>
+            <button class="btn-teal" onclick="runAIInsights()" id="ai-run-btn" style="font-size:12px;padding:6px 16px">✨ Analyze</button>
+          </div>
+        </div>
+        <div id="ai-loading" style="display:none;text-align:center;padding:32px;color:var(--text2)">
+          <div class="spinner" style="margin:0 auto 12px"></div>
+          <div style="font-size:12px">Claude is analyzing your analytics data...</div>
+        </div>
+        <div id="ai-output" style="font-size:13px;line-height:1.7;color:var(--text)">
+          <div class="empty" style="padding:32px">Click "Analyze" to get AI-powered insights about your traffic, trends, and opportunities.</div>
+        </div>
+      </div>
+      <div id="ai-insights-cards" style="display:none">
+        <div class="g3" style="margin-bottom:14px" id="ai-cards-grid"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- CUSTOM DASHBOARD TAB -->
+  <div id="tab-custom" class="tab-panel">
+    <main>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+        <div style="font-size:13px;color:var(--text2)">Pin your most-used views. Drag to reorder.</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-teal" onclick="addCustomWidget()" style="font-size:12px;padding:6px 14px">+ Add Widget</button>
+          <button class="btn-secondary" onclick="resetCustomDashboard()" style="font-size:12px;padding:6px 14px">Reset</button>
+        </div>
+      </div>
+      <div id="widget-picker" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);margin-bottom:12px">Choose a widget to pin:</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap" id="widget-options"></div>
+      </div>
+      <div id="custom-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px">
+        <div class="empty chart-card" style="padding:32px;text-align:center;border-style:dashed">
+          No widgets pinned yet. Click "Add Widget" to build your custom view.
+        </div>
+      </div>
+    </main>
+  </div>
+
   </div><!-- /content-area -->
   </div><!-- /app-body -->
   <footer>Kulan Analytics v4 &mdash; <a href="https://mmohamud.me" target="_blank">mmohamud.me</a></footer>
@@ -1437,7 +1619,13 @@ document.addEventListener('DOMContentLoaded', initApp);
 /* ── Tab ──────────────────────────────────────────────────────────── */
 function switchTab(tab){
   state.tab=tab;
-  const titles={overview:'Overview',status:'Status',realtime:'Realtime',flow:'Flow',comparison:'Comparison',campaigns:'Campaigns',goals:'Goals',heatmap:'Heatmap',snippet:'Snippet',audience:'Audience',geo:'Geographic',scroll:'Scroll Depth',search:'Search',funnel:'Funnel Builder',cohort:'Cohort',channels:'Channels',landing:'Landing Pages',visitors:'Visitor Explorer',forms:'Form Analytics',ecommerce:'Ecommerce',alertsctr:'Alerts Center'};
+  const titles={overview:'Overview',status:'Site Health',realtime:'Realtime',flow:'Pages & Flow',
+    comparison:'Comparison',campaigns:'Campaigns',goals:'Goals',heatmap:'Heatmap',
+    snippet:'Snippet',audience:'Visitors',geo:'Geographic',scroll:'Scroll Depth',
+    search:'Search',funnel:'Funnel Builder',cohort:'Cohort',channels:'Channels',
+    landing:'Landing Pages',visitors:'Visitor Explorer',forms:'Forms',
+    ecommerce:'Ecommerce',alertsctr:'Alerts',performance:'Performance',
+    errors:'Error Tracking',linkedin:'LinkedIn',ai:'AI Insights',custom:'My Dashboard'};
   document.title=(titles[tab]||tab)+' — Kulan Analytics';
   document.querySelectorAll('.sb-item').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tab));
@@ -1459,15 +1647,20 @@ function switchTab(tab){
   if(tab==='channels')   renderChannels();
   if(tab==='visitors')   renderVisitorExplorer();
   if(tab==='landing')    renderLandingPages();
-  if(tab==='alerts')     renderAlertRules();
-  if(tab==='settings')   renderSettings();
+  if(tab==='alertsctr')  renderAlertsCenter();
+  if(tab==='performance') renderPerformance();
+  if(tab==='errors')     renderErrors();
+  if(tab==='linkedin')   renderLinkedIn();
+  if(tab==='custom')     renderCustomDashboard();
 }
 
 /* ── Init ─────────────────────────────────────────────────────────── */
 async function initApp(){
   sb=supabase.createClient(CFG.SUPABASE_URL,CFG.ANON_KEY);
   initDates();
+  initTheme();
   restoreSidebarState();
+  loadPinnedWidgets();
   applyShareToken();
   await loadSites();
   await Promise.all([loadGoalValues(), loadAlertRules()]);
@@ -2038,13 +2231,23 @@ function renderHeatmap(){
   if(filtered.length){
     const off=document.createElement('canvas');off.width=W;off.height=H;
     const octx=off.getContext('2d');
+    // Dynamic radius based on data density — fewer points = larger blobs
+    const density=filtered.length;
+    const baseR=density>500?14:density>200?18:density>50?22:28;
     filtered.forEach(c=>{
       const x=(c.click_x/100)*W,y=(c.click_y/100)*H;
-      const grd=octx.createRadialGradient(x,y,0,x,y,38);
-      grd.addColorStop(0,'rgba(255,255,255,.35)');grd.addColorStop(1,'rgba(255,255,255,0)');
+      const grd=octx.createRadialGradient(x,y,0,x,y,baseR);
+      grd.addColorStop(0,'rgba(255,255,255,0.18)');
+      grd.addColorStop(0.4,'rgba(255,255,255,0.08)');
+      grd.addColorStop(1,'rgba(255,255,255,0)');
       octx.globalCompositeOperation='lighter';octx.fillStyle=grd;
-      octx.beginPath();octx.arc(x,y,38,0,Math.PI*2);octx.fill();
+      octx.beginPath();octx.arc(x,y,baseR,0,Math.PI*2);octx.fill();
     });
+    // Clamp max intensity to prevent full-red saturation
+    const rawData=octx.getImageData(0,0,W,H);
+    const rawD=rawData.data;
+    for(let i=0;i<rawD.length;i+=4) rawD[i]=Math.min(rawD[i],180);
+    octx.putImageData(rawData,0,0);
     const id=octx.getImageData(0,0,W,H),d=id.data;
     for(let i=0;i<d.length;i+=4){
       const a=d[i]/255;if(a<0.01){d[i]=d[i+1]=d[i+2]=d[i+3]=0;continue;}
@@ -2188,12 +2391,16 @@ function renderAudience(){
   const retV=pv.filter(e=>e.is_returning===true).length;
   const total=newV+retV||1;
   const langs=new Set(pv.map(e=>e.language).filter(Boolean)).size;
+  const models=new Set(pv.map(e=>e.device_model).filter(Boolean)).size;
+  const osVers=new Set(pv.map(e=>e.os_version).filter(Boolean)).size;
   document.getElementById('aud-new').textContent=fmt(newV);
   document.getElementById('aud-ret').textContent=fmt(retV);
   document.getElementById('aud-rate').textContent=Math.round(retV/total*100)+'%';
   document.getElementById('aud-langs').textContent=fmt(langs);
+  document.getElementById('aud-models').textContent=fmt(models);
+  document.getElementById('aud-os-vers').textContent=fmt(osVers);
 
-  // New vs Returning doughnut
+  // New vs Returning
   kill('nv-ret');
   charts['nv-ret']=new Chart(document.getElementById('chart-nv-ret'),{
     type:'doughnut',
@@ -2201,7 +2408,7 @@ function renderAudience(){
     options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:14,boxWidth:8}}}},
   });
 
-  // Device detail — pixel ratio distribution
+  // Pixel ratio bar
   const prMap={};
   pv.forEach(e=>{if(e.pixel_ratio){const k=e.pixel_ratio+'x';prMap[k]=(prMap[k]||0)+1;}});
   const prData=Object.entries(prMap).sort((a,b)=>b[1]-a[1]).slice(0,6);
@@ -2210,20 +2417,32 @@ function renderAudience(){
     charts['dev-detail']=new Chart(document.getElementById('chart-dev-detail'),{
       type:'bar',
       data:{labels:prData.map(d=>d[0]),datasets:[{data:prData.map(d=>d[1]),backgroundColor:COLORS,borderRadius:4,borderSkipped:false}]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:{display:true,text:'Pixel Ratio Distribution',font:{size:10},color:'#8BA3C7'}},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
         scales:{x:{grid:{display:false}},y:{...G,beginAtZero:true,ticks:{precision:0}}}},
     });
   }
 
-  renderTable('table-languages',  countBy(pv,'language').slice(0,10));
-  renderTable('table-timezones',  countBy(pv,'timezone').slice(0,10));
-  renderTable('table-platforms',  countBy(pv,'platform').slice(0,10));
-  renderTable('table-connections',countBy(pv,'connection_type').slice(0,8));
+  // Device tables
+  renderTable('table-device-models',   countBy(pv,'device_model').slice(0,10));
+  renderTable('table-os-versions',     countBy(pv,'os_version').slice(0,12));
+  const bvMap={};pv.forEach(e=>{const k=(e.browser||'?')+' '+(e.browser_version?e.browser_version.split('.')[0]:'?');bvMap[k]=(bvMap[k]||0)+1;});
+  renderTable('table-browser-versions',Object.entries(bvMap).sort((a,b)=>b[1]-a[1]).slice(0,10));
+  renderTable('table-gpu-renderers',   countBy(pv,'gpu_renderer').filter(r=>r[0]!=='(unknown)').slice(0,8));
+  renderTable('table-gpu-vendors',     countBy(pv,'gpu_vendor').filter(r=>r[0]!=='(unknown)').slice(0,8));
+  renderTable('table-languages',       countBy(pv,'language').slice(0,10));
+  renderTable('table-timezones',       countBy(pv,'timezone').slice(0,10));
+  renderTable('table-platforms',       countBy(pv,'platform').slice(0,10));
+  renderTable('table-connections',     countBy(pv,'connection_type').slice(0,8));
 
   // Screen resolutions
   const resMap={};
-  pv.forEach(e=>{if(e.screen_width&&e.screen_height){const k=e.screen_width+'×'+e.screen_height;resMap[k]=(resMap[k]||0)+1;}});
+  pv.forEach(e=>{if(e.screen_width&&e.screen_height){const k=e.screen_width+'x'+e.screen_height;resMap[k]=(resMap[k]||0)+1;}});
   renderTable('table-resolutions',Object.entries(resMap).sort((a,b)=>b[1]-a[1]).slice(0,10));
+
+  // Viewport sizes
+  const vpMap={};
+  pv.forEach(e=>{if(e.viewport_width&&e.viewport_height){const k=e.viewport_width+'x'+e.viewport_height;vpMap[k]=(vpMap[k]||0)+1;}});
+  renderTable('table-viewports',Object.entries(vpMap).sort((a,b)=>b[1]-a[1]).slice(0,10));
 }
 
 
@@ -3813,6 +4032,579 @@ function restoreSidebarState() {
       }
     });
   } catch(_) {}
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   DARK / LIGHT MODE
+   ══════════════════════════════════════════════════════════════════ */
+function toggleTheme() {
+  const isLight = document.documentElement.classList.toggle('light');
+  document.getElementById('theme-btn').textContent = isLight ? '🌙' : '☀️';
+  localStorage.setItem('_kl_theme', isLight ? 'light' : 'dark');
+  // Redraw charts with new colors
+  Chart.defaults.color = isLight ? '#4A5568' : '#8BA3C7';
+  Object.values(charts).forEach(c => { try { c.update(); } catch(_){} });
+}
+function initTheme() {
+  if (localStorage.getItem('_kl_theme') === 'light') {
+    document.documentElement.classList.add('light');
+    const btn = document.getElementById('theme-btn');
+    if (btn) btn.textContent = '☀️';
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   NOTIFICATION CENTER
+   ══════════════════════════════════════════════════════════════════ */
+const _notifications = [];
+function addNotification(type, title, message) {
+  const n = { id: Date.now(), type, title, message, time: new Date().toISOString(), read: false };
+  _notifications.unshift(n);
+  if (_notifications.length > 50) _notifications.pop();
+  updateNotifBadge();
+  renderNotifList();
+}
+function updateNotifBadge() {
+  const unread = _notifications.filter(n => !n.read).length;
+  const badge = document.getElementById('notif-badge');
+  if (badge) { badge.textContent = unread; badge.style.display = unread > 0 ? 'flex' : 'none'; }
+}
+function toggleNotifications() {
+  const dd = document.getElementById('notif-dropdown');
+  dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+  _notifications.forEach(n => n.read = true);
+  updateNotifBadge();
+}
+function clearNotifications() {
+  _notifications.length = 0;
+  updateNotifBadge();
+  renderNotifList();
+}
+function renderNotifList() {
+  const el = document.getElementById('notif-list');
+  if (!el) return;
+  if (!_notifications.length) { el.innerHTML = '<div class="empty" style="padding:20px">No notifications</div>'; return; }
+  el.innerHTML = _notifications.slice(0, 20).map(n => `
+    <div style="padding:12px 16px;border-bottom:1px solid var(--border);${!n.read?'background:rgba(13,148,136,.04)':''}">
+      <div style="font-size:12px;font-weight:700;color:${n.type==='error'?'var(--red)':n.type==='warning'?'var(--amber)':'var(--teal)'}">${n.title}</div>
+      <div style="font-size:11px;color:var(--text2);margin-top:2px">${n.message}</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px">${fmtAgo(n.time)}</div>
+    </div>`).join('');
+}
+// Close notification dropdown when clicking outside
+document.addEventListener('click', e => {
+  const dd = document.getElementById('notif-dropdown');
+  const btn = document.getElementById('notif-btn');
+  if (dd && !dd.contains(e.target) && !btn?.contains(e.target)) dd.style.display = 'none';
+});
+
+/* ══════════════════════════════════════════════════════════════════
+   PERFORMANCE TAB
+   ══════════════════════════════════════════════════════════════════ */
+function renderPerformance() {
+  const ev = state.events;
+  const perf = ev.filter(e => e.event_type === 'performance');
+  const vitals = ev.filter(e => e.event_type === 'web_vital');
+
+  const avg = (arr, key) => { const v = arr.map(e=>e[key]).filter(Boolean); return v.length ? Math.round(v.reduce((a,b)=>a+b,0)/v.length) : null; };
+
+  const avgTTFB = avg(perf, 'ttfb');
+  const avgLoad = avg(perf, 'page_load');
+  const avgDOM  = avg(perf, 'dom_ready');
+
+  document.getElementById('perf-ttfb').textContent = avgTTFB ? avgTTFB+'ms' : '—';
+  document.getElementById('perf-load').textContent = avgLoad ? avgLoad+'ms' : '—';
+  document.getElementById('perf-dom').textContent  = avgDOM  ? avgDOM+'ms'  : '—';
+
+  // Web Vitals
+  ['LCP','CLS','FID'].forEach(name => {
+    const v = vitals.filter(e=>e.vital_name===name);
+    const avgV = v.length ? parseFloat((v.reduce((s,e)=>s+(e.vital_value||0),0)/v.length).toFixed(name==='CLS'?3:0)) : null;
+    const el = document.getElementById('perf-'+name.toLowerCase());
+    const badgeEl = document.getElementById('vital-'+name.toLowerCase()+'-badge');
+    if (el) el.textContent = avgV !== null ? avgV+(name==='CLS'?'':' ms') : '—';
+
+    // Rating distribution
+    if (badgeEl) {
+      const good = v.filter(e=>e.vital_rating==='good').length;
+      const total = v.length || 1;
+      const pct = Math.round(good/total*100);
+      badgeEl.textContent = pct+'% good';
+      badgeEl.style.background = pct>75?'rgba(16,185,129,.15)':pct>50?'rgba(217,119,6,.12)':'rgba(239,68,68,.12)';
+      badgeEl.style.color = pct>75?'var(--green)':pct>50?'var(--amber)':'var(--red)';
+    }
+
+    // Doughnut chart
+    const good = v.filter(e=>e.vital_rating==='good').length;
+    const needs = v.filter(e=>e.vital_rating==='needs-improvement').length;
+    const poor  = v.filter(e=>e.vital_rating==='poor').length;
+    const chartId = 'chart-vital-'+name.toLowerCase();
+    kill(chartId);
+    if (v.length) {
+      charts[chartId] = new Chart(document.getElementById(chartId), {
+        type: 'doughnut',
+        data: { labels:['Good','Needs Work','Poor'], datasets:[{ data:[good,needs,poor],
+          backgroundColor:['#10B981','#D97706','#EF4444'], borderWidth:0, hoverOffset:4 }] },
+        options: { responsive:true, maintainAspectRatio:false, cutout:'65%',
+          plugins:{ legend:{position:'right',labels:{usePointStyle:true,padding:10,boxWidth:8,font:{size:10}}} } },
+      });
+    }
+  });
+
+  // Page load timeline
+  const { labels, dates } = groupByDay(perf, state.days, state.startDate, state.endDate);
+  const loadByDay = dates.map(d => {
+    const dayPerf = perf.filter(e=>e.created_at.slice(0,10)===d&&e.page_load);
+    return dayPerf.length ? Math.round(dayPerf.reduce((s,e)=>s+(e.page_load||0),0)/dayPerf.length) : null;
+  });
+  kill('perf-tl');
+  charts['perf-tl'] = new Chart(document.getElementById('chart-perf-tl'), {
+    type: 'line',
+    data: { labels, datasets:[{ data:loadByDay, borderColor:'#0D9488', backgroundColor:'rgba(13,148,136,.1)',
+      borderWidth:2, pointRadius:0, fill:true, tension:.35, spanGaps:true }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{ x:{...G,ticks:{maxTicksLimit:12}}, y:{...G,beginAtZero:true,ticks:{callback:v=>v+'ms'}} } },
+  });
+
+  // By device
+  const devPerf = {};
+  perf.forEach(e=>{if(e.device_type&&e.page_load){if(!devPerf[e.device_type])devPerf[e.device_type]={sum:0,count:0};devPerf[e.device_type].sum+=e.page_load;devPerf[e.device_type].count++;}});
+  const devData = Object.entries(devPerf).map(([d,v])=>[d, Math.round(v.sum/v.count)]).sort((a,b)=>b[1]-a[1]);
+  kill('perf-device');
+  if (devData.length) {
+    charts['perf-device'] = new Chart(document.getElementById('chart-perf-device'), {
+      type: 'bar',
+      data: { labels:devData.map(d=>d[0]), datasets:[{data:devData.map(d=>d[1]), backgroundColor:COLORS, borderRadius:4, borderSkipped:false}] },
+      options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+        scales:{ x:{grid:{display:false}}, y:{...G,beginAtZero:true,ticks:{callback:v=>v+'ms'}} } },
+    });
+  }
+
+  // Slowest pages
+  const pagePerf = {};
+  perf.forEach(e=>{ if(!e.url||!e.page_load)return; const p=fmtUrl(e.url); if(!pagePerf[p])pagePerf[p]={sum:0,count:0}; pagePerf[p].sum+=e.page_load; pagePerf[p].count++; });
+  const slowPages = Object.entries(pagePerf).map(([p,v])=>[p,Math.round(v.sum/v.count)]).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  renderTable('table-slow-pages', slowPages);
+  renderTable('table-perf-pages', slowPages.map(([p,v])=>[p, v+'ms']));
+
+  if (perf.length === 0) {
+    addNotification('info', 'No performance data', 'Deploy tracker v5 to start collecting Web Vitals and load times.');
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   ERROR TRACKING TAB
+   ══════════════════════════════════════════════════════════════════ */
+function renderErrors() {
+  const errors = state.events.filter(e => e.event_type === 'error');
+  const jsErrs  = errors.filter(e => e.error_type === 'js_error');
+  const resErrs = errors.filter(e => e.error_type === 'broken_resource');
+  const affectedPages = new Set(errors.map(e=>fmtUrl(e.url||'')).filter(Boolean)).size;
+
+  document.getElementById('err-total').textContent  = fmt(errors.length);
+  document.getElementById('err-js').textContent     = fmt(jsErrs.length);
+  document.getElementById('err-res').textContent    = fmt(resErrs.length);
+  document.getElementById('err-pages').textContent  = fmt(affectedPages);
+
+  // Notify if errors exist
+  if (jsErrs.length > 0) addNotification('error', `${jsErrs.length} JS errors detected`, `Check Error Tracking tab for details.`);
+
+  // Timeline
+  const { labels } = groupByDay(errors, state.days, state.startDate, state.endDate);
+  const { values } = groupByDay(errors, state.days, state.startDate, state.endDate);
+  kill('err-tl');
+  charts['err-tl'] = new Chart(document.getElementById('chart-err-tl'), {
+    type: 'bar',
+    data: { labels, datasets:[{ data:values, backgroundColor:'rgba(239,68,68,.7)', borderRadius:3, borderSkipped:false }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{ x:{...G,ticks:{maxTicksLimit:12}}, y:{...G,beginAtZero:true,ticks:{precision:0}} } },
+  });
+
+  // Types doughnut
+  const typeCounts = countBy(errors, 'error_type');
+  kill('err-types');
+  if (typeCounts.length) {
+    charts['err-types'] = new Chart(document.getElementById('chart-err-types'), {
+      type: 'doughnut',
+      data: { labels:typeCounts.map(t=>t[0]), datasets:[{ data:typeCounts.map(t=>t[1]),
+        backgroundColor:['#EF4444','#D97706','#8B5CF6'], borderWidth:0, hoverOffset:5 }] },
+      options: { responsive:true, maintainAspectRatio:false, cutout:'60%',
+        plugins:{ legend:{position:'right',labels:{usePointStyle:true,padding:10,boxWidth:8}} } },
+    });
+  }
+
+  // Error log
+  const log = document.getElementById('error-log');
+  if (!errors.length) { log.innerHTML='<div class="empty">No errors recorded yet. Tracker v5 will catch JS errors, promise rejections, and broken resources automatically.</div>'; }
+  else {
+    log.innerHTML = errors.slice(0,50).map(e=>`
+      <div style="padding:10px 14px;border-bottom:1px solid rgba(239,68,68,.1);font-size:11px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span style="background:rgba(239,68,68,.15);color:var(--red);padding:1px 7px;border-radius:4px;font-size:10px;font-weight:700;flex-shrink:0">${e.error_type||'error'}</span>
+          <span style="color:var(--text);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${(e.error_message||'').slice(0,120)}</span>
+          <span style="color:var(--text3);margin-left:auto;flex-shrink:0;font-family:'JetBrains Mono',monospace">${fmtAgo(e.created_at)}</span>
+        </div>
+        ${e.error_source?`<div style="color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:10px">${fmtUrl(e.error_source||'')}${e.error_line?':'+e.error_line:''}</div>`:''}
+        <div style="color:var(--text3)">${fmtUrl(e.url||'')}</div>
+      </div>`).join('');
+  }
+
+  renderTable('table-err-pages', countBy(errors.filter(e=>e.url), 'url').map(([u,c])=>[fmtUrl(u),c]).slice(0,8));
+  renderTable('table-err-msgs', countBy(errors.filter(e=>e.error_message), 'error_message').slice(0,8));
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LINKEDIN TAB
+   ══════════════════════════════════════════════════════════════════ */
+function renderLinkedIn() {
+  const ev = state.events;
+  const liEvents = ev.filter(e =>
+    e.utm_source === 'linkedin' || e.channel === 'LinkedIn' ||
+    (e.referrer || '').includes('linkedin.com')
+  );
+  const liPV = liEvents.filter(e=>e.event_type==='pageview');
+  const liGoals = liEvents.filter(e=>e.event_type==='goal');
+  const liSessions = new Set(liPV.map(e=>e.session_id)).size;
+  const liDurs = ev.filter(e=>e.event_type==='session_end'&&e.duration&&liEvents.some(l=>l.session_id===e.session_id)).map(e=>e.duration);
+  const avgDur = liDurs.length ? Math.round(liDurs.reduce((a,b)=>a+b,0)/liDurs.length) : null;
+
+  document.getElementById('li-sessions').textContent  = fmt(liSessions);
+  document.getElementById('li-goals').textContent     = fmt(liGoals.length);
+  document.getElementById('li-top-camp').textContent  = countBy(liPV.filter(e=>e.utm_campaign),'utm_campaign')[0]?.[0] || '—';
+  document.getElementById('li-dur').textContent       = fmtD(avgDur);
+
+  // Timeline
+  const { labels, values } = groupByDay(liPV, state.days, state.startDate, state.endDate);
+  kill('li-tl');
+  charts['li-tl'] = new Chart(document.getElementById('chart-li-tl'), {
+    type: 'bar',
+    data: { labels, datasets:[{ data:values, backgroundColor:'rgba(10,102,194,.7)', borderRadius:3, borderSkipped:false }] },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{ x:{...G,ticks:{maxTicksLimit:12}}, y:{...G,beginAtZero:true,ticks:{precision:0}} } },
+  });
+
+  // Top landing pages
+  const lpMap = {};
+  liPV.forEach(e=>{const p=fmtUrl(e.url||'');lpMap[p]=(lpMap[p]||0)+1;});
+  const topLP = Object.entries(lpMap).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  kill('li-pages');
+  if (topLP.length) {
+    charts['li-pages'] = new Chart(document.getElementById('chart-li-pages'), {
+      type: 'bar',
+      data: { labels:topLP.map(p=>p[0].length>22?p[0].slice(0,20)+'…':p[0]),
+        datasets:[{data:topLP.map(p=>p[1]),backgroundColor:'rgba(10,102,194,.65)',borderRadius:4,borderSkipped:false}] },
+      options: { indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+        scales:{ x:{...G,ticks:{precision:0}}, y:{grid:{display:false}} } },
+    });
+  }
+
+  // Campaign table
+  const campData = countBy(liPV.filter(e=>e.utm_campaign),'utm_campaign').slice(0,10);
+  const tcEl = document.getElementById('table-li-campaigns');
+  if (campData.length) {
+    const max = campData[0][1];
+    tcEl.innerHTML = campData.map(([name,count])=>`
+      <div class="table-row">
+        <div class="table-lbl">${name}</div>
+        <div class="table-bar"><div class="table-bar-fill" style="width:${Math.round(count/max*100)}%;background:#0A66C2"></div></div>
+        <div class="table-cnt">${fmt(count)}</div>
+      </div>`).join('');
+  }
+
+  renderTable('table-li-countries', countBy(liPV,'country').slice(0,8));
+  renderTable('table-li-devices',   countBy(liPV,'device_type').slice(0,5));
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   AI INSIGHTS
+   ══════════════════════════════════════════════════════════════════ */
+async function runAIInsights() {
+  const btn = document.getElementById('ai-run-btn');
+  const loading = document.getElementById('ai-loading');
+  const output = document.getElementById('ai-output');
+  const focus = document.getElementById('ai-focus').value;
+
+  btn.disabled = true;
+  loading.style.display = 'block';
+  output.innerHTML = '';
+
+  // Build data summary to send to Claude
+  const ev = state.events;
+  const pv = ev.filter(e=>e.event_type==='pageview');
+  const goals = ev.filter(e=>e.event_type==='goal');
+  const sessions = new Set(ev.map(e=>e.session_id)).size;
+  const visitors = new Set(ev.map(e=>e.visitor_id)).size;
+  const pvPS={};pv.forEach(e=>{pvPS[e.session_id]=(pvPS[e.session_id]||0)+1;});
+  const sl=Object.values(pvPS);
+  const bounce=sl.length?Math.round(sl.filter(c=>c===1).length/sl.length*100):0;
+  const durs=ev.filter(e=>e.event_type==='session_end'&&e.duration).map(e=>e.duration);
+  const avgDur=durs.length?Math.round(durs.reduce((a,b)=>a+b,0)/durs.length):0;
+  const topPages = countBy(pv,'url').slice(0,5).map(([u,c])=>fmtUrl(u)+': '+c);
+  const topRefs = countBy(pv,'referrer').map(([r,c])=>[fmtRef(r),c]).slice(0,5).map(([r,c])=>r+': '+c);
+  const topCountries = countBy(pv,'country').slice(0,5).map(([c,n])=>c+': '+n);
+  const channels = {};
+  pv.forEach(e=>{const ch=e.channel||'Unknown';channels[ch]=(channels[ch]||0)+1;});
+  const errors = ev.filter(e=>e.event_type==='error');
+  const liTraffic = pv.filter(e=>e.channel==='LinkedIn'||e.utm_source==='linkedin').length;
+
+  // Day-over-day trend
+  const dayMap={};pv.forEach(e=>{const d=e.created_at.slice(0,10);dayMap[d]=(dayMap[d]||0)+1;});
+  const days=Object.values(dayMap);
+  const trend=days.length>=2?Math.round(((days[days.length-1]-days[0])/Math.max(days[0],1))*100):0;
+
+  const focusPrompts = {
+    general: 'Provide a comprehensive overview of the analytics performance.',
+    growth: 'Focus on growth opportunities, underperforming channels, and ways to increase traffic.',
+    anomalies: 'Look for unusual patterns, anomalies, traffic drops, spikes, and potential issues.',
+    seo: 'Analyze SEO and organic search performance, referral sources, and acquisition.',
+    conversion: 'Focus on conversion rate optimization, goal performance, and funnel improvements.',
+    linkedin: `Specifically analyze the LinkedIn traffic (${liTraffic} visits) and how to improve it.`,
+  };
+
+  const prompt = `You are an analytics expert reviewing web analytics data. ${focusPrompts[focus] || ''}
+
+Here is the analytics data for the past ${state.days} days${state.siteId?' for site: '+state.siteId:''}:
+
+TRAFFIC SUMMARY:
+- Page Views: ${pv.length}
+- Unique Visitors: ${visitors}
+- Sessions: ${sessions}
+- Bounce Rate: ${bounce}%
+- Avg Session Duration: ${fmtD(avgDur)}
+- Overall trend: ${trend > 0 ? '+' : ''}${trend}% (first vs last day)
+
+GOALS & CONVERSIONS:
+- Total Goal Events: ${goals.length}
+- Conversion Rate: ${sessions ? Math.round(goals.length/sessions*100) : 0}%
+- Top Goals: ${countBy(goals,'goal_name').slice(0,3).map(([g,c])=>g+': '+c).join(', ') || 'none'}
+
+TOP PAGES: ${topPages.join(', ')}
+
+TRAFFIC SOURCES: ${topRefs.join(', ')}
+
+CHANNELS: ${Object.entries(channels).map(([k,v])=>k+': '+v).join(', ')}
+
+TOP COUNTRIES: ${topCountries.join(', ')}
+
+ERRORS: ${errors.length} JS errors detected
+LINKEDIN TRAFFIC: ${liTraffic} visits
+
+Please provide:
+1. A brief executive summary (2-3 sentences)
+2. 3-4 key insights with specific data points
+3. 2-3 actionable recommendations
+4. Any red flags or concerns
+
+Format your response with clear sections using markdown-style headers (## for sections, **bold** for emphasis). Be specific, data-driven, and actionable. Keep it concise but insightful.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+    const data = await resp.json();
+    const text = data.content?.[0]?.text || 'No response received.';
+
+    // Render markdown-ish response
+    const html = text
+      .replace(/## (.+)/g, '<h3 style="font-size:13px;font-weight:800;color:var(--teal);margin:16px 0 6px;text-transform:uppercase;letter-spacing:.5px">$1</h3>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong style="color:var(--text)">$1</strong>')
+      .replace(/\n\n/g, '</p><p style="margin-bottom:10px">')
+      .replace(/\n/g, '<br>')
+      .replace(/^/, '<p style="margin-bottom:10px">')
+      .replace(/$/, '</p>');
+
+    loading.style.display = 'none';
+    output.innerHTML = `<div style="padding:4px 0">${html}</div>`;
+    addNotification('info', 'AI analysis complete', `${focus} analysis generated for ${state.days}-day period.`);
+  } catch(e) {
+    loading.style.display = 'none';
+    output.innerHTML = `<div class="empty" style="color:var(--red)">Error: ${e.message}. Make sure you have API access.</div>`;
+  }
+  btn.disabled = false;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   CUSTOM DASHBOARD
+   ══════════════════════════════════════════════════════════════════ */
+const WIDGET_DEFS = [
+  { id:'wg-pv',     label:'Page Views',       render: renderWidgetPV },
+  { id:'wg-visitors',label:'Unique Visitors', render: renderWidgetVisitors },
+  { id:'wg-bounce', label:'Bounce Rate',       render: renderWidgetBounce },
+  { id:'wg-goals',  label:'Goal Conversions',  render: renderWidgetGoals },
+  { id:'wg-tl',     label:'Traffic Timeline',  render: renderWidgetTimeline },
+  { id:'wg-devices',label:'Devices',           render: renderWidgetDevices },
+  { id:'wg-top-pages',label:'Top Pages',       render: renderWidgetTopPages },
+  { id:'wg-channels',label:'Channels',         render: renderWidgetChannels },
+  { id:'wg-countries',label:'Countries',       render: renderWidgetCountries },
+  { id:'wg-realtime',label:'Live Visitors',    render: renderWidgetLive },
+];
+let _pinnedWidgets = [];
+
+function loadPinnedWidgets() {
+  try { _pinnedWidgets = JSON.parse(localStorage.getItem('_kl_widgets') || '[]'); } catch(_) { _pinnedWidgets = []; }
+}
+function savePinnedWidgets() { localStorage.setItem('_kl_widgets', JSON.stringify(_pinnedWidgets)); }
+
+function addCustomWidget() {
+  const picker = document.getElementById('widget-picker');
+  picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+  const opts = document.getElementById('widget-options');
+  opts.innerHTML = WIDGET_DEFS.filter(w => !_pinnedWidgets.includes(w.id)).map(w => `
+    <button class="btn-secondary" style="font-size:12px;padding:7px 14px" onclick="pinWidget('${w.id}')">${w.label}</button>`).join('');
+}
+
+function pinWidget(id) {
+  if (!_pinnedWidgets.includes(id)) { _pinnedWidgets.push(id); savePinnedWidgets(); renderCustomDashboard(); }
+  document.getElementById('widget-picker').style.display = 'none';
+}
+
+function unpinWidget(id) {
+  _pinnedWidgets = _pinnedWidgets.filter(w => w !== id);
+  savePinnedWidgets();
+  renderCustomDashboard();
+}
+
+function resetCustomDashboard() { _pinnedWidgets = []; savePinnedWidgets(); renderCustomDashboard(); }
+
+function renderCustomDashboard() {
+  const grid = document.getElementById('custom-grid');
+  if (!_pinnedWidgets.length) {
+    grid.innerHTML = '<div class="empty chart-card" style="padding:32px;text-align:center;border-style:dashed">No widgets pinned yet. Click "Add Widget" to build your custom view.</div>';
+    return;
+  }
+  grid.innerHTML = _pinnedWidgets.map(id => {
+    const def = WIDGET_DEFS.find(w => w.id === id);
+    if (!def) return '';
+    return `<div class="chart-card" id="${id}-widget">
+      <div class="chart-header">
+        <div class="chart-title">${def.label}</div>
+        <button onclick="unpinWidget('${id}')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px" title="Unpin">📌</button>
+      </div>
+      <div id="${id}-content"></div>
+    </div>`;
+  }).join('');
+  _pinnedWidgets.forEach(id => {
+    const def = WIDGET_DEFS.find(w => w.id === id);
+    if (def && state.events.length) def.render();
+  });
+}
+
+// Individual widget renderers
+function renderWidgetPV() { const c=document.getElementById('wg-pv-content');if(c){const n=state.events.filter(e=>e.event_type==='pageview').length;c.innerHTML=`<div style="font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:600;color:var(--teal);padding:16px 0">${fmt(n)}</div><div style="font-size:11px;color:var(--text2)">last ${state.days} days</div>`;}}
+function renderWidgetVisitors() { const c=document.getElementById('wg-visitors-content');if(c){const n=new Set(state.events.map(e=>e.visitor_id)).size;c.innerHTML=`<div style="font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:600;color:var(--green);padding:16px 0">${fmt(n)}</div><div style="font-size:11px;color:var(--text2)">unique visitors</div>`;}}
+function renderWidgetBounce() { const c=document.getElementById('wg-bounce-content');if(c){const pv=state.events.filter(e=>e.event_type==='pageview');const m={};pv.forEach(e=>{m[e.session_id]=(m[e.session_id]||0)+1;});const sl=Object.values(m);const b=sl.length?Math.round(sl.filter(c=>c===1).length/sl.length*100):0;c.innerHTML=`<div style="font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:600;color:var(--amber);padding:16px 0">${b}%</div><div style="font-size:11px;color:var(--text2)">bounce rate</div>`;}}
+function renderWidgetGoals() { const c=document.getElementById('wg-goals-content');if(c){const n=state.events.filter(e=>e.event_type==='goal').length;c.innerHTML=`<div style="font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:600;color:var(--purple);padding:16px 0">${fmt(n)}</div><div style="font-size:11px;color:var(--text2)">conversions</div>`;}}
+function renderWidgetLive() { const c=document.getElementById('wg-realtime-content');if(c){c.innerHTML=`<div style="display:flex;align-items:center;gap:8px;padding:16px 0"><div style="width:12px;height:12px;background:var(--teal);border-radius:50%;animation:pulse 1.5s infinite"></div><div style="font-family:'JetBrains Mono',monospace;font-size:32px;color:var(--teal)">${document.getElementById('live-count').textContent}</div><div style="font-size:12px;color:var(--text2)">active now</div></div>`;}}
+function renderWidgetTimeline() {
+  const c=document.getElementById('wg-tl-content');if(!c)return;
+  c.innerHTML='<div style="height:140px"><canvas id="wg-tl-canvas"></canvas></div>';
+  const pv=state.events.filter(e=>e.event_type==='pageview');
+  const{labels,values}=groupByDay(pv,state.days,state.startDate,state.endDate);
+  kill('wg-tl-canvas');
+  charts['wg-tl-canvas']=new Chart(document.getElementById('wg-tl-canvas'),{type:'line',data:{labels,datasets:[{data:values,borderColor:'#0D9488',backgroundColor:'rgba(13,148,136,.1)',borderWidth:2,pointRadius:0,fill:true,tension:.35}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{...G,ticks:{maxTicksLimit:8}},y:{...G,beginAtZero:true,ticks:{precision:0}}}}});
+}
+function renderWidgetDevices() {
+  const c=document.getElementById('wg-devices-content');if(!c)return;
+  c.innerHTML='<div style="height:140px"><canvas id="wg-dev-canvas"></canvas></div>';
+  const pv=state.events.filter(e=>e.event_type==='pageview');
+  const dc=countBy(pv,'device_type');
+  kill('wg-dev-canvas');
+  if(dc.length)charts['wg-dev-canvas']=new Chart(document.getElementById('wg-dev-canvas'),{type:'doughnut',data:{labels:dc.map(d=>d[0]),datasets:[{data:dc.map(d=>d[1]),backgroundColor:COLORS,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:8,boxWidth:7,font:{size:10}}}}}});
+}
+function renderWidgetTopPages() {
+  const c=document.getElementById('wg-top-pages-content');if(!c)return;
+  const pm={};state.events.filter(e=>e.event_type==='pageview').forEach(e=>{const k=fmtUrl(e.url||'');pm[k]=(pm[k]||0)+1;});
+  const tp=Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const max=tp[0]?.[1]||1;
+  c.innerHTML=tp.map(([p,n])=>`<div class="table-row"><div class="table-lbl">${p}</div><div class="table-bar"><div class="table-bar-fill" style="width:${Math.round(n/max*100)}%"></div></div><div class="table-cnt">${fmt(n)}</div></div>`).join('');
+}
+function renderWidgetChannels() {
+  const c=document.getElementById('wg-channels-content');if(!c)return;
+  c.innerHTML='<div style="height:140px"><canvas id="wg-ch-canvas"></canvas></div>';
+  const pv=state.events.filter(e=>e.event_type==='pageview');
+  const chMap={};pv.forEach(e=>{const ch=e.channel||'Unknown';chMap[ch]=(chMap[ch]||0)+1;});
+  const channels=Object.entries(chMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  kill('wg-ch-canvas');
+  if(channels.length)charts['wg-ch-canvas']=new Chart(document.getElementById('wg-ch-canvas'),{type:'doughnut',data:{labels:channels.map(c=>c[0]),datasets:[{data:channels.map(c=>c[1]),backgroundColor:channels.map(c=>CH_COLORS[c[0]]||COLORS[0]),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{usePointStyle:true,padding:8,boxWidth:7,font:{size:10}}}}}});
+}
+function renderWidgetCountries() {
+  const c=document.getElementById('wg-countries-content');if(!c)return;
+  const pv=state.events.filter(e=>e.event_type==='pageview');
+  const countries=countBy(pv,'country').filter(c=>c[0]!=='(unknown)').slice(0,5);
+  const max=countries[0]?.[1]||1;
+  c.innerHTML=countries.map(([co,n])=>`<div class="table-row"><div class="table-lbl">${co}</div><div class="table-bar"><div class="table-bar-fill" style="width:${Math.round(n/max*100)}%"></div></div><div class="table-cnt">${fmt(n)}</div></div>`).join('');
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   PDF EXPORT
+   ══════════════════════════════════════════════════════════════════ */
+function exportPDF() {
+  const ev=state.events;
+  const pv=ev.filter(e=>e.event_type==='pageview');
+  const gl=ev.filter(e=>e.event_type==='goal');
+  const visitors=new Set(ev.map(e=>e.visitor_id)).size;
+  const sessions=new Set(ev.map(e=>e.session_id)).size;
+  const pvPS={};pv.forEach(e=>{pvPS[e.session_id]=(pvPS[e.session_id]||0)+1;});
+  const sl=Object.values(pvPS);
+  const bounce=sl.length?Math.round(sl.filter(c=>c===1).length/sl.length*100):0;
+  const durs=ev.filter(e=>e.event_type==='session_end'&&e.duration).map(e=>e.duration);
+  const avgDur=durs.length?Math.round(durs.reduce((a,b)=>a+b,0)/durs.length):null;
+  const pm={};pv.forEach(e=>{const k=fmtUrl(e.url||'');pm[k]=(pm[k]||0)+1;});
+  const topPages=Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const topRefs=countBy(pv,'referrer').map(([r,c])=>[fmtRef(r),c]).slice(0,6);
+  const topCountries=countBy(pv,'country').slice(0,6);
+  const chMap={};pv.forEach(e=>{const ch=e.channel||'Unknown';chMap[ch]=(chMap[ch]||0)+1;});
+  const now=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+
+  const printWin = window.open('','_blank');
+  printWin.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <title>Kulan Analytics Report</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Arial,sans-serif;background:#fff;color:#1a202c;padding:40px;max-width:900px;margin:0 auto}
+    h1{font-size:24px;font-weight:800;color:#0B2545;margin-bottom:4px}
+    .subtitle{font-size:13px;color:#718096;margin-bottom:32px}
+    .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
+    .kpi{background:#f7fafc;border-radius:8px;padding:16px;border-left:4px solid #0D9488}
+    .kpi-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#718096;margin-bottom:6px}
+    .kpi-value{font-size:28px;font-weight:700;color:#0B2545;font-family:monospace}
+    h2{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#4a5568;margin:24px 0 12px;border-bottom:2px solid #e2e8f0;padding-bottom:6px}
+    table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px}
+    th{padding:8px 12px;text-align:left;background:#f7fafc;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#718096;border-bottom:2px solid #e2e8f0}
+    td{padding:8px 12px;border-bottom:1px solid #e2e8f0}
+    .num{font-family:monospace;color:#0D9488;font-weight:700}
+    .footer{text-align:center;font-size:11px;color:#a0aec0;margin-top:40px;padding-top:16px;border-top:1px solid #e2e8f0}
+    @media print{body{padding:20px}}
+  </style></head><body>
+  <h1>Kulan Analytics Report</h1>
+  <div class="subtitle">Last ${state.days} days${state.siteId?' — '+state.siteId:' — All Sites'} &nbsp;·&nbsp; Generated ${now}</div>
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-label">Page Views</div><div class="kpi-value">${fmt(pv.length)}</div></div>
+    <div class="kpi"><div class="kpi-label">Unique Visitors</div><div class="kpi-value">${fmt(visitors)}</div></div>
+    <div class="kpi"><div class="kpi-label">Sessions</div><div class="kpi-value">${fmt(sessions)}</div></div>
+    <div class="kpi"><div class="kpi-label">Bounce Rate</div><div class="kpi-value">${bounce}%</div></div>
+    <div class="kpi"><div class="kpi-label">Avg Duration</div><div class="kpi-value">${fmtD(avgDur)}</div></div>
+    <div class="kpi"><div class="kpi-label">Conversions</div><div class="kpi-value">${fmt(gl.length)}</div></div>
+  </div>
+  <h2>Top Pages</h2>
+  <table><tr><th>Page</th><th>Views</th></tr>${topPages.map(([p,c])=>`<tr><td>${p}</td><td class="num">${fmt(c)}</td></tr>`).join('')}</table>
+  <h2>Traffic Channels</h2>
+  <table><tr><th>Channel</th><th>Sessions</th></tr>${Object.entries(chMap).sort((a,b)=>b[1]-a[1]).map(([ch,c])=>`<tr><td>${ch}</td><td class="num">${fmt(c)}</td></tr>`).join('')}</table>
+  <h2>Top Referrers</h2>
+  <table><tr><th>Source</th><th>Visits</th></tr>${topRefs.map(([r,c])=>`<tr><td>${r}</td><td class="num">${fmt(c)}</td></tr>`).join('')}</table>
+  <h2>Countries</h2>
+  <table><tr><th>Country</th><th>Views</th></tr>${topCountries.map(([c,n])=>`<tr><td>${c}</td><td class="num">${fmt(n)}</td></tr>`).join('')}</table>
+  <div class="footer">Kulan Analytics &mdash; mmohamud.me &mdash; ${now}</div>
+  <scr"+"ipt>window.onload=function(){window.print();}</scr"+"ipt>
+  </body></html>`);
+  printWin.document.close();
 }
 
 /* ── Live ─────────────────────────────────────────────────────────── */
