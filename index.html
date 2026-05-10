@@ -439,6 +439,24 @@ main { padding: 14px 16px; max-width: 100%; }
 
 /* Minimum bar height for thin data */
 .chart-card canvas { display: block; }
+
+/* ── CMD+K PALETTE ───────────────────────────────────────────── */
+#kpalette-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;backdrop-filter:blur(4px);display:none}
+#kpalette-backdrop.open{display:block}
+#kpalette{position:fixed;top:20%;left:50%;transform:translateX(-50%);width:min(560px,90vw);
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  z-index:201;box-shadow:0 24px 64px rgba(0,0,0,.6);overflow:hidden}
+#kpalette-input{width:100%;background:none;border:none;border-bottom:1px solid var(--border);
+  padding:16px 20px;font-family:'Syne',sans-serif;font-size:15px;color:var(--text);outline:none}
+#kpalette-input::placeholder{color:var(--text3)}
+#kpalette-results{max-height:360px;overflow-y:auto;padding:8px 0}
+.kp-item{display:flex;align-items:center;gap:12px;padding:10px 20px;cursor:pointer;transition:background .1s;font-size:13px}
+.kp-item:hover,.kp-item.selected{background:var(--teal-dim)}
+.kp-item-icon{width:28px;height:28px;border-radius:6px;background:var(--bg2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.kp-item-label{flex:1;font-weight:600;color:var(--text)}
+.kp-item-section{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px}
+.kp-section-header{padding:6px 20px 2px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3)}
+
 </style>
 </head>
 <body>
@@ -491,6 +509,16 @@ main { padding: 14px 16px; max-width: 100%; }
 </div>
 
 <!-- APP -->
+<!-- CMD+K QUICK JUMP PALETTE -->
+<div id="kpalette-backdrop" onclick="closePalette()">
+  <div id="kpalette" onclick="event.stopPropagation()">
+    <input id="kpalette-input" placeholder="Jump to... (type a section name)" oninput="filterPalette(this.value)" onkeydown="palettKey(event)">
+    <div id="kpalette-results"></div>
+    <div style="padding:8px 20px;border-top:1px solid var(--border);font-size:10px;color:var(--text3);display:flex;gap:16px">
+      <span>↑↓ navigate</span><span>↵ select</span><span>esc close</span>
+    </div>
+  </div>
+</div>
 <div id="app">
   <header>
     <!-- IDENTITY -->
@@ -513,6 +541,8 @@ main { padding: 14px 16px; max-width: 100%; }
         <button class="preset-btn active" onclick="setPreset(30)">30d</button>
         <button class="preset-btn" onclick="setPreset(90)">90d</button>
         <button class="preset-btn" onclick="setPreset(365)">1y</button>
+        <button class="preset-btn" onclick="setPresetMonth('this')" title="This calendar month">Mo</button>
+        <button class="preset-btn" onclick="setPresetMonth('last')" title="Last calendar month">LM</button>
       </div>
       <div class="date-range">
         <input type="date" id="date-start" onchange="onDateChange()" aria-label="Start date">
@@ -525,6 +555,10 @@ main { padding: 14px 16px; max-width: 100%; }
     <div class="h-sep"></div>
 
     <!-- ACTIONS GROUP -->
+    <button class="btn-ctrl" onclick="openPalette()" title="Quick jump (Ctrl+K / Cmd+K)" style="font-size:10px;padding:3px 8px;color:var(--text3);margin-right:4px;flex-shrink:0">
+      <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      ⌘K
+    </button>
     <div class="h-actions">
       <!-- Export dropdown -->
       <div class="export-wrap">
@@ -567,6 +601,13 @@ main { padding: 14px 16px; max-width: 100%; }
     </div>
   </header>
 
+  <!-- Data error banner -->
+  <div id="data-error-banner" style="display:none;background:rgba(239,68,68,.12);border-bottom:1px solid rgba(239,68,68,.3);padding:10px 20px;font-size:12px;color:var(--red);align-items:center;gap:12px;position:sticky;top:52px;z-index:45">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span class="err-msg">Failed to load data</span>
+    <button onclick="document.getElementById('data-error-banner').style.display='none';loadData()" style="background:var(--red);color:#fff;border:none;border-radius:4px;padding:3px 10px;font-size:11px;cursor:pointer;margin-left:auto">Retry</button>
+    <button onclick="document.getElementById('data-error-banner').style.display='none'" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:16px">×</button>
+  </div>
   <!-- Sidebar overlay for mobile -->
   <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
   <div class="app-body">
@@ -657,7 +698,7 @@ main { padding: 14px 16px; max-width: 100%; }
         <div class="kpi-card teal"><div class="kpi-label">Page Views</div><div class="kpi-value" id="kpi-pv">—</div><div id="kpi-pv-chg"></div><div class="kpi-sub" id="kpi-pv-sub">loading...</div></div>
         <div class="kpi-card"><div class="kpi-label">Unique Visitors</div><div class="kpi-value" id="kpi-vis">—</div><div id="kpi-vis-chg"></div><div class="kpi-sub">distinct IDs</div></div>
         <div class="kpi-card"><div class="kpi-label">Sessions</div><div class="kpi-value" id="kpi-sess">—</div><div id="kpi-sess-chg"></div><div class="kpi-sub">distinct sessions</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Bounce Rate</div><div class="kpi-value" id="kpi-bounce">—</div><div id="kpi-bounce-chg"></div><div class="kpi-sub">1-page sessions</div></div>
+        <div class="kpi-card amber" title="Bounce Rate: % of sessions with only 1 page view. Industry avg: 40-60% for content sites, 20-40% for apps. High bounce ≠ always bad — single-page content is valid."><div class="kpi-label">Bounce Rate <span style="font-size:9px;color:var(--text3);font-weight:400">ⓘ</span></div><div class="kpi-value" id="kpi-bounce">—</div><div id="kpi-bounce-chg"></div><div class="kpi-sub">1-page sessions</div></div>
         <div class="kpi-card green"><div class="kpi-label">Avg Duration</div><div class="kpi-value" id="kpi-dur">—</div><div id="kpi-dur-chg"></div><div class="kpi-sub">per session</div></div>
         <div class="kpi-card purple"><div class="kpi-label">Conversions</div><div class="kpi-value" id="kpi-goals">—</div><div id="kpi-goals-chg"></div><div class="kpi-sub">goal events</div></div>
       </div>
@@ -726,7 +767,7 @@ main { padding: 14px 16px; max-width: 100%; }
           <div style="height:200px"><canvas id="chart-os"></canvas></div>
         </div>
         <div class="table-card">
-          <div class="table-head">Top Referrers</div>
+          <div class="table-head" title="Direct = no referrer header (bookmarks, direct URL entry, dark social, native apps). UTM params can identify these sources even without a referrer.">Top Referrers</div>
           <div class="table-body" id="table-referrers"><div class="empty">Loading...</div></div>
         </div>
       </div>
@@ -1042,7 +1083,7 @@ main { padding: 14px 16px; max-width: 100%; }
           </div>
           <div class="table-body" id="geo-table-postal"></div>
         </div>
-        <div class="table-card"><div class="table-head">Coordinate Clusters</div><div class="table-body" id="geo-table-coords"></div></div>
+        <div class="table-card"><div class="table-head" style="display:flex;align-items:center;justify-content:space-between">Coordinate Clusters <span style="font-size:9px;font-weight:400;color:var(--text3);background:var(--bg2);padding:2px 6px;border-radius:4px">lat,lng</span></div><div class="table-body" id="geo-table-coords"></div></div>
       </div>
     </main>
   </div>
@@ -1453,7 +1494,7 @@ main { padding: 14px 16px; max-width: 100%; }
 
   </div><!-- /content-area -->
   </div><!-- /app-body -->
-  <footer>Kulan Analytics v4 &mdash; <a href="https://mmohamud.me" target="_blank">mmohamud.me</a></footer>
+  <footer>Kulan Analytics v5 &mdash; <a href="https://mmohamud.me" target="_blank">mmohamud.me</a> &mdash; <a href="#" onclick="switchTab('snippet');return false" style="color:var(--teal)">Snippet Generator</a></footer>
 </div>
 
 <script>
@@ -1481,7 +1522,10 @@ const fmtD  = s => !s?'—':s<60?s+'s':Math.floor(s/60)+'m '+(s%60)+'s';
 const fmtUrl= u => { try{const p=new URL(u);return p.pathname+(p.search||'');}catch{return u;} };
 const fmtRef= r => { if(!r)return'Direct';try{const h=new URL(r).hostname;return h||'Direct';}catch{return r||'Direct';} };
 const fmtAgo= d => { const s=Math.round((Date.now()-new Date(d))/1000);if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago'; };
-const countBy=(arr,key)=>{const m={};arr.forEach(i=>{const v=i[key]||'(unknown)';m[v]=(m[v]||0)+1;});return Object.entries(m).sort((a,b)=>b[1]-a[1]);};
+const countBy=(arr,key)=>{const m={};arr.forEach(i=>{const v=i[key]||'(unknown)';m[v]=(m[v]||0)+1;});return Object.entries(m).sort((a,b)=>{
+  // push (unknown) to bottom always
+  if(a[0]==='(unknown)')return 1;if(b[0]==='(unknown)')return -1;return b[1]-a[1];
+});};
 const groupByDay=(events,days,startDate,endDate)=>{
   const m={};events.forEach(e=>{const d=e.created_at.slice(0,10);m[d]=(m[d]||0)+1;});
   const labels=[],values=[],dates=[];
@@ -1513,6 +1557,27 @@ function setPreset(days){
   // Update subtitle immediately
   const sub=document.getElementById('kpi-pv-sub');
   if(sub)sub.textContent=days+' day window';
+  loadData();
+}
+
+function setPresetMonth(which) {
+  const now = new Date();
+  let start, end;
+  if (which === 'this') {
+    start = new Date(now.getFullYear(), now.getMonth(), 1);
+    end   = new Date(now.getFullYear(), now.getMonth()+1, 0);
+  } else {
+    start = new Date(now.getFullYear(), now.getMonth()-1, 1);
+    end   = new Date(now.getFullYear(), now.getMonth(), 0);
+  }
+  state.startDate = start.toISOString().slice(0,10);
+  state.endDate   = end.toISOString().slice(0,10);
+  state.days      = Math.round((end-start)/86400000);
+  document.getElementById('date-start').value = state.startDate;
+  document.getElementById('date-end').value   = state.endDate;
+  document.querySelectorAll('.preset-btn').forEach(b=>b.classList.remove('active'));
+  const sub = document.getElementById('kpi-pv-sub');
+  if(sub) sub.textContent = (which==='this'?'This month':'Last month');
   loadData();
 }
 function onDateChange(){
@@ -1667,7 +1732,7 @@ async function loadData(){
   }catch(e){
     console.error('loadData full error:', JSON.stringify(e), e);
     const msg=[e.message,e.details,e.hint,e.code].filter(Boolean).join(' | ')||JSON.stringify(e);
-    alert('loadData error:\n\n'+msg+'\n\nCheck browser Console (F12) for full details.');
+    const eb=document.getElementById('data-error-banner');if(eb){eb.style.display='flex';const em=eb.querySelector('.err-msg');if(em)em.textContent=msg.slice(0,200);}
   }finally{document.getElementById('loading').style.display='none';}
 }
 
@@ -1780,6 +1845,7 @@ function renderOverview(){
   const pm={};pv.forEach(e=>{const k=fmtUrl(e.url||'');pm[k]=(pm[k]||0)+1;});
   const tp=Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,8);
   document.getElementById('pages-badge').textContent=tp.length+' pages';
+  if(tp.length===1){addNotification('warning','Low page coverage','Only 1 URL tracked. Make sure the tracker snippet is on all pages — not just the homepage.');}
   kill('pages');
   charts.pages=new Chart(document.getElementById('chart-pages'),{
     type:'bar',
@@ -3284,6 +3350,118 @@ function renderTimelineWithOverlay() {
       scales:{ x:{...G,ticks:{maxTicksLimit:12}}, y:{...G,beginAtZero:true,ticks:{precision:0}} } },
   });
   renderAnnotations(labels, dates);
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   CMD+K QUICK JUMP PALETTE
+   ══════════════════════════════════════════════════════════════════ */
+const PALETTE_ITEMS = [
+  {tab:'overview',   label:'Overview',        section:'Dashboard',    icon:'📊'},
+  {tab:'realtime',   label:'Realtime',         section:'Dashboard',    icon:'⚡'},
+  {tab:'status',     label:'Site Health',      section:'Dashboard',    icon:'🟢'},
+  {tab:'channels',   label:'Channels',         section:'Acquisition',  icon:'📡'},
+  {tab:'campaigns',  label:'Campaigns',        section:'Acquisition',  icon:'🎯'},
+  {tab:'landing',    label:'Landing Pages',    section:'Acquisition',  icon:'🛬'},
+  {tab:'linkedin',   label:'LinkedIn',         section:'Acquisition',  icon:'💼'},
+  {tab:'audience',   label:'Visitors',         section:'Audience',     icon:'👤'},
+  {tab:'geo',        label:'Geographic',       section:'Audience',     icon:'🌍'},
+  {tab:'visitors',   label:'Visitor Explorer', section:'Audience',     icon:'🔍'},
+  {tab:'cohort',     label:'Cohort',           section:'Audience',     icon:'📅'},
+  {tab:'flow',       label:'Pages & Flow',     section:'Behavior',     icon:'🗺️'},
+  {tab:'scroll',     label:'Scroll Depth',     section:'Behavior',     icon:'📜'},
+  {tab:'heatmap',    label:'Heatmap',          section:'Behavior',     icon:'🔥'},
+  {tab:'forms',      label:'Forms',            section:'Behavior',     icon:'📝'},
+  {tab:'search',     label:'Search',           section:'Behavior',     icon:'🔎'},
+  {tab:'performance',label:'Performance',      section:'Behavior',     icon:'⚡'},
+  {tab:'errors',     label:'Errors',           section:'Behavior',     icon:'🚨'},
+  {tab:'goals',      label:'Goals',            section:'Conversions',  icon:'✅'},
+  {tab:'funnel',     label:'Funnel Builder',   section:'Conversions',  icon:'📉'},
+  {tab:'ecommerce',  label:'Ecommerce',        section:'Conversions',  icon:'💰'},
+  {tab:'comparison', label:'Comparison',       section:'Conversions',  icon:'⚖️'},
+  {tab:'snippet',    label:'Snippet Generator',section:'Settings',     icon:'🧩'},
+  {tab:'ai',         label:'AI Insights',      section:'Settings',     icon:'🤖'},
+  {tab:'custom',     label:'My Dashboard',     section:'Settings',     icon:'📌'},
+];
+
+let _paletteIdx = 0;
+
+function openPalette() {
+  document.getElementById('kpalette-backdrop').classList.add('open');
+  const input = document.getElementById('kpalette-input');
+  input.value = '';
+  filterPalette('');
+  setTimeout(() => input.focus(), 50);
+}
+
+function closePalette() {
+  document.getElementById('kpalette-backdrop').classList.remove('open');
+  _paletteIdx = 0;
+}
+
+function filterPalette(q) {
+  const filtered = q
+    ? PALETTE_ITEMS.filter(i => i.label.toLowerCase().includes(q.toLowerCase()) || i.section.toLowerCase().includes(q.toLowerCase()))
+    : PALETTE_ITEMS;
+  _paletteIdx = 0;
+  const el = document.getElementById('kpalette-results');
+  if (!filtered.length) {
+    el.innerHTML = '<div class="empty" style="padding:20px">No sections found</div>';
+    return;
+  }
+  // Group by section
+  const groups = {};
+  filtered.forEach(i => { if(!groups[i.section]) groups[i.section]=[]; groups[i.section].push(i); });
+  el.innerHTML = Object.entries(groups).map(([section, items]) =>
+    `<div class="kp-section-header">${section}</div>` +
+    items.map((item, j) =>
+      `<div class="kp-item${j===0&&!q?' selected':''}" data-tab="${item.tab}" onclick="palettePick('${item.tab}')">
+        <div class="kp-item-icon">${item.icon}</div>
+        <div class="kp-item-label">${item.label}</div>
+        <div class="kp-item-section">${item.section}</div>
+      </div>`).join('')
+  ).join('');
+}
+
+function palettKey(e) {
+  const items = document.querySelectorAll('.kp-item');
+  if (!items.length) return;
+  if (e.key === 'ArrowDown') { e.preventDefault(); _paletteIdx = Math.min(_paletteIdx+1, items.length-1); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); _paletteIdx = Math.max(_paletteIdx-1, 0); }
+  else if (e.key === 'Enter') { e.preventDefault(); const sel = items[_paletteIdx]; if(sel) palettePick(sel.dataset.tab); return; }
+  else if (e.key === 'Escape') { closePalette(); return; }
+  items.forEach((el,i) => el.classList.toggle('selected', i===_paletteIdx));
+  items[_paletteIdx]?.scrollIntoView({block:'nearest'});
+}
+
+function palettePick(tab) {
+  closePalette();
+  switchTab(tab);
+  // Expand the section in sidebar
+  const btn = document.querySelector(`.sb-item[data-tab="${tab}"]`);
+  if(btn) {
+    const sec = btn.closest('.sb-section');
+    if(sec && sec.classList.contains('collapsed')) toggleSection(sec.id.replace('sec-',''));
+  }
+}
+
+// Global keyboard shortcut
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('kpalette-backdrop').classList.contains('open') ? closePalette() : openPalette();
+  }
+});
+
+/* ══════════════════════════════════════════════════════════════════
+   SUGGESTED WIDGETS FOR MY DASHBOARD
+   ══════════════════════════════════════════════════════════════════ */
+function initSuggestedWidgets() {
+  // If user has never pinned anything, auto-suggest top 3
+  if (!localStorage.getItem('_kl_widgets')) {
+    _pinnedWidgets = ['wg-pv', 'wg-visitors', 'wg-bounce'];
+    savePinnedWidgets();
+  }
 }
 
 function startLivePoll(){updateLive();setInterval(updateLive,30000);}
