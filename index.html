@@ -1612,7 +1612,13 @@ const CFG = {
   SUPABASE_URL: 'https://xkadqvmqxdyqoddiypet.supabase.co',
   ANON_KEY:     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrYWRxdm1xeGR5cW9kZGl5cGV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNzI5NDMsImV4cCI6MjA4ODk0ODk0M30.FPBEXOx62vaTcLom7IkVRKRLda1xKk09slhQZ9yuRWc',
   PASSWORD:     'kulanAdmin2025',
+  AI_ENDPOINT:    'https://xkadqvmqxdyqoddiypet.supabase.co/functions/v1/kulan-ai',
 };
+
+/* ── AI Constants ──────────────────────────────────────────
+   Defined here so all functions can reference them directly  */
+const AI_ENDPOINT     = CFG.AI_ENDPOINT;
+const KULAN_AI_SECRET = localStorage.getItem('_kl_ai_secret') || '';
 
 /* ── Globals ──────────────────────────────────────────────────────── */
 let sb, rtChannel;
@@ -4002,16 +4008,23 @@ RESPONSE RULES:
    INLINE CHART AI HINTS
    ══════════════════════════════════════════════════════════════════ */
 function addChartHint(chartTitle, question) {
-  // Find chart headers and inject AI hint buttons
   document.querySelectorAll('.chart-header').forEach(header => {
     const title = header.querySelector('.chart-title');
-    if (title && title.textContent.trim() === chartTitle && !header.querySelector('.ai-chart-hint')) {
+    if (!title) return;
+    // Fuzzy match — normalize whitespace and case
+    const titleText = title.textContent.replace(/\s+/g,' ').trim().toLowerCase();
+    const target    = chartTitle.toLowerCase();
+    if (titleText.includes(target) || target.includes(titleText)) {
+      if (header.querySelector('.ai-chart-hint')) return; // already injected
       const btn = document.createElement('button');
-      btn.className = 'ai-chart-hint';
+      btn.className   = 'ai-chart-hint';
       btn.textContent = '✨ Explain';
-      btn.onclick = () => {
-        if (!_aiOpen) toggleAIPanel();
-        setTimeout(() => sendAIMessage(question), 300);
+      btn.title       = 'Ask AI to explain this chart';
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        if (!_aiOpen) { toggleAIPanel(); }
+        // Wait for panel to open before sending
+        setTimeout(() => sendAIMessage(question), _aiOpen ? 0 : 350);
       };
       header.appendChild(btn);
     }
@@ -4020,14 +4033,23 @@ function addChartHint(chartTitle, question) {
 
 function injectChartHints() {
   const hints = [
-    ['Pageviews Over Time',   'Explain my pageview trend and what might be causing it'],
-    ['DAU / MAU Stickiness',  'What does my DAU/MAU stickiness mean and how can I improve it?'],
-    ['Engagement Rate',       'Analyze my engagement rate and suggest improvements'],
-    ['Channel Distribution',  'Which channel should I focus on to grow traffic?'],
-    ['Scroll Depth Funnel',   'What does my scroll depth tell me about my content quality?'],
-    ['LCP — Largest Contentful Paint', 'Is my LCP score good? How can I improve it?'],
-    ['New vs Returning',      'What does my new vs returning visitor ratio tell me?'],
-    ['Errors Over Time',      'What should I do about these JavaScript errors?'],
+    ['Pageviews Over Time',        'Explain my pageview trend and what might be causing it'],
+    ['DAU / MAU',                  'What does my DAU/MAU stickiness mean and how can I improve it?'],
+    ['Engagement Rate',            'Analyze my engagement rate and suggest improvements'],
+    ['Channel Distribution',       'Which channel should I focus on to grow traffic?'],
+    ['Channel Trend',              'Analyze my channel trends — which is growing fastest?'],
+    ['Scroll Depth',               'What does my scroll depth tell me about my content quality?'],
+    ['LCP',                        'Is my LCP score good? How can I improve page load speed?'],
+    ['New vs Returning',           'What does my new vs returning visitor ratio tell me?'],
+    ['Errors Over Time',           'What should I do about these JavaScript errors?'],
+    ['Bounce Rate',                'Why is my bounce rate high and how do I lower it?'],
+    ['Cohort',                     'Explain my cohort retention and what I can do to improve it'],
+    ['Top Countries',              'Which countries should I focus my content on?'],
+    ['Goals Over Time',            'How can I improve my conversion rate?'],
+    ['Pageviews by Device',        'What does my device split tell me about my audience?'],
+    ['Revenue Over Time',          'Analyze my revenue trends and suggest improvements'],
+    ['LinkedIn Sessions',          'How can I get more traffic from LinkedIn?'],
+    ['Page Load Over Time',        'Is my page performance trending in the right direction?'],
   ];
   hints.forEach(([title, q]) => addChartHint(title, q));
 }
@@ -4107,13 +4129,19 @@ function initAI() {
     }
   }, 3000);
 
-  // Inject chart hints when tabs render
+  // Inject chart hints after every tab switch and on load
   document.addEventListener('click', e => {
-    if (e.target.closest('.sb-item')) {
-      setTimeout(injectChartHints, 500);
+    if (e.target.closest('.sb-item') || e.target.closest('.preset-btn')) {
+      setTimeout(injectChartHints, 600);
     }
   });
-  setTimeout(injectChartHints, 1500);
+  // Also hook into switchTab directly
+  const _origSwitchTab = switchTab;
+  window.switchTab = function(tab) {
+    _origSwitchTab(tab);
+    setTimeout(injectChartHints, 700);
+  };
+  setTimeout(injectChartHints, 2000); // initial load
 
   // Upgrade AI Insights tab
   setTimeout(upgradeAIInsightsTab, 1000);
