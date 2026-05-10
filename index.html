@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Kulan Analytics -->
+  <script src="https://analytics.kulaninstitute.org/tracker.js" data-site="Analytics" data-group="dashboard" defer></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
@@ -1615,8 +1617,10 @@ const CFG = {
   AI_ENDPOINT:    'https://xkadqvmqxdyqoddiypet.supabase.co/functions/v1/kulan-ai',
 };
 
-/* ── AI Constants ──────────────────────────────────────────
-   Defined here so all functions can reference them directly  */
+/* ── Destructured constants (used throughout) ───────────────
+   Pull from CFG so functions reference them directly          */
+const SUPABASE_URL    = CFG.SUPABASE_URL;
+const ANON_KEY        = CFG.ANON_KEY;
 const AI_ENDPOINT     = CFG.AI_ENDPOINT;
 const KULAN_AI_SECRET = localStorage.getItem('_kl_ai_secret') || '';
 
@@ -4222,7 +4226,5 @@ function testAPIKey() {
 function startLivePoll(){updateLive();setInterval(updateLive,30000);}
 </script>
 
-  <!-- Kulan Analytics -->
-  <script src="https://analytics.kulaninstitute.org/tracker.js" data-site="Analytics" data-group="dashboard" defer></script>
 </body>
 </html>
