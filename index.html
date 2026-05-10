@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Kulan Analytics — private traffic dashboard">
+<meta name="description" content="Kulan Analytics -- private traffic dashboard">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' fonts.googleapis.com cdn.jsdelivr.net; font-src fonts.gstatic.com cdn.jsdelivr.net; connect-src *.supabase.co cdn.jsdelivr.net ipapi.co; img-src 'self' data: *.tile.openstreetmap.org *.basemaps.cartocdn.com;">
 <title>Kulan Analytics</title>
 <!-- Favicon -->
@@ -203,7 +203,7 @@ select:hover,.btn-ctrl:hover{border-color:var(--teal)}
 /* Sidebar divider */
 .sb-divider{border:none;border-top:1px solid var(--border);margin:8px 0}
 
-/* Collapsed sidebar — icon-only mode */
+/* Collapsed sidebar -- icon-only mode */
 .sidebar.collapsed .sb-section-header span:not(.sb-icon){display:none}
 .sidebar.collapsed .sb-section-header .sb-chevron{display:none}
 .sidebar.collapsed .sb-item-label{display:none}
@@ -461,7 +461,7 @@ main { padding: 14px 16px; max-width: 100%; }
 
 
 /* ══════════════════════════════════════════════════════════════════
-   KULAN AI ASSISTANT — FLOATING CHAT
+   KULAN AI ASSISTANT -- FLOATING CHAT
    ══════════════════════════════════════════════════════════════════ */
 #ai-bubble{position:fixed;bottom:24px;right:24px;z-index:300;
   width:52px;height:52px;background:linear-gradient(135deg,var(--teal),#0ea5e9);
@@ -684,9 +684,14 @@ main { padding: 14px 16px; max-width: 100%; }
   <!-- Data error banner -->
   <div id="data-error-banner" style="display:none;background:rgba(239,68,68,.12);border-bottom:1px solid rgba(239,68,68,.3);padding:10px 20px;font-size:12px;color:var(--red);align-items:center;gap:12px;position:sticky;top:52px;z-index:45">
     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    <span class="err-msg">Failed to load data</span>
+    <span class="err-msg">Failed to load data — check Supabase project status</span>
     <button onclick="document.getElementById('data-error-banner').style.display='none';loadData()" style="background:var(--red);color:#fff;border:none;border-radius:4px;padding:3px 10px;font-size:11px;cursor:pointer;margin-left:auto">Retry</button>
     <button onclick="document.getElementById('data-error-banner').style.display='none'" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:16px">×</button>
+  </div>
+  <!-- AI unavailable banner -->
+  <div id="ai-status-banner" style="display:none;background:rgba(139,92,246,.1);border-bottom:1px solid rgba(139,92,246,.25);padding:8px 20px;font-size:11px;color:var(--purple);align-items:center;gap:10px;position:sticky;top:52px;z-index:44">
+    🤖 AI features unavailable — check API key in <a href="#" onclick="switchTab('snippet');return false" style="color:var(--purple);font-weight:700">Settings → AI Settings</a>
+    <button onclick="document.getElementById('ai-status-banner').style.display='none'" style="background:none;border:none;color:var(--purple);cursor:pointer;margin-left:auto;font-size:15px">×</button>
   </div>
   <!-- Sidebar overlay for mobile -->
   <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
@@ -775,12 +780,12 @@ main { padding: 14px 16px; max-width: 100%; }
         <span><span class="kpi-legend-dot" style="background:#8B5CF6;display:inline-block"></span> Conversions</span>
       </div>
       <div class="kpi-grid">
-        <div class="kpi-card teal"><div class="kpi-label">Page Views</div><div class="kpi-value" id="kpi-pv">—</div><div id="kpi-pv-chg"></div><div class="kpi-sub" id="kpi-pv-sub">loading...</div></div>
-        <div class="kpi-card"><div class="kpi-label">Unique Visitors</div><div class="kpi-value" id="kpi-vis">—</div><div id="kpi-vis-chg"></div><div class="kpi-sub">distinct IDs</div></div>
-        <div class="kpi-card"><div class="kpi-label">Sessions</div><div class="kpi-value" id="kpi-sess">—</div><div id="kpi-sess-chg"></div><div class="kpi-sub">distinct sessions</div></div>
-        <div class="kpi-card amber" title="Bounce Rate: % of sessions with only 1 page view. Industry avg: 40-60% for content sites, 20-40% for apps. High bounce ≠ always bad — single-page content is valid."><div class="kpi-label">Bounce Rate <span style="font-size:9px;color:var(--text3);font-weight:400">ⓘ</span></div><div class="kpi-value" id="kpi-bounce">—</div><div id="kpi-bounce-chg"></div><div class="kpi-sub">1-page sessions</div></div>
-        <div class="kpi-card green"><div class="kpi-label">Avg Duration</div><div class="kpi-value" id="kpi-dur">—</div><div id="kpi-dur-chg"></div><div class="kpi-sub">per session</div></div>
-        <div class="kpi-card purple"><div class="kpi-label">Conversions</div><div class="kpi-value" id="kpi-goals">—</div><div id="kpi-goals-chg"></div><div class="kpi-sub">goal events</div></div>
+        <div class="kpi-card teal"><div class="kpi-label">Page Views</div><div class="kpi-value" id="kpi-pv">--</div><div id="kpi-pv-chg"></div><div class="kpi-sub" id="kpi-pv-sub">loading...</div></div>
+        <div class="kpi-card"><div class="kpi-label">Unique Visitors</div><div class="kpi-value" id="kpi-vis">--</div><div id="kpi-vis-chg"></div><div class="kpi-sub">distinct IDs</div></div>
+        <div class="kpi-card"><div class="kpi-label">Sessions</div><div class="kpi-value" id="kpi-sess">--</div><div id="kpi-sess-chg"></div><div class="kpi-sub">distinct sessions</div></div>
+        <div class="kpi-card amber" title="Bounce Rate: % of sessions with only 1 page view. Industry avg: 40-60% for content sites, 20-40% for apps. High bounce ≠ always bad -- single-page content is valid."><div class="kpi-label">Bounce Rate <span style="font-size:9px;color:var(--text3);font-weight:400">ⓘ</span></div><div class="kpi-value" id="kpi-bounce">--</div><div id="kpi-bounce-chg"></div><div class="kpi-sub">1-page sessions</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Avg Duration</div><div class="kpi-value" id="kpi-dur">--</div><div id="kpi-dur-chg"></div><div class="kpi-sub">per session</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">Conversions</div><div class="kpi-value" id="kpi-goals">--</div><div id="kpi-goals-chg"></div><div class="kpi-sub">goal events</div></div>
       </div>
 
       <!-- DAU/MAU row -->
@@ -788,7 +793,7 @@ main { padding: 14px 16px; max-width: 100%; }
         <div class="chart-card">
           <div class="chart-header">
             <div class="chart-title">DAU / MAU Stickiness</div>
-            <div id="dau-mau-badge" class="chart-badge">—</div>
+            <div id="dau-mau-badge" class="chart-badge">--</div>
           </div>
           <div style="height:160px;position:relative">
             <canvas id="chart-dau-mau"></canvas>
@@ -800,7 +805,7 @@ main { padding: 14px 16px; max-width: 100%; }
         <div class="chart-card">
           <div class="chart-header">
             <div class="chart-title">Engagement Rate</div>
-            <div id="eng-badge" class="chart-badge">—</div>
+            <div id="eng-badge" class="chart-badge">--</div>
           </div>
           <div style="height:160px;position:relative">
             <canvas id="chart-engagement"></canvas>
@@ -816,7 +821,7 @@ main { padding: 14px 16px; max-width: 100%; }
           <div class="chart-header">
             <div class="chart-title">Pageviews Over Time</div>
             <div class="chart-actions">
-              <div class="chart-badge" id="time-badge">—</div>
+              <div class="chart-badge" id="time-badge">--</div>
               <button class="btn-ctrl" id="overlay-btn" onclick="togglePrevOverlay()" style="font-size:10px;padding:3px 8px;white-space:nowrap" title="Overlay previous period">± Prev</button>
               <button class="btn-ctrl btn-note" onclick="openAnnModal()" aria-label="Add annotation note">+ Note</button>
             </div>
@@ -832,7 +837,7 @@ main { padding: 14px 16px; max-width: 100%; }
 
       <div class="g11">
         <div class="chart-card">
-          <div class="chart-header"><div class="chart-title">Top Pages</div><div class="chart-badge" id="pages-badge">—</div></div>
+          <div class="chart-header"><div class="chart-title">Top Pages</div><div class="chart-badge" id="pages-badge">--</div></div>
           <div style="height:200px"><canvas id="chart-pages"></canvas></div>
         </div>
         <div class="chart-card">
@@ -894,7 +899,7 @@ main { padding: 14px 16px; max-width: 100%; }
             <button class="btn-ctrl" onclick="clearRTFeed()">&#x2715; Clear</button>
           </div>
         </div>
-        <div id="rt-paused-banner" class="rt-paused" style="display:none">Feed paused — click Resume to continue</div>
+        <div id="rt-paused-banner" class="rt-paused" style="display:none">Feed paused -- click Resume to continue</div>
         <div id="rt-feed"><div class="empty" style="margin:auto">Waiting for events... Open any tracked site in a new tab.</div></div>
       </div>
     </main>
@@ -906,7 +911,7 @@ main { padding: 14px 16px; max-width: 100%; }
       <div class="chart-card" style="margin-bottom:12px">
         <div class="chart-header">
           <div class="chart-title">Page Transition Flow</div>
-          <div class="chart-badge" id="flow-badge">—</div>
+          <div class="chart-badge" id="flow-badge">--</div>
         </div>
         <canvas id="flow-canvas" height="420"></canvas>
         <div class="flow-legend" id="flow-legend"></div>
@@ -944,10 +949,10 @@ main { padding: 14px 16px; max-width: 100%; }
   <div id="tab-campaigns" class="tab-panel">
     <main>
       <div class="kpi-grid">
-        <div class="kpi-card teal"><div class="kpi-label">UTM Sessions</div><div class="kpi-value" id="utmk-sess">—</div><div class="kpi-sub">from campaigns</div></div>
-        <div class="kpi-card"><div class="kpi-label">Organic</div><div class="kpi-value" id="utmk-org">—</div><div class="kpi-sub">no UTM params</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Top Source</div><div class="kpi-value" id="utmk-src" style="font-size:13px">—</div><div class="kpi-sub">most traffic</div></div>
-        <div class="kpi-card green"><div class="kpi-label">Top Campaign</div><div class="kpi-value" id="utmk-camp" style="font-size:13px">—</div><div class="kpi-sub">most traffic</div></div>
+        <div class="kpi-card teal"><div class="kpi-label">UTM Sessions</div><div class="kpi-value" id="utmk-sess">--</div><div class="kpi-sub">from campaigns</div></div>
+        <div class="kpi-card"><div class="kpi-label">Organic</div><div class="kpi-value" id="utmk-org">--</div><div class="kpi-sub">no UTM params</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Top Source</div><div class="kpi-value" id="utmk-src" style="font-size:13px">--</div><div class="kpi-sub">most traffic</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Top Campaign</div><div class="kpi-value" id="utmk-camp" style="font-size:13px">--</div><div class="kpi-sub">most traffic</div></div>
       </div>
       <div class="g11">
         <div class="chart-card"><div class="chart-header"><div class="chart-title">By Source</div></div><div style="height:220px"><canvas id="chart-utm-src"></canvas></div></div>
@@ -964,10 +969,10 @@ main { padding: 14px 16px; max-width: 100%; }
   <div id="tab-goals" class="tab-panel">
     <main>
       <div class="kpi-grid">
-        <div class="kpi-card purple"><div class="kpi-label">Total Conversions</div><div class="kpi-value" id="gk-total">—</div><div class="kpi-sub">all goal events</div></div>
-        <div class="kpi-card green"><div class="kpi-label">Conversion Rate</div><div class="kpi-value" id="gk-rate">—</div><div class="kpi-sub">goals / sessions</div></div>
-        <div class="kpi-card"><div class="kpi-label">Unique Goals</div><div class="kpi-value" id="gk-unique">—</div><div class="kpi-sub">distinct names</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Top Goal</div><div class="kpi-value" id="gk-top" style="font-size:12px">—</div><div class="kpi-sub">most conversions</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">Total Conversions</div><div class="kpi-value" id="gk-total">--</div><div class="kpi-sub">all goal events</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Conversion Rate</div><div class="kpi-value" id="gk-rate">--</div><div class="kpi-sub">goals / sessions</div></div>
+        <div class="kpi-card"><div class="kpi-label">Unique Goals</div><div class="kpi-value" id="gk-unique">--</div><div class="kpi-sub">distinct names</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Top Goal</div><div class="kpi-value" id="gk-top" style="font-size:12px">--</div><div class="kpi-sub">most conversions</div></div>
       </div>
       <div class="g21">
         <div class="chart-card"><div class="chart-header"><div class="chart-title">Conversions Over Time</div></div><div style="height:180px"><canvas id="chart-goals-tl"></canvas></div></div>
@@ -987,7 +992,7 @@ main { padding: 14px 16px; max-width: 100%; }
         <select id="heatmap-url-select" onchange="renderHeatmap(this)" style="min-width:260px"><option value="">All Pages</option></select>
         <div style="display:flex;gap:8px">
           <div class="kpi-card" style="padding:10px 14px;min-width:110px"><div class="kpi-label">Total Clicks</div><div class="kpi-value" style="font-size:18px" id="hm-total">0</div></div>
-          <div class="kpi-card" style="padding:10px 14px;min-width:110px"><div class="kpi-label">Hottest Zone</div><div class="kpi-value" style="font-size:12px" id="hm-zone">—</div></div>
+          <div class="kpi-card" style="padding:10px 14px;min-width:110px"><div class="kpi-label">Hottest Zone</div><div class="kpi-value" style="font-size:12px" id="hm-zone">--</div></div>
         </div>
       </div>
       <div class="g11" style="margin-bottom:16px">
@@ -1044,12 +1049,37 @@ main { padding: 14px 16px; max-width: 100%; }
       <!-- ── AI Settings ──────────────────────────────────────── -->
       <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">🤖 AI Settings</div>
       <div class="chart-card" style="padding:20px">
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">Anthropic API Key — via Supabase Edge Function</div>
-        <div style="font-size:11px;color:var(--text3);margin-bottom:14px">Your API key lives securely in Supabase — never exposed in the browser. Get a key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--teal)">console.anthropic.com</a></div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">Anthropic API Key -- via Supabase Edge Function</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:14px">Your API key lives securely in Supabase -- never exposed in the browser. Get a key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--teal)">console.anthropic.com</a></div>
         <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;font-size:12px;margin-bottom:14px">
-          <div style="font-weight:700;color:var(--teal);margin-bottom:8px">One-time setup in your terminal:</div>
-          <pre style="margin:0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2);white-space:pre-wrap">supabase functions deploy kulan-ai --no-verify-jwt
-supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
+          <div style="font-weight:700;color:var(--teal);margin-bottom:8px">Supabase → Edge Functions → kulan-ai → Secrets:</div>
+          <table style="width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:11px">
+            <tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:6px 8px;color:var(--teal);font-weight:700">ANTHROPIC_API_KEY</td>
+              <td style="padding:6px 8px;color:var(--text2)">sk-ant-... (from console.anthropic.com)</td>
+              <td style="padding:6px 8px;color:var(--red);font-size:10px">Required</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:6px 8px;color:var(--teal);font-weight:700">KULAN_AI_SECRET</td>
+              <td style="padding:6px 8px;color:var(--text2)">any random 32-char string</td>
+              <td style="padding:6px 8px;color:var(--amber);font-size:10px">Recommended</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:6px 8px;color:var(--teal);font-weight:700">ALLOWED_ORIGINS</td>
+              <td style="padding:6px 8px;color:var(--text2)">https://analytics.kulaninstitute.org</td>
+              <td style="padding:6px 8px;color:var(--amber);font-size:10px">Recommended</td>
+            </tr>
+            <tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:6px 8px;color:var(--teal);font-weight:700">SUPABASE_SERVICE_ROLE_KEY</td>
+              <td style="padding:6px 8px;color:var(--text2)">Settings → API → service_role key</td>
+              <td style="padding:6px 8px;color:var(--text3);font-size:10px">For logging</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 8px;color:var(--teal);font-weight:700">IP_HASH_SALT</td>
+              <td style="padding:6px 8px;color:var(--text2)">any random string</td>
+              <td style="padding:6px 8px;color:var(--text3);font-size:10px">For logging</td>
+            </tr>
+          </table>
         </div>
         <!-- Shared secret for x-kulan-token header -->
         <div style="margin-top:14px">
@@ -1077,12 +1107,12 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
   <div id="tab-audience" class="tab-panel">
     <main>
       <div class="kpi-grid">
-        <div class="kpi-card teal"><div class="kpi-label">New Visitors</div><div class="kpi-value" id="aud-new">—</div><div class="kpi-sub">first-time</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Returning</div><div class="kpi-value" id="aud-ret">—</div><div class="kpi-sub">came back</div></div>
-        <div class="kpi-card green"><div class="kpi-label">Return Rate</div><div class="kpi-value" id="aud-rate">—</div><div class="kpi-sub">of all visitors</div></div>
-        <div class="kpi-card purple"><div class="kpi-label">Languages</div><div class="kpi-value" id="aud-langs">—</div><div class="kpi-sub">distinct</div></div>
-        <div class="kpi-card"><div class="kpi-label">Device Models</div><div class="kpi-value" id="aud-models">—</div><div class="kpi-sub">distinct</div></div>
-        <div class="kpi-card"><div class="kpi-label">OS Versions</div><div class="kpi-value" id="aud-os-vers">—</div><div class="kpi-sub">distinct</div></div>
+        <div class="kpi-card teal"><div class="kpi-label">New Visitors</div><div class="kpi-value" id="aud-new">--</div><div class="kpi-sub">first-time</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Returning</div><div class="kpi-value" id="aud-ret">--</div><div class="kpi-sub">came back</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Return Rate</div><div class="kpi-value" id="aud-rate">--</div><div class="kpi-sub">of all visitors</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">Languages</div><div class="kpi-value" id="aud-langs">--</div><div class="kpi-sub">distinct</div></div>
+        <div class="kpi-card"><div class="kpi-label">Device Models</div><div class="kpi-value" id="aud-models">--</div><div class="kpi-sub">distinct</div></div>
+        <div class="kpi-card"><div class="kpi-label">OS Versions</div><div class="kpi-value" id="aud-os-vers">--</div><div class="kpi-sub">distinct</div></div>
       </div>
       <div class="g11">
         <div class="chart-card"><div class="chart-header"><div class="chart-title">New vs Returning</div></div><div style="height:200px"><canvas id="chart-nv-ret"></canvas></div></div>
@@ -1124,12 +1154,12 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
             <div class="table-row">
               <div class="table-lbl">EU Visitors</div>
               <div class="table-bar"><div class="table-bar-fill" id="eu-bar" style="width:0%"></div></div>
-              <div class="table-cnt" id="eu-count">—</div>
+              <div class="table-cnt" id="eu-count">--</div>
             </div>
             <div class="table-row">
               <div class="table-lbl">Non-EU Visitors</div>
               <div class="table-bar"><div class="table-bar-fill" id="non-eu-bar" style="width:0%;background:var(--text3)"></div></div>
-              <div class="table-cnt" id="non-eu-count">—</div>
+              <div class="table-cnt" id="non-eu-count">--</div>
             </div>
             <div style="padding:8px 16px;font-size:10px;color:var(--text3)">GDPR applies to EU visitors</div>
           </div>
@@ -1142,10 +1172,10 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
   <div id="tab-geo" class="tab-panel">
     <main>
       <div class="kpi-grid">
-        <div class="kpi-card teal"><div class="kpi-label">Countries</div><div class="kpi-value" id="geo-countries">—</div><div class="kpi-sub">distinct</div></div>
-        <div class="kpi-card"><div class="kpi-label">Regions</div><div class="kpi-value" id="geo-regions">—</div><div class="kpi-sub">states / provinces</div></div>
-        <div class="kpi-card"><div class="kpi-label">Cities</div><div class="kpi-value" id="geo-cities">—</div><div class="kpi-sub">distinct</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Top Country</div><div class="kpi-value" id="geo-top" style="font-size:13px">—</div><div class="kpi-sub">most traffic</div></div>
+        <div class="kpi-card teal"><div class="kpi-label">Countries</div><div class="kpi-value" id="geo-countries">--</div><div class="kpi-sub">distinct</div></div>
+        <div class="kpi-card"><div class="kpi-label">Regions</div><div class="kpi-value" id="geo-regions">--</div><div class="kpi-sub">states / provinces</div></div>
+        <div class="kpi-card"><div class="kpi-label">Cities</div><div class="kpi-value" id="geo-cities">--</div><div class="kpi-sub">distinct</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Top Country</div><div class="kpi-value" id="geo-top" style="font-size:13px">--</div><div class="kpi-sub">most traffic</div></div>
       </div>
 
       <!-- INTERACTIVE MAP -->
@@ -1201,10 +1231,10 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
   <div id="tab-scroll" class="tab-panel">
     <main>
       <div class="kpi-grid">
-        <div class="kpi-card teal"><div class="kpi-label">Reached 25%</div><div class="kpi-value" id="scr-25">—</div><div class="kpi-sub">of sessions</div></div>
-        <div class="kpi-card"><div class="kpi-label">Reached 50%</div><div class="kpi-value" id="scr-50">—</div><div class="kpi-sub">of sessions</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Reached 75%</div><div class="kpi-value" id="scr-75">—</div><div class="kpi-sub">of sessions</div></div>
-        <div class="kpi-card green"><div class="kpi-label">Reached 100%</div><div class="kpi-value" id="scr-100">—</div><div class="kpi-sub">read to end</div></div>
+        <div class="kpi-card teal"><div class="kpi-label">Reached 25%</div><div class="kpi-value" id="scr-25">--</div><div class="kpi-sub">of sessions</div></div>
+        <div class="kpi-card"><div class="kpi-label">Reached 50%</div><div class="kpi-value" id="scr-50">--</div><div class="kpi-sub">of sessions</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Reached 75%</div><div class="kpi-value" id="scr-75">--</div><div class="kpi-sub">of sessions</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Reached 100%</div><div class="kpi-value" id="scr-100">--</div><div class="kpi-sub">read to end</div></div>
       </div>
       <div class="g21">
         <div class="chart-card">
@@ -1227,9 +1257,9 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
   <div id="tab-search" class="tab-panel">
     <main>
       <div class="kpi-grid">
-        <div class="kpi-card teal"><div class="kpi-label">Total Searches</div><div class="kpi-value" id="srch-total">—</div><div class="kpi-sub">search events</div></div>
-        <div class="kpi-card"><div class="kpi-label">Unique Queries</div><div class="kpi-value" id="srch-unique">—</div><div class="kpi-sub">distinct terms</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Top Query</div><div class="kpi-value" id="srch-top" style="font-size:13px">—</div><div class="kpi-sub">most searched</div></div>
+        <div class="kpi-card teal"><div class="kpi-label">Total Searches</div><div class="kpi-value" id="srch-total">--</div><div class="kpi-sub">search events</div></div>
+        <div class="kpi-card"><div class="kpi-label">Unique Queries</div><div class="kpi-value" id="srch-unique">--</div><div class="kpi-sub">distinct terms</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Top Query</div><div class="kpi-value" id="srch-top" style="font-size:13px">--</div><div class="kpi-sub">most searched</div></div>
       </div>
       <div class="g21">
         <div class="chart-card"><div class="chart-header"><div class="chart-title">Searches Over Time</div></div><div style="height:200px"><canvas id="chart-search-tl"></canvas></div></div>
@@ -1255,7 +1285,7 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
         </div>
       </div>
       <div class="chart-card" style="margin-bottom:14px">
-        <div class="chart-header"><div class="chart-title">Funnel Results</div><div class="chart-badge" id="funnel-badge">—</div></div>
+        <div class="chart-header"><div class="chart-title">Funnel Results</div><div class="chart-badge" id="funnel-badge">--</div></div>
         <div style="height:260px"><canvas id="chart-funnel"></canvas></div>
       </div>
       <div id="funnel-detail" style="margin-bottom:16px"><div class="empty" style="padding:20px;color:var(--text3)">Define your steps above and click ▶ Run Funnel to see results.</div></div>
@@ -1289,11 +1319,11 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
   <div id="tab-channels" class="tab-panel">
     <main>
       <div class="kpi-grid">
-        <div class="kpi-card teal"><div class="kpi-label">Organic Search</div><div class="kpi-value" id="ch-organic">—</div></div>
-        <div class="kpi-card"><div class="kpi-label">Direct</div><div class="kpi-value" id="ch-direct">—</div></div>
-        <div class="kpi-card"><div class="kpi-label">Referral</div><div class="kpi-value" id="ch-referral">—</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Social</div><div class="kpi-value" id="ch-social">—</div></div>
-        <div class="kpi-card purple"><div class="kpi-label">Email / Paid</div><div class="kpi-value" id="ch-other">—</div></div>
+        <div class="kpi-card teal"><div class="kpi-label">Organic Search</div><div class="kpi-value" id="ch-organic">--</div></div>
+        <div class="kpi-card"><div class="kpi-label">Direct</div><div class="kpi-value" id="ch-direct">--</div></div>
+        <div class="kpi-card"><div class="kpi-label">Referral</div><div class="kpi-value" id="ch-referral">--</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Social</div><div class="kpi-value" id="ch-social">--</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">Email / Paid</div><div class="kpi-value" id="ch-other">--</div></div>
       </div>
       <div class="g11">
         <div class="chart-card"><div class="chart-header"><div class="chart-title">Channel Distribution</div></div><div style="height:240px"><canvas id="chart-channels-pie"></canvas></div></div>
@@ -1331,20 +1361,20 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
             </div>
           </div>
           <div class="g3" style="margin-bottom:12px">
-            <div class="kpi-card" style="padding:10px 14px"><div class="kpi-label">Page Views</div><div class="kpi-value" style="font-size:18px" id="tl-pv">—</div></div>
-            <div class="kpi-card" style="padding:10px 14px"><div class="kpi-label">Sessions</div><div class="kpi-value" style="font-size:18px" id="tl-sess">—</div></div>
-            <div class="kpi-card" style="padding:10px 14px"><div class="kpi-label">Goals</div><div class="kpi-value" style="font-size:18px" id="tl-goals">—</div></div>
+            <div class="kpi-card" style="padding:10px 14px"><div class="kpi-label">Page Views</div><div class="kpi-value" style="font-size:18px" id="tl-pv">--</div></div>
+            <div class="kpi-card" style="padding:10px 14px"><div class="kpi-label">Sessions</div><div class="kpi-value" style="font-size:18px" id="tl-sess">--</div></div>
+            <div class="kpi-card" style="padding:10px 14px"><div class="kpi-label">Goals</div><div class="kpi-value" style="font-size:18px" id="tl-goals">--</div></div>
           </div>
           <!-- Visitor geo + org detail -->
           <div id="tl-visitor-detail" style="display:none;background:var(--card2);border-radius:var(--radius-sm);padding:12px 16px;margin-bottom:12px;font-size:12px;display:flex;flex-wrap:wrap;gap:16px">
-            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">IP</span><div style="font-family:'JetBrains Mono',monospace;color:var(--teal);margin-top:2px" id="tl-ip">—</div></div>
-            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Organization / ISP</span><div style="color:var(--text);margin-top:2px" id="tl-org">—</div></div>
-            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Location</span><div style="color:var(--text);margin-top:2px" id="tl-location">—</div></div>
-            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Timezone / Offset</span><div style="font-family:'JetBrains Mono',monospace;color:var(--text2);margin-top:2px" id="tl-tz">—</div></div>
-            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Currency</span><div style="color:var(--text);margin-top:2px" id="tl-currency">—</div></div>
-            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Country TLD</span><div style="font-family:'JetBrains Mono',monospace;color:var(--text2);margin-top:2px" id="tl-tld">—</div></div>
-            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">ISO3 Code</span><div style="font-family:'JetBrains Mono',monospace;color:var(--text2);margin-top:2px" id="tl-iso3">—</div></div>
-            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">EU Visitor</span><div style="margin-top:2px" id="tl-eu">—</div></div>
+            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">IP</span><div style="font-family:'JetBrains Mono',monospace;color:var(--teal);margin-top:2px" id="tl-ip">--</div></div>
+            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Organization / ISP</span><div style="color:var(--text);margin-top:2px" id="tl-org">--</div></div>
+            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Location</span><div style="color:var(--text);margin-top:2px" id="tl-location">--</div></div>
+            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Timezone / Offset</span><div style="font-family:'JetBrains Mono',monospace;color:var(--text2);margin-top:2px" id="tl-tz">--</div></div>
+            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Currency</span><div style="color:var(--text);margin-top:2px" id="tl-currency">--</div></div>
+            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">Country TLD</span><div style="font-family:'JetBrains Mono',monospace;color:var(--text2);margin-top:2px" id="tl-tld">--</div></div>
+            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">ISO3 Code</span><div style="font-family:'JetBrains Mono',monospace;color:var(--text2);margin-top:2px" id="tl-iso3">--</div></div>
+            <div><span style="color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.6px">EU Visitor</span><div style="margin-top:2px" id="tl-eu">--</div></div>
           </div>
           <div id="visitor-timeline" style="max-height:380px;overflow-y:auto;padding:0 4px"></div>
         </div>
@@ -1356,10 +1386,10 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
   <div id="tab-landing" class="tab-panel">
     <main>
       <div class="kpi-grid">
-        <div class="kpi-card teal"><div class="kpi-label">Landing Pages</div><div class="kpi-value" id="lp-count">—</div></div>
-        <div class="kpi-card"><div class="kpi-label">Avg Bounce Rate</div><div class="kpi-value" id="lp-bounce">—</div></div>
-        <div class="kpi-card green"><div class="kpi-label">Best Converter</div><div class="kpi-value" id="lp-best" style="font-size:12px">—</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Highest Bounce</div><div class="kpi-value" id="lp-avg-bounce" style="font-size:12px">—</div></div>
+        <div class="kpi-card teal"><div class="kpi-label">Landing Pages</div><div class="kpi-value" id="lp-count">--</div></div>
+        <div class="kpi-card"><div class="kpi-label">Avg Bounce Rate</div><div class="kpi-value" id="lp-bounce">--</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Best Converter</div><div class="kpi-value" id="lp-best" style="font-size:12px">--</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Highest Bounce</div><div class="kpi-value" id="lp-avg-bounce" style="font-size:12px">--</div></div>
       </div>
       <div class="chart-card" style="margin-bottom:14px;overflow-x:auto">
         <div class="chart-header"><div class="chart-title">Landing Page Performance</div></div>
@@ -1399,10 +1429,10 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
   <div id="tab-forms" class="tab-panel">
     <main>
       <div class="kpi-grid">
-        <div class="kpi-card teal"><div class="kpi-label">Form Interactions</div><div class="kpi-value" id="form-total">—</div><div class="kpi-sub">field events</div></div>
-        <div class="kpi-card"><div class="kpi-label">Forms Tracked</div><div class="kpi-value" id="form-count">—</div><div class="kpi-sub">distinct forms</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Most Skipped</div><div class="kpi-value" id="form-skipped" style="font-size:12px">—</div><div class="kpi-sub">highest abandon field</div></div>
-        <div class="kpi-card green"><div class="kpi-label">Avg Time/Field</div><div class="kpi-value" id="form-avg-time">—</div><div class="kpi-sub">seconds</div></div>
+        <div class="kpi-card teal"><div class="kpi-label">Form Interactions</div><div class="kpi-value" id="form-total">--</div><div class="kpi-sub">field events</div></div>
+        <div class="kpi-card"><div class="kpi-label">Forms Tracked</div><div class="kpi-value" id="form-count">--</div><div class="kpi-sub">distinct forms</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Most Skipped</div><div class="kpi-value" id="form-skipped" style="font-size:12px">--</div><div class="kpi-sub">highest abandon field</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Avg Time/Field</div><div class="kpi-value" id="form-avg-time">--</div><div class="kpi-sub">seconds</div></div>
       </div>
       <div class="chart-card" style="margin-bottom:14px">
         <div class="chart-header"><div class="chart-title">Select Form</div></div>
@@ -1411,7 +1441,7 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
         </select>
       </div>
       <div class="chart-card" style="margin-bottom:14px">
-        <div class="chart-header"><div class="chart-title">Field Drop-off Analysis</div><div class="chart-badge" id="form-field-badge">—</div></div>
+        <div class="chart-header"><div class="chart-title">Field Drop-off Analysis</div><div class="chart-badge" id="form-field-badge">--</div></div>
         <div id="form-fields-viz"></div>
       </div>
       <div class="g11" style="margin-bottom:16px">
@@ -1431,10 +1461,10 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
         <code style="display:block;background:var(--bg);border-radius:6px;padding:10px 14px;margin-top:8px;font-size:11px;color:var(--teal)">&lt;button data-kl-purchase data-kl-props='{"product":"Pro Plan","revenue":49,"currency":"USD"}'&gt;Buy Now&lt;/button&gt;</code>
       </div>
       <div class="kpi-grid">
-        <div class="kpi-card teal"><div class="kpi-label">Total Revenue</div><div class="kpi-value" id="ec-revenue">—</div><div class="kpi-sub">USD</div></div>
-        <div class="kpi-card green"><div class="kpi-label">Transactions</div><div class="kpi-value" id="ec-txns">—</div><div class="kpi-sub">purchases</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Avg Order Value</div><div class="kpi-value" id="ec-aov">—</div><div class="kpi-sub">per transaction</div></div>
-        <div class="kpi-card purple"><div class="kpi-label">Top Product</div><div class="kpi-value" id="ec-top" style="font-size:12px">—</div><div class="kpi-sub">most purchased</div></div>
+        <div class="kpi-card teal"><div class="kpi-label">Total Revenue</div><div class="kpi-value" id="ec-revenue">--</div><div class="kpi-sub">USD</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Transactions</div><div class="kpi-value" id="ec-txns">--</div><div class="kpi-sub">purchases</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Avg Order Value</div><div class="kpi-value" id="ec-aov">--</div><div class="kpi-sub">per transaction</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">Top Product</div><div class="kpi-value" id="ec-top" style="font-size:12px">--</div><div class="kpi-sub">most purchased</div></div>
       </div>
       <div class="g21">
         <div class="chart-card"><div class="chart-header"><div class="chart-title">Revenue Over Time</div></div><div style="height:220px"><canvas id="chart-ec-tl"></canvas></div></div>
@@ -1463,24 +1493,24 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
   <div id="tab-performance" class="tab-panel">
     <main>
       <div class="kpi-grid">
-        <div class="kpi-card teal"><div class="kpi-label">Avg TTFB</div><div class="kpi-value" id="perf-ttfb">—</div><div class="kpi-sub">time to first byte</div></div>
-        <div class="kpi-card green"><div class="kpi-label">Avg Page Load</div><div class="kpi-value" id="perf-load">—</div><div class="kpi-sub">full load time</div></div>
-        <div class="kpi-card"><div class="kpi-label">Avg DOM Ready</div><div class="kpi-value" id="perf-dom">—</div><div class="kpi-sub">interactive</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">LCP Score</div><div class="kpi-value" id="perf-lcp">—</div><div class="kpi-sub">largest contentful paint</div></div>
-        <div class="kpi-card purple"><div class="kpi-label">CLS Score</div><div class="kpi-value" id="perf-cls">—</div><div class="kpi-sub">layout shift</div></div>
+        <div class="kpi-card teal"><div class="kpi-label">Avg TTFB</div><div class="kpi-value" id="perf-ttfb">--</div><div class="kpi-sub">time to first byte</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Avg Page Load</div><div class="kpi-value" id="perf-load">--</div><div class="kpi-sub">full load time</div></div>
+        <div class="kpi-card"><div class="kpi-label">Avg DOM Ready</div><div class="kpi-value" id="perf-dom">--</div><div class="kpi-sub">interactive</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">LCP Score</div><div class="kpi-value" id="perf-lcp">--</div><div class="kpi-sub">largest contentful paint</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">CLS Score</div><div class="kpi-value" id="perf-cls">--</div><div class="kpi-sub">layout shift</div></div>
       </div>
       <!-- Web Vitals Score Cards -->
       <div class="g3" style="margin-bottom:14px">
         <div class="chart-card" id="vital-lcp-card">
-          <div class="chart-header"><div class="chart-title">LCP — Largest Contentful Paint</div><div class="chart-badge" id="vital-lcp-badge">—</div></div>
+          <div class="chart-header"><div class="chart-title">LCP -- Largest Contentful Paint</div><div class="chart-badge" id="vital-lcp-badge">--</div></div>
           <div style="height:180px"><canvas id="chart-vital-lcp"></canvas></div>
         </div>
         <div class="chart-card" id="vital-cls-card">
-          <div class="chart-header"><div class="chart-title">CLS — Cumulative Layout Shift</div><div class="chart-badge" id="vital-cls-badge">—</div></div>
+          <div class="chart-header"><div class="chart-title">CLS -- Cumulative Layout Shift</div><div class="chart-badge" id="vital-cls-badge">--</div></div>
           <div style="height:180px"><canvas id="chart-vital-cls"></canvas></div>
         </div>
         <div class="chart-card" id="vital-fid-card">
-          <div class="chart-header"><div class="chart-title">FID — First Input Delay</div><div class="chart-badge" id="vital-fid-badge">—</div></div>
+          <div class="chart-header"><div class="chart-title">FID -- First Input Delay</div><div class="chart-badge" id="vital-fid-badge">--</div></div>
           <div style="height:180px"><canvas id="chart-vital-fid"></canvas></div>
         </div>
       </div>
@@ -1499,10 +1529,10 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
   <div id="tab-errors" class="tab-panel">
     <main>
       <div class="kpi-grid">
-        <div class="kpi-card red" style="--teal:var(--red)"><div class="kpi-label">Total Errors</div><div class="kpi-value" id="err-total" style="color:var(--red)">—</div><div class="kpi-sub">all error events</div></div>
-        <div class="kpi-card"><div class="kpi-label">JS Errors</div><div class="kpi-value" id="err-js">—</div><div class="kpi-sub">script errors</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Broken Resources</div><div class="kpi-value" id="err-res">—</div><div class="kpi-sub">404 images/scripts</div></div>
-        <div class="kpi-card purple"><div class="kpi-label">Affected Pages</div><div class="kpi-value" id="err-pages">—</div><div class="kpi-sub">distinct URLs</div></div>
+        <div class="kpi-card red" style="--teal:var(--red)"><div class="kpi-label">Total Errors</div><div class="kpi-value" id="err-total" style="color:var(--red)">--</div><div class="kpi-sub">all error events</div></div>
+        <div class="kpi-card"><div class="kpi-label">JS Errors</div><div class="kpi-value" id="err-js">--</div><div class="kpi-sub">script errors</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Broken Resources</div><div class="kpi-value" id="err-res">--</div><div class="kpi-sub">404 images/scripts</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">Affected Pages</div><div class="kpi-value" id="err-pages">--</div><div class="kpi-sub">distinct URLs</div></div>
       </div>
       <div class="g21">
         <div class="chart-card"><div class="chart-header"><div class="chart-title">Errors Over Time</div></div><div style="height:200px"><canvas id="chart-err-tl"></canvas></div></div>
@@ -1523,10 +1553,10 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
   <div id="tab-linkedin" class="tab-panel">
     <main>
       <div class="kpi-grid">
-        <div class="kpi-card teal"><div class="kpi-label">LinkedIn Sessions</div><div class="kpi-value" id="li-sessions">—</div><div class="kpi-sub">from LinkedIn</div></div>
-        <div class="kpi-card green"><div class="kpi-label">Goals from LinkedIn</div><div class="kpi-value" id="li-goals">—</div><div class="kpi-sub">conversions</div></div>
-        <div class="kpi-card amber"><div class="kpi-label">Top Campaign</div><div class="kpi-value" id="li-top-camp" style="font-size:12px">—</div><div class="kpi-sub">utm_campaign</div></div>
-        <div class="kpi-card purple"><div class="kpi-label">Avg Session Duration</div><div class="kpi-value" id="li-dur">—</div><div class="kpi-sub">LinkedIn visitors</div></div>
+        <div class="kpi-card teal"><div class="kpi-label">LinkedIn Sessions</div><div class="kpi-value" id="li-sessions">--</div><div class="kpi-sub">from LinkedIn</div></div>
+        <div class="kpi-card green"><div class="kpi-label">Goals from LinkedIn</div><div class="kpi-value" id="li-goals">--</div><div class="kpi-sub">conversions</div></div>
+        <div class="kpi-card amber"><div class="kpi-label">Top Campaign</div><div class="kpi-value" id="li-top-camp" style="font-size:12px">--</div><div class="kpi-sub">utm_campaign</div></div>
+        <div class="kpi-card purple"><div class="kpi-label">Avg Session Duration</div><div class="kpi-value" id="li-dur">--</div><div class="kpi-sub">LinkedIn visitors</div></div>
       </div>
       <div class="g21">
         <div class="chart-card"><div class="chart-header"><div class="chart-title">LinkedIn Traffic Over Time</div></div><div style="height:200px"><canvas id="chart-li-tl"></canvas></div></div>
@@ -1570,7 +1600,7 @@ supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
           <div class="empty" style="padding:32px">Click "Analyze" to get AI-powered insights about your traffic, trends, and opportunities.</div>
         </div>
         <div id="ai-cached-badge" style="display:none;font-size:10px;color:var(--text3);padding:8px 4px;text-align:right">
-          ↑ Cached from last session — click Analyze to refresh
+          ↑ Cached from last session -- click Analyze to refresh
         </div>
       </div>
       <div id="ai-insights-cards" style="display:none">
@@ -1634,8 +1664,8 @@ const state = {
 };
 
 /* ── Formatters ───────────────────────────────────────────────────── */
-const fmt   = n => n==null?'—':n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':String(n);
-const fmtD  = s => !s?'—':s<60?s+'s':Math.floor(s/60)+'m '+(s%60)+'s';
+const fmt   = n => n==null?'--':n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':String(n);
+const fmtD  = s => !s?'--':s<60?s+'s':Math.floor(s/60)+'m '+(s%60)+'s';
 const fmtUrl= u => { try{const p=new URL(u);return p.pathname+(p.search||'');}catch{return u;} };
 const fmtRef= r => { if(!r)return'Direct';try{const h=new URL(r).hostname;return h||'Direct';}catch{return r||'Direct';} };
 const fmtAgo= d => { const s=Math.round((Date.now()-new Date(d))/1000);if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago'; };
@@ -1739,7 +1769,7 @@ function switchTab(tab){
     landing:'Landing Pages',visitors:'Visitor Explorer',forms:'Forms',
     ecommerce:'Ecommerce',performance:'Performance',
     errors:'Error Tracking',linkedin:'LinkedIn',ai:'AI Insights',custom:'My Dashboard'};
-  document.title=(titles[tab]||tab)+' — Kulan Analytics';
+  document.title=(titles[tab]||tab)+' -- Kulan Analytics';
   document.querySelectorAll('.sb-item').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tab));
   // Close mobile sidebar on nav
@@ -1770,7 +1800,7 @@ function switchTab(tab){
       if(cached&&cached.html){
         document.getElementById('ai-output').innerHTML=cached.html;
         const cb=document.getElementById('ai-cached-badge');
-        if(cb){cb.style.display='block';cb.textContent='↑ Cached '+cached.focus+' analysis from '+new Date(cached.ts).toLocaleDateString()+' — click Analyze to refresh';}
+        if(cb){cb.style.display='block';cb.textContent='↑ Cached '+cached.focus+' analysis from '+new Date(cached.ts).toLocaleDateString()+' -- click Analyze to refresh';}
       }
     }catch(_){}
   }
@@ -1989,7 +2019,7 @@ function renderOverview(){
   document.getElementById('kpi-dur').textContent=fmtD(avgDur);
   document.getElementById('kpi-pv-sub').textContent=state.days+' day window';
 
-  // Timeline — delegate to overlay-aware renderer
+  // Timeline -- delegate to overlay-aware renderer
   renderTimelineWithOverlay();
   const{labels,values,dates}=groupByDay(pv,state.days,state.startDate,state.endDate);
   // Annotations handled in renderTimelineWithOverlay
@@ -2008,7 +2038,7 @@ function renderOverview(){
   const pm={};pv.forEach(e=>{const k=fmtUrl(e.url||'');pm[k]=(pm[k]||0)+1;});
   const tp=Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,8);
   document.getElementById('pages-badge').textContent=tp.length+' pages';
-  if(tp.length===1){addNotification('warning','Low page coverage','Only 1 URL tracked. Make sure the tracker snippet is on all pages — not just the homepage.');}
+  if(tp.length===1){addNotification('warning','Low page coverage','Only 1 URL tracked. Make sure the tracker snippet is on all pages -- not just the homepage.');}
   kill('pages');
   charts.pages=new Chart(document.getElementById('chart-pages'),{
     type:'bar',
@@ -2085,7 +2115,7 @@ function renderStatus(){
       <div class="status-meta">
         <span>Total Events <strong>${fmt(d.count)}</strong></span>
         <span>Last Seen <strong>${d.last?fmtAgo(d.last):'never'}</strong></span>
-        <span>First Seen <strong>${d.first?d.first.slice(0,10):'—'}</strong></span>
+        <span>First Seen <strong>${d.first?d.first.slice(0,10):'--'}</strong></span>
       </div>`;
     grid.appendChild(card);
   });
@@ -2111,7 +2141,7 @@ function initRealtime(){
   const banner = document.getElementById('rt-paused-banner');
   if(banner) banner.style.display='none';
   const btn = document.getElementById('rt-pause-btn');
-  if(btn) btn.textContent='⏸ Pause';
+  if(btn) { btn.textContent='⏸ Pause'; btn.title='Pause live feed'; }
   if(rtChannel)return; // already subscribed
   rtChannel=sb.channel('rt-events')
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'analytics_events'},payload=>{
@@ -2131,7 +2161,7 @@ function appendRTEvent(e){
   div.className='rt-event';
   div.innerHTML=`
     <span class="rt-type ${e.event_type}">${e.event_type}</span>
-    <span class="rt-site">${e.site_id||'—'}</span>
+    <span class="rt-site">${e.site_id||'--'}</span>
     <span class="rt-page">${fmtUrl(e.url||'')}</span>
     <span class="rt-meta">
       <span>${e.device_type||'?'}</span>
@@ -2154,7 +2184,7 @@ function toggleRTPause(){
 function clearRTFeed(){
   state.rtCount=0;
   document.getElementById('rt-counter').textContent='0 events';
-  document.getElementById('rt-feed').innerHTML='<div class="empty" style="margin:auto">Feed cleared — waiting for new events...</div>';
+  document.getElementById('rt-feed').innerHTML='<div class="empty" style="margin:auto">Feed cleared -- waiting for new events...</div>';
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -2303,10 +2333,19 @@ function renderComparison(){
     const avgD=durs.length?Math.round(durs.reduce((a,b)=>a+b,0)/durs.length):null;
     return{site,pv:pv.length,vis,sess,bounce,avgD,goals:gl.length};
   });
-  tbody.innerHTML=rows.map(r=>`<tr><td><span class="site-pill">${r.site}</span></td>
-    <td class="num">${fmt(r.pv)}</td><td class="num">${fmt(r.vis)}</td>
-    <td class="num">${fmt(r.sess)}</td><td class="num">${r.bounce}%</td>
-    <td class="num">${fmtD(r.avgD)}</td><td class="num">${fmt(r.goals)}</td></tr>`).join('');
+  // Map to standard shape for sort function
+  _compData = rows.map(r=>({...r, avgDur:r.avgD}));
+  // Render via sort function (uses comp-tbody)
+  const sortedRows = [..._compData].sort((a,b)=>b.pv-a.pv);
+  tbody.innerHTML=sortedRows.map(r=>`<tr style="border-bottom:1px solid var(--border)">
+    <td style="padding:9px 14px"><span class="site-pill">${r.site}</span></td>
+    <td class="num" style="padding:9px 14px;text-align:right;color:var(--teal)">${fmt(r.pv)}</td>
+    <td class="num" style="padding:9px 14px;text-align:right">${fmt(r.vis)}</td>
+    <td class="num" style="padding:9px 14px;text-align:right">${fmt(r.sess)}</td>
+    <td class="num" style="padding:9px 14px;text-align:right;color:${r.bounce>70?'var(--red)':r.bounce>40?'var(--amber)':'var(--green)'}">${r.bounce}%</td>
+    <td class="num" style="padding:9px 14px;text-align:right">${fmtD(r.avgD)}</td>
+    <td class="num" style="padding:9px 14px;text-align:right;color:var(--purple)">${fmt(r.goals)}</td>
+  </tr>`).join('');
   const{labels}=groupByDay(ev.filter(e=>e.event_type==='pageview'),state.days,state.startDate,state.endDate);
   kill('comp-tl');
   charts['comp-tl']=new Chart(document.getElementById('chart-comp-timeline'),{
@@ -2333,8 +2372,8 @@ function renderCampaigns(){
   const campC=countBy(withUTM.filter(e=>e.utm_campaign),'utm_campaign').slice(0,8);
   document.getElementById('utmk-sess').textContent=fmt(new Set(withUTM.map(e=>e.session_id)).size);
   document.getElementById('utmk-org').textContent=fmt(new Set(withoutUTM.map(e=>e.session_id)).size);
-  document.getElementById('utmk-src').textContent=srcC[0]?srcC[0][0]:'—';
-  document.getElementById('utmk-camp').textContent=campC[0]?campC[0][0]:'—';
+  document.getElementById('utmk-src').textContent=srcC[0]?srcC[0][0]:'--';
+  document.getElementById('utmk-camp').textContent=campC[0]?campC[0][0]:'--';
   kill('utm-src');
   const utmSrcEl = document.getElementById('chart-utm-src');
   if(utmSrcEl) {
@@ -2375,7 +2414,7 @@ function renderGoals(){
   document.getElementById('gk-total').textContent=fmt(goals.length);
   document.getElementById('gk-rate').textContent=rate+'%';
   document.getElementById('gk-unique').textContent=gnames.length||'0';
-  document.getElementById('gk-top').textContent=gnames[0]?gnames[0][0]:'—';
+  document.getElementById('gk-top').textContent=gnames[0]?gnames[0][0]:'--';
   const{labels,values}=groupByDay(goals,state.days,state.startDate,state.endDate);
   kill('goals-tl');
   charts['goals-tl']=new Chart(document.getElementById('chart-goals-tl'),{
@@ -2424,7 +2463,7 @@ function renderHeatmap(){
   if(filtered.length){
     const off=document.createElement('canvas');off.width=W;off.height=H;
     const octx=off.getContext('2d');
-    // Dynamic radius based on data density — fewer points = larger blobs
+    // Dynamic radius based on data density -- fewer points = larger blobs
     const density=filtered.length;
     const baseR=density>500?14:density>200?18:density>50?22:28;
     filtered.forEach(c=>{
@@ -2462,7 +2501,7 @@ function renderHeatmap(){
     {label:'Upper Content',y:30,h:25},{label:'Mid Content',y:55,h:25},{label:'Lower',y:80,h:20},
   ];
   const zs=zones.map(z=>({...z,count:filtered.filter(c=>c.click_y>=z.y&&c.click_y<z.y+z.h).length})).sort((a,b)=>b.count-a.count);
-  document.getElementById('hm-zone').textContent=zs[0]?.label||'—';
+  document.getElementById('hm-zone').textContent=zs[0]?.label||'--';
   const maxZ=zs[0]?.count||1;
   document.getElementById('heatmap-zones').innerHTML=zs.map(z=>`<div class="table-row">
     <div class="table-lbl">${z.label}</div>
@@ -2530,7 +2569,7 @@ table{width:100%;border-collapse:collapse;font-size:12px}td,th{padding:7px 9px;t
 th{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#999;font-weight:600}.n{font-family:monospace;color:#0D9488;font-weight:600}
 .f{background:#0B2545;padding:14px 30px;text-align:center;font-size:11px;color:#8BA3C7}.f a{color:#0D9488}
 </style></head><body><div class="w">
-<div class="h"><h1>Kulan Analytics Report</h1><p>Last ${state.days} Days${state.siteId?' — '+state.siteId:''} &mdash; ${now}</p></div>
+<div class="h"><h1>Kulan Analytics Report</h1><p>Last ${state.days} Days${state.siteId?' -- '+state.siteId:''} &mdash; ${now}</p></div>
 <div class="b">
 <h2>Overview</h2>
 <div class="s">
@@ -2675,7 +2714,7 @@ function setPeriodChange(elId, current, previous, invertGood) {
   const up = pct > 0;
   const good = invertGood ? !up : up;
   el.className = 'kpi-change ' + (pct === 0 ? 'neutral' : good ? 'up' : 'down');
-  el.textContent = (pct > 0 ? '▲' : pct < 0 ? '▼' : '—') + ' ' + Math.abs(pct) + '% vs prev';
+  el.textContent = (pct > 0 ? '▲' : pct < 0 ? '▼' : '--') + ' ' + Math.abs(pct) + '% vs prev';
 }
 
 async function loadPreviousPeriod() {
@@ -2847,7 +2886,7 @@ function renderDAUMAU(events) {
     if(emptyEng)emptyEng.style.display='flex';
     return;
   }
-  // Data available — hide empty states
+  // Data available -- hide empty states
   const emptyDAU=document.getElementById('dau-empty');
   const emptyEng=document.getElementById('eng-empty');
   if(emptyDAU)emptyDAU.style.display='none';
@@ -2986,7 +3025,7 @@ function renderGeo(){
   const cities=countBy(pv,'city').filter(c=>c[0]!=='(unknown)');
   const safeSet=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   safeSet('geo-countries',fmt(countries.length)); safeSet('geo-regions',fmt(regions.length));
-  safeSet('geo-cities',fmt(cities.length)); safeSet('geo-top',countries[0]?countries[0][0]:'—');
+  safeSet('geo-cities',fmt(cities.length)); safeSet('geo-top',countries[0]?countries[0][0]:'--');
   setTimeout(()=>{renderGeoMap(pv);if(_map)_map.invalidateSize();},150);
   kill('countries-bar');
   if(countries.slice(0,8).length)charts['countries-bar']=new Chart(document.getElementById('chart-countries-bar'),{type:'bar',data:{labels:countries.slice(0,8).map(c=>c[0]),datasets:[{data:countries.slice(0,8).map(c=>c[1]),backgroundColor:'rgba(13,148,136,.75)',borderRadius:4,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{...G,ticks:{precision:0}},y:{grid:{display:false}}}}});
@@ -3037,7 +3076,7 @@ function renderSearch(){
   const queries=countBy(searches,'search_query').filter(q=>q[0]!=='(unknown)');
   const safeSet=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
   safeSet('srch-total',fmt(searches.length)); safeSet('srch-unique',fmt(queries.length));
-  safeSet('srch-top',queries[0]?queries[0][0]:'—');
+  safeSet('srch-top',queries[0]?queries[0][0]:'--');
   if(!searches.length){
     const el=document.getElementById('chart-search-tl');
     if(el)el.parentElement.innerHTML='<div class="empty" style="height:200px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px"><div style="font-size:28px">🔎</div><div style="font-weight:700">No search tracking yet</div><div style="font-size:11px;color:var(--text3)">Add <code>type=\"search\"</code> or <code>data-kl-search</code> to your search inputs</div></div>';
@@ -3077,7 +3116,7 @@ function renderCohort(){
   const maxN=Math.min(8,sortedWeeks.length);
   const thead=document.getElementById('cohort-thead'),tbody=document.getElementById('cohort-tbody');
   thead.innerHTML='<tr><th style="padding:8px 12px;font-size:10px;color:var(--text2);border-bottom:1px solid var(--border)">Cohort</th><th style="padding:8px 12px;font-size:10px;color:var(--text2);border-bottom:1px solid var(--border)">Users</th>'+Array.from({length:maxN},(_,i)=>`<th style="padding:8px 12px;font-size:10px;color:var(--text2);border-bottom:1px solid var(--border);text-align:center">W${i}</th>`).join('')+'</tr>';
-  tbody.innerHTML=sortedWeeks.map(week=>{const c=cohorts[week];const size=c.visitors.size;const cells=Array.from({length:maxN},(_,n)=>{const ret=c.weeks[n]?c.weeks[n].size:0;const pct=n===0?100:Math.round(ret/size*100);const alpha=pct/100;return`<td style="padding:7px 10px;text-align:center;background:rgba(13,148,136,${n===0?.8:(alpha*.6).toFixed(2)});font-size:11px">${n===0?size:ret?pct+'%':'—'}</td>`;}).join('');return`<tr><td style="padding:7px 12px;font-size:11px;color:var(--text2)">${week}</td><td style="padding:7px 12px;font-size:11px;color:var(--teal)">${size}</td>${cells}</tr>`;}).join('');
+  tbody.innerHTML=sortedWeeks.map(week=>{const c=cohorts[week];const size=c.visitors.size;const cells=Array.from({length:maxN},(_,n)=>{const ret=c.weeks[n]?c.weeks[n].size:0;const pct=n===0?100:Math.round(ret/size*100);const alpha=pct/100;return`<td style="padding:7px 10px;text-align:center;background:rgba(13,148,136,${n===0?.8:(alpha*.6).toFixed(2)});font-size:11px">${n===0?size:ret?pct+'%':'--'}</td>`;}).join('');return`<tr><td style="padding:7px 12px;font-size:11px;color:var(--text2)">${week}</td><td style="padding:7px 12px;font-size:11px;color:var(--teal)">${size}</td>${cells}</tr>`;}).join('');
   const avgRet=Array.from({length:maxN},(_,n)=>{const vals=sortedWeeks.map(w=>{const c=cohorts[w];return n===0?100:c.weeks[n]?Math.round(c.weeks[n].size/c.visitors.size*100):0;}).filter(v=>v>0);return vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;});
   kill('cohort-line');
   charts['cohort-line']=new Chart(document.getElementById('chart-cohort-line'),{type:'line',data:{labels:Array.from({length:maxN},(_,i)=>'Week '+i),datasets:[{label:'Avg Retention',data:avgRet,borderColor:'#0D9488',backgroundColor:'rgba(13,148,136,.1)',borderWidth:2,pointRadius:4,fill:true,tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{...G,beginAtZero:true,max:100,ticks:{callback:v=>v+'%'}}}}});
@@ -3149,21 +3188,21 @@ function openVisitorTimeline(vid){
   if(ref){
     const detail=document.getElementById('tl-visitor-detail');
     if(detail)detail.style.display='flex';
-    safeSet('tl-ip',ref.ip_address||'—');
-    safeSet('tl-org',ref.org||'—');
+    safeSet('tl-ip',ref.ip_address||'--');
+    safeSet('tl-org',ref.org||'--');
     const loc=[ref.city,ref.region,ref.country_code_iso3||ref.country_code||ref.country].filter(Boolean).join(', ');
-    safeSet('tl-location',loc||'—');
+    safeSet('tl-location',loc||'--');
     const tz=[ref.timezone,ref.utc_offset?'(UTC'+ref.utc_offset+')':''].filter(Boolean).join(' ');
-    safeSet('tl-tz',tz||'—');
-    safeSet('tl-currency',(ref.currency||'')+(ref.currency_name?' — '+ref.currency_name:'')||'—');
-    safeSet('tl-tld',ref.country_tld||'—');
-    safeSet('tl-iso3',ref.country_code_iso3||'—');
+    safeSet('tl-tz',tz||'--');
+    safeSet('tl-currency',(ref.currency||'')+(ref.currency_name?' -- '+ref.currency_name:'')||'--');
+    safeSet('tl-tld',ref.country_tld||'--');
+    safeSet('tl-iso3',ref.country_code_iso3||'--');
     const euEl=document.getElementById('tl-eu');
     if(euEl){euEl.textContent=ref.in_eu?'Yes ⚠️ GDPR':'No';euEl.style.color=ref.in_eu?'var(--amber)':'var(--text2)';}
   }
   const typeColors={pageview:'#0D9488',click:'#3B82F6',goal:'#8B5CF6',scroll:'#D97706',search:'#10B981',session_end:'#4A6080'};
   const tl=document.getElementById('visitor-timeline');
-  if(tl)tl.innerHTML=ev.map(e=>`<div class="timeline-event"><div class="tl-dot" style="background:${typeColors[e.event_type]||'#666'}"></div><div style="flex:1"><div class="tl-type">${e.event_type}${e.goal_name?' — '+e.goal_name:''}</div><div class="tl-page">${fmtUrl(e.url||'')}</div>${e.country?`<div style="font-size:10px;color:var(--text3)">${e.country} · ${e.device_type||''} · ${e.browser||''}</div>`:''}</div><div class="tl-time">${fmtAgo(e.created_at)}</div></div>`).join('');
+  if(tl)tl.innerHTML=ev.map(e=>`<div class="timeline-event"><div class="tl-dot" style="background:${typeColors[e.event_type]||'#666'}"></div><div style="flex:1"><div class="tl-type">${e.event_type}${e.goal_name?' -- '+e.goal_name:''}</div><div class="tl-page">${fmtUrl(e.url||'')}</div>${e.country?`<div style="font-size:10px;color:var(--text3)">${e.country} · ${e.device_type||''} · ${e.browser||''}</div>`:''}</div><div class="tl-time">${fmtAgo(e.created_at)}</div></div>`).join('');
   const wrap=document.getElementById('visitor-timeline-wrap');
   if(wrap){wrap.style.display='block';wrap.scrollIntoView({behavior:'smooth'});}
 }
@@ -3186,11 +3225,11 @@ function renderLanding(){
   safeSet('lp-count',fmt(pages.length));
   const bestConv=[...pages].sort((a,b)=>b.cvr-a.cvr)[0];
   const worstBounce=[...pages].sort((a,b)=>b.bounceRate-a.bounceRate)[0];
-  const lpBestLabel = bestConv ? (bestConv.page === '/' ? '/  (home)' : bestConv.page.length > 16 ? bestConv.page.slice(0,14)+'…' : bestConv.page) : '—';
+  const lpBestLabel = bestConv ? (bestConv.page === '/' ? '/  (home)' : bestConv.page.length > 16 ? bestConv.page.slice(0,14)+'…' : bestConv.page) : '--';
   safeSet('lp-best', lpBestLabel);
-  const lpBounceLabel = worstBounce ? (worstBounce.page === '/' ? '/  (home)' : worstBounce.page.length > 16 ? worstBounce.page.slice(0,14)+'…' : worstBounce.page) : '—';
+  const lpBounceLabel = worstBounce ? (worstBounce.page === '/' ? '/  (home)' : worstBounce.page.length > 16 ? worstBounce.page.slice(0,14)+'…' : worstBounce.page) : '--';
   safeSet('lp-bounce', lpBounceLabel);
-  safeSet('lp-avg-bounce',pages.length?Math.round(pages.reduce((s,p)=>s+p.bounceRate,0)/pages.length)+'%':'—');
+  safeSet('lp-avg-bounce',pages.length?Math.round(pages.reduce((s,p)=>s+p.bounceRate,0)/pages.length)+'%':'--');
   const top8=pages.slice(0,8);
   const lpChart=document.getElementById('chart-lp-entries')||document.getElementById('chart-landing');
   if(lpChart){kill(lpChart.id);charts[lpChart.id]=new Chart(lpChart,{type:'bar',data:{labels:top8.map(p=>p.page.length>20?p.page.slice(0,18)+'…':p.page),datasets:[{label:'Sessions',data:top8.map(p=>p.sessions),backgroundColor:'rgba(13,148,136,.7)',borderRadius:3},{label:'Bounce%',data:top8.map(p=>p.bounceRate),backgroundColor:'rgba(217,119,6,.6)',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{usePointStyle:true,padding:12,boxWidth:8}}},scales:{x:{grid:{display:false}},y:{...G,beginAtZero:true,ticks:{precision:0}}}}});}
@@ -3211,9 +3250,9 @@ function renderForms(){
   if(sel){sel.innerHTML='<option value="">All Forms</option>';forms.forEach(f=>{const o=document.createElement('option');o.value=o.textContent=f;sel.appendChild(o);});}
   const skipMap={};ff.filter(e=>e.field_skipped).forEach(e=>{const k=e.form_field||'?';skipMap[k]=(skipMap[k]||0)+1;});
   const topSkip=Object.entries(skipMap).sort((a,b)=>b[1]-a[1])[0];
-  safeSet('form-skipped',topSkip?topSkip[0]:'—');
+  safeSet('form-skipped',topSkip?topSkip[0]:'--');
   const times=ff.map(e=>e.time_on_field).filter(Boolean);
-  safeSet('form-avg-time',times.length?Math.round(times.reduce((a,b)=>a+b,0)/times.length/1000)+'s':'—');
+  safeSet('form-avg-time',times.length?Math.round(times.reduce((a,b)=>a+b,0)/times.length/1000)+'s':'--');
   renderFormDetail();
 }
 function renderFormDetail(){
@@ -3258,7 +3297,7 @@ function renderEcommerce(){
   safeSet('ec-revenue','$'+totalRev.toFixed(2)); safeSet('ec-txns',fmt(txns)); safeSet('ec-aov','$'+aov);
   const prodMap={};purchases.forEach(e=>{const k=e.product_name||'(unknown)';prodMap[k]=(prodMap[k]||0)+1;});
   const topProd=Object.entries(prodMap).sort((a,b)=>b[1]-a[1])[0];
-  safeSet('ec-top',topProd?topProd[0]:'—');
+  safeSet('ec-top',topProd?topProd[0]:'--');
   const{labels,dates}=groupByDay(purchases,state.days,state.startDate,state.endDate);
   const revByDay={};purchases.forEach(e=>{const d=e.created_at.slice(0,10);revByDay[d]=(revByDay[d]||0)+(e.revenue||0);});
   kill('ec-tl');
@@ -3280,13 +3319,13 @@ function renderPerformance(){
   const vitals=state.events.filter(e=>e.event_type==='web_vital');
   const avg=(arr,key)=>{const v=arr.map(e=>e[key]).filter(Boolean);return v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length):null;};
   const safeSet=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
-  safeSet('perf-ttfb',avg(perf,'ttfb')?avg(perf,'ttfb')+'ms':'—');
-  safeSet('perf-load',avg(perf,'page_load')?avg(perf,'page_load')+'ms':'—');
-  safeSet('perf-dom',avg(perf,'dom_ready')?avg(perf,'dom_ready')+'ms':'—');
+  safeSet('perf-ttfb',avg(perf,'ttfb')?avg(perf,'ttfb')+'ms':'--');
+  safeSet('perf-load',avg(perf,'page_load')?avg(perf,'page_load')+'ms':'--');
+  safeSet('perf-dom',avg(perf,'dom_ready')?avg(perf,'dom_ready')+'ms':'--');
   ['LCP','CLS','FID'].forEach(name=>{
     const v=vitals.filter(e=>e.vital_name===name);
     const avgV=v.length?parseFloat((v.reduce((s,e)=>s+(e.vital_value||0),0)/v.length).toFixed(name==='CLS'?3:0)):null;
-    safeSet('perf-'+name.toLowerCase(),avgV!==null?avgV+(name==='CLS'?'':' ms'):'—');
+    safeSet('perf-'+name.toLowerCase(),avgV!==null?avgV+(name==='CLS'?'':' ms'):'--');
     const badgeEl=document.getElementById('vital-'+name.toLowerCase()+'-badge');
     if(badgeEl&&v.length){const good=v.filter(e=>e.vital_rating==='good').length;const pct=Math.round(good/v.length*100);badgeEl.textContent=pct+'% good';badgeEl.style.background=pct>75?'rgba(16,185,129,.15)':pct>50?'rgba(217,119,6,.12)':'rgba(239,68,68,.12)';badgeEl.style.color=pct>75?'var(--green)':pct>50?'var(--amber)':'var(--red)';}
     const chartId='chart-vital-'+name.toLowerCase();kill(chartId);
@@ -3346,7 +3385,7 @@ function renderLinkedIn(){
   if(!liSess){
     addNotification('info','LinkedIn tip','Add ?utm_source=linkedin to your post links to track LinkedIn traffic precisely.');
   }
-  safeSet('li-top-camp',countBy(liPV.filter(e=>e.utm_campaign),'utm_campaign')[0]?.[0]||'—');
+  safeSet('li-top-camp',countBy(liPV.filter(e=>e.utm_campaign),'utm_campaign')[0]?.[0]||'--');
   safeSet('li-dur',fmtD(liDurs.length?Math.round(liDurs.reduce((a,b)=>a+b,0)/liDurs.length):null));
   const{labels,values}=groupByDay(liPV,state.days,state.startDate,state.endDate);
   kill('li-tl');
@@ -3383,8 +3422,8 @@ async function runAIInsights(){
   const dayMap={};pv.forEach(e=>{const d=e.created_at.slice(0,10);dayMap[d]=(dayMap[d]||0)+1;});
   const days=Object.values(dayMap);
   const trend=days.length>=2?Math.round(((days[days.length-1]-days[0])/Math.max(days[0],1))*100):0;
-  const focusPrompts={general:'Provide a comprehensive overview of all metrics.',growth:'Focus on growth opportunities, underperforming channels, and traffic expansion strategies.',anomalies:`Look for unusual patterns, traffic spikes or drops, geographic anomalies, and smart alert opportunities. Note that today shows ${days.length?days[days.length-1]:0} pageviews vs avg ${days.length>1?Math.round(days.slice(0,-1).reduce((a,b)=>a+b,0)/(days.length-1)):0}/day.`,seo:'Analyze SEO, organic search performance, referral sources, and acquisition quality.',conversion:'Focus on conversion rate optimization, goal performance, funnel drop-off, and revenue opportunities.',linkedin:`Specifically analyze the LinkedIn traffic (${liTraffic} visits) — post timing, UTM campaigns, and content strategy.`,regions:'Analyze geographic distribution, identify high-potential regions, and flag any unusual regional traffic patterns.'};
-  const prompt=`Analytics expert. ${focusPrompts[focus]||''}\n\nData (${state.days} days${state.siteId?' — '+state.siteId:''}):\nViews: ${pv.length}, Visitors: ${visitors}, Sessions: ${sessions}, Bounce: ${bounce}%, Avg Duration: ${fmtD(avgDur)}, Trend: ${trend>0?'+':''}${trend}%\nGoals: ${goals.length}, CVR: ${sessions?Math.round(goals.length/sessions*100):0}%\nTop goals: ${countBy(goals,'goal_name').slice(0,3).map(([g,c])=>g+': '+c).join(', ')||'none'}\nTop pages: ${countBy(pv,'url').slice(0,5).map(([u,c])=>fmtUrl(u)+': '+c).join(', ')}\nChannels: ${Object.entries(channels).map(([k,v])=>k+': '+v).join(', ')}\nCountries: ${countBy(pv,'country').slice(0,5).map(([c,n])=>c+': '+n).join(', ')}\nErrors: ${errors.length}, LinkedIn: ${liTraffic} visits\n\nProvide: 1) Executive summary (2-3 sentences) 2) 3-4 key insights with data 3) 2-3 recommendations 4) Red flags\nFormat with ## headers and **bold**. Be specific and actionable.`;
+  const focusPrompts={general:'Provide a comprehensive overview of all metrics.',growth:'Focus on growth opportunities, underperforming channels, and traffic expansion strategies.',anomalies:`Look for unusual patterns, traffic spikes or drops, geographic anomalies, and smart alert opportunities. Note that today shows ${days.length?days[days.length-1]:0} pageviews vs avg ${days.length>1?Math.round(days.slice(0,-1).reduce((a,b)=>a+b,0)/(days.length-1)):0}/day.`,seo:'Analyze SEO, organic search performance, referral sources, and acquisition quality.',conversion:'Focus on conversion rate optimization, goal performance, funnel drop-off, and revenue opportunities.',linkedin:`Specifically analyze the LinkedIn traffic (${liTraffic} visits) -- post timing, UTM campaigns, and content strategy.`,regions:'Analyze geographic distribution, identify high-potential regions, and flag any unusual regional traffic patterns.'};
+  const prompt=`Analytics expert. ${focusPrompts[focus]||''}\n\nData (${state.days} days${state.siteId?' -- '+state.siteId:''}):\nViews: ${pv.length}, Visitors: ${visitors}, Sessions: ${sessions}, Bounce: ${bounce}%, Avg Duration: ${fmtD(avgDur)}, Trend: ${trend>0?'+':''}${trend}%\nGoals: ${goals.length}, CVR: ${sessions?Math.round(goals.length/sessions*100):0}%\nTop goals: ${countBy(goals,'goal_name').slice(0,3).map(([g,c])=>g+': '+c).join(', ')||'none'}\nTop pages: ${countBy(pv,'url').slice(0,5).map(([u,c])=>fmtUrl(u)+': '+c).join(', ')}\nChannels: ${Object.entries(channels).map(([k,v])=>k+': '+v).join(', ')}\nCountries: ${countBy(pv,'country').slice(0,5).map(([c,n])=>c+': '+n).join(', ')}\nErrors: ${errors.length}, LinkedIn: ${liTraffic} visits\n\nProvide: 1) Executive summary (2-3 sentences) 2) 3-4 key insights with data 3) 2-3 recommendations 4) Red flags\nFormat with ## headers and **bold**. Be specific and actionable.`;
   try{
     const resp=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON_KEY,'x-kulan-token':KULAN_AI_SECRET},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
     const data=await resp.json();
@@ -3396,7 +3435,17 @@ async function runAIInsights(){
     try{localStorage.setItem('_kl_ai_cache',JSON.stringify({html:htmlResult,focus,days:state.days,ts:new Date().toISOString()}));}catch(_){}
     const cb=document.getElementById('ai-cached-badge');if(cb)cb.style.display='none';
     addNotification('info','AI analysis complete',focus+' analysis done for '+state.days+'-day period.');
-  }catch(e){loading.style.display='none';output.innerHTML=`<div class="empty" style="color:var(--red)">Error: ${e.message}</div>`;}
+  }catch(e){
+    loading.style.display='none';
+    let msg=e.message||'Unknown error';
+    if(msg.includes('Failed to fetch')||msg.includes('NetworkError'))
+      msg='Edge Function not reachable -- run: supabase functions deploy kulan-ai';
+    else if(msg.includes('500'))
+      msg='Server error -- ANTHROPIC_API_KEY secret likely not set in Supabase';
+    else if(msg.includes('401'))
+      msg='Unauthorized -- KULAN_AI_SECRET mismatch. Update in Settings → AI Settings';
+    output.innerHTML=`<div class="empty" style="color:var(--red);padding:16px">⚠️ ${msg}</div>`;
+  }
   btn.disabled=false;
 }
 
@@ -3442,7 +3491,7 @@ function exportPDF(){
   const now=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
   const printWin=window.open('','_blank');
   printWin.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Kulan Analytics Report</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;background:#fff;color:#1a202c;padding:40px;max-width:900px;margin:0 auto}h1{font-size:24px;font-weight:800;color:#0B2545;margin-bottom:4px}.subtitle{font-size:13px;color:#718096;margin-bottom:32px}.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}.kpi{background:#f7fafc;border-radius:8px;padding:16px;border-left:4px solid #0D9488}.kpi-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#718096;margin-bottom:6px}.kpi-value{font-size:28px;font-weight:700;color:#0B2545;font-family:monospace}h2{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#4a5568;margin:24px 0 12px;border-bottom:2px solid #e2e8f0;padding-bottom:6px}table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px}th{padding:8px 12px;text-align:left;background:#f7fafc;font-size:11px;font-weight:700;text-transform:uppercase;color:#718096;border-bottom:2px solid #e2e8f0}td{padding:8px 12px;border-bottom:1px solid #e2e8f0}.num{font-family:monospace;color:#0D9488;font-weight:700}.footer{text-align:center;font-size:11px;color:#a0aec0;margin-top:40px;padding-top:16px;border-top:1px solid #e2e8f0}@media print{body{padding:20px}}</style></head><body>');
-  printWin.document.write(`<h1>Kulan Analytics Report</h1><div class="subtitle">Last ${state.days} days${state.siteId?' — '+state.siteId:' — All Sites'} · Generated ${now}</div><div class="kpis"><div class="kpi"><div class="kpi-label">Page Views</div><div class="kpi-value">${fmt(pv.length)}</div></div><div class="kpi"><div class="kpi-label">Unique Visitors</div><div class="kpi-value">${fmt(visitors)}</div></div><div class="kpi"><div class="kpi-label">Sessions</div><div class="kpi-value">${fmt(sessions)}</div></div><div class="kpi"><div class="kpi-label">Bounce Rate</div><div class="kpi-value">${bounce}%</div></div><div class="kpi"><div class="kpi-label">Avg Duration</div><div class="kpi-value">${fmtD(avgDur)}</div></div><div class="kpi"><div class="kpi-label">Conversions</div><div class="kpi-value">${fmt(gl.length)}</div></div></div><h2>Top Pages</h2><table><tr><th>Page</th><th>Views</th></tr>${topPages.map(([p,c])=>`<tr><td>${p}</td><td class="num">${fmt(c)}</td></tr>`).join('')}</table><h2>Traffic Channels</h2><table><tr><th>Channel</th><th>Sessions</th></tr>${Object.entries(chMap).sort((a,b)=>b[1]-a[1]).map(([ch,c])=>`<tr><td>${ch}</td><td class="num">${fmt(c)}</td></tr>`).join('')}</table><h2>Top Referrers</h2><table><tr><th>Source</th><th>Visits</th></tr>${topRefs.map(([r,c])=>`<tr><td>${r}</td><td class="num">${fmt(c)}</td></tr>`).join('')}</table><h2>Countries</h2><table><tr><th>Country</th><th>Views</th></tr>${topCountries.map(([c,n])=>`<tr><td>${c}</td><td class="num">${fmt(n)}</td></tr>`).join('')}</table><div class="footer">Kulan Analytics &mdash; mmohamud.me &mdash; ${now}</div>`);
+  printWin.document.write(`<h1>Kulan Analytics Report</h1><div class="subtitle">Last ${state.days} days${state.siteId?' -- '+state.siteId:' -- All Sites'} · Generated ${now}</div><div class="kpis"><div class="kpi"><div class="kpi-label">Page Views</div><div class="kpi-value">${fmt(pv.length)}</div></div><div class="kpi"><div class="kpi-label">Unique Visitors</div><div class="kpi-value">${fmt(visitors)}</div></div><div class="kpi"><div class="kpi-label">Sessions</div><div class="kpi-value">${fmt(sessions)}</div></div><div class="kpi"><div class="kpi-label">Bounce Rate</div><div class="kpi-value">${bounce}%</div></div><div class="kpi"><div class="kpi-label">Avg Duration</div><div class="kpi-value">${fmtD(avgDur)}</div></div><div class="kpi"><div class="kpi-label">Conversions</div><div class="kpi-value">${fmt(gl.length)}</div></div></div><h2>Top Pages</h2><table><tr><th>Page</th><th>Views</th></tr>${topPages.map(([p,c])=>`<tr><td>${p}</td><td class="num">${fmt(c)}</td></tr>`).join('')}</table><h2>Traffic Channels</h2><table><tr><th>Channel</th><th>Sessions</th></tr>${Object.entries(chMap).sort((a,b)=>b[1]-a[1]).map(([ch,c])=>`<tr><td>${ch}</td><td class="num">${fmt(c)}</td></tr>`).join('')}</table><h2>Top Referrers</h2><table><tr><th>Source</th><th>Visits</th></tr>${topRefs.map(([r,c])=>`<tr><td>${r}</td><td class="num">${fmt(c)}</td></tr>`).join('')}</table><h2>Countries</h2><table><tr><th>Country</th><th>Views</th></tr>${topCountries.map(([c,n])=>`<tr><td>${c}</td><td class="num">${fmt(n)}</td></tr>`).join('')}</table><div class="footer">Kulan Analytics &mdash; mmohamud.me &mdash; ${now}</div>`);
   printWin.document.write('<scr'+'ipt>window.onload=function(){window.print();}</scr'+'ipt></body></html>');
   printWin.document.close();
 }
@@ -3675,7 +3724,7 @@ function initSuggestedWidgets() {
 
 
 /* ══════════════════════════════════════════════════════════════════
-   KULAN AI ASSISTANT — FULL SYSTEM
+   KULAN AI ASSISTANT -- FULL SYSTEM
    ══════════════════════════════════════════════════════════════════ */
 
 let _aiOpen = false;
@@ -3683,10 +3732,13 @@ let _aiHistory = []; // conversation memory
 let _aiTyping = false;
 
 function toggleAIPanel() {
+  const panel = document.getElementById('ai-panel');
+  if (!panel) { switchTab('ai'); return; } // fallback: navigate to AI tab
   _aiOpen = !_aiOpen;
-  document.getElementById('ai-panel').classList.toggle('open', _aiOpen);
+  panel.classList.toggle('open', _aiOpen);
   if (_aiOpen) {
-    document.getElementById('ai-chat-input').focus();
+    const inp = document.getElementById('ai-chat-input');
+    if(inp) inp.focus();
     const badge = document.getElementById('ai-bubble-badge');
     if(badge) badge.style.display = 'none';
     localStorage.setItem('_kl_ai_welcomed','1');
@@ -3717,6 +3769,7 @@ function saveAIHistory() {
 
 function appendAIMessage(role, content, animate=true) {
   const container = document.getElementById('ai-messages');
+  if (!container) return null; // panel not in DOM yet
   const div = document.createElement('div');
   div.className = `ai-msg ${role}`;
   // Render basic markdown
@@ -3797,7 +3850,7 @@ function buildAIContext() {
   const newV = pv.filter(e=>e.is_returning===false).length;
   const retV = pv.filter(e=>e.is_returning===true).length;
 
-  return `KULAN ANALYTICS DATA — Last ${state.days} days${state.siteId?' ('+state.siteId+')':' (All Sites)'}:
+  return `KULAN ANALYTICS DATA -- Last ${state.days} days${state.siteId?' ('+state.siteId+')':' (All Sites)'}:
 
 TRAFFIC:
 - Pageviews: ${pv.length} | Visitors: ${visitors} | Sessions: ${sessions}
@@ -3863,7 +3916,23 @@ async function sendAIMessage(preset) {
 
   } catch(e) {
     hideTyping();
-    appendAIMessage('assistant', `⚠️ ${e.message || 'Something went wrong. Please try again.'}`);
+    // Hide cached badge when there's an error
+    const cb = document.getElementById('ai-cached-badge');
+    if(cb) cb.style.display = 'none';
+    let errMsg = e.message || 'Unknown error';
+    if (errMsg.includes('Failed to fetch') || errMsg.includes('NetworkError')) {
+      document.getElementById('ai-status-banner').style.display='flex';
+      errMsg = '**Edge Function not reachable.** Possible causes:\n\n' +
+        '• Function not deployed yet → run `supabase functions deploy kulan-ai`\n' +
+        '• ANTHROPIC_API_KEY secret not set → run `supabase secrets set ANTHROPIC_API_KEY=sk-ant-...`\n' +
+        '• CORS blocking the request → check ALLOWED_ORIGINS secret\n' +
+        '• x-kulan-token mismatch → check KULAN_AI_SECRET in Settings';
+    } else if (errMsg.includes('401') || errMsg.includes('Unauthorized')) {
+      errMsg = '**Unauthorized** -- your KULAN_AI_SECRET in Settings does not match the Supabase secret. Update it in Settings → AI Settings.';
+    } else if (errMsg.includes('500')) {
+      errMsg = '**Edge Function error (500)** -- ANTHROPIC_API_KEY is likely not set. Run: `supabase secrets set ANTHROPIC_API_KEY=sk-ant-...`';
+    }
+    appendAIMessage('assistant', `⚠️ ${errMsg}`);
   }
 
   _aiTyping = false;
@@ -3890,15 +3959,15 @@ async function handleDataQuery(msg) {
     const pm = {}; pv.forEach(e=>{ const k=fmtUrl(e.url||''); pm[k]=(pm[k]||0)+1; });
     const top = Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,5);
     if (!top.length) return 'No page data yet.';
-    return `**Top pages (${state.days} days):**\n\n${top.map(([p,c],i)=>`${i+1}. ${p} — **${c} views**`).join('\n')}`;
+    return `**Top pages (${state.days} days):**\n\n${top.map(([p,c],i)=>`${i+1}. ${p} -- **${c} views**`).join('\n')}`;
   }
 
   if (/bounce rate|bouncing/.test(m)) {
     const pvPS={}; pv.forEach(e=>{pvPS[e.session_id]=(pvPS[e.session_id]||0)+1;});
     const sl=Object.values(pvPS);
     const bounce=sl.length?Math.round(sl.filter(c=>c===1).length/sl.length*100):0;
-    const bench = bounce > 70 ? 'above average — consider improving page content or load speed' : bounce > 50 ? 'average for content sites' : 'excellent — users are exploring multiple pages';
-    return `Your bounce rate is **${bounce}%** — ${bench}.\n\nIndustry benchmarks: 20-40% for apps, 40-60% for content sites, 60-80% for blogs.`;
+    const bench = bounce > 70 ? 'above average -- consider improving page content or load speed' : bounce > 50 ? 'average for content sites' : 'excellent -- users are exploring multiple pages';
+    return `Your bounce rate is **${bounce}%** -- ${bench}.\n\nIndustry benchmarks: 20-40% for apps, 40-60% for content sites, 60-80% for blogs.`;
   }
 
   if (/how many visitor|total visitor|unique visitor/.test(m)) {
@@ -3909,7 +3978,7 @@ async function handleDataQuery(msg) {
   if (/which country|top country|where.*visitor|where.*traffic/.test(m)) {
     const cm={}; pv.forEach(e=>{if(e.country&&e.country!=='(unknown)')cm[e.country]=(cm[e.country]||0)+1;});
     const top=Object.entries(cm).sort((a,b)=>b[1]-a[1]).slice(0,5);
-    return `**Top countries:**\n\n${top.map(([c,n],i)=>`${i+1}. ${c} — **${n} visits**`).join('\n')}`;
+    return `**Top countries:**\n\n${top.map(([c,n],i)=>`${i+1}. ${c} -- **${n} visits**`).join('\n')}`;
   }
 
   if (/goal|conversion|convert/.test(m)) {
@@ -3992,10 +4061,10 @@ async function callClaude(userMsg) {
 ${context}
 
 RESPONSE RULES:
-- Be conversational and direct — no long preambles
+- Be conversational and direct -- no long preambles
 - Use **bold** for key numbers and insights
 - Keep responses under 200 words unless asked for detail
-- Use bullet points sparingly — prefer flowing sentences
+- Use bullet points sparingly -- prefer flowing sentences
 - Always end with ONE specific actionable recommendation
 - If asked about something not in the data, say so honestly
 - Format numbers clearly (e.g. "47 pageviews", "87% bounce rate")`,
@@ -4015,7 +4084,7 @@ function addChartHint(chartTitle, question) {
   document.querySelectorAll('.chart-header').forEach(header => {
     const title = header.querySelector('.chart-title');
     if (!title) return;
-    // Fuzzy match — normalize whitespace and case
+    // Fuzzy match -- normalize whitespace and case
     const titleText = title.textContent.replace(/\s+/g,' ').trim().toLowerCase();
     const target    = chartTitle.toLowerCase();
     if (titleText.includes(target) || target.includes(titleText)) {
@@ -4026,8 +4095,21 @@ function addChartHint(chartTitle, question) {
       btn.title       = 'Ask AI to explain this chart';
       btn.onclick = (e) => {
         e.stopPropagation();
+        e.preventDefault();
+        const panel = document.getElementById('ai-panel');
+        if (!panel) {
+          // No floating panel — navigate to AI tab and auto-run
+          switchTab('ai');
+          setTimeout(() => {
+            const output = document.getElementById('ai-output');
+            if(output) {
+              document.getElementById('ai-focus').value = 'general';
+              runAIInsights();
+            }
+          }, 400);
+          return;
+        }
         if (!_aiOpen) { toggleAIPanel(); }
-        // Wait for panel to open before sending
         setTimeout(() => sendAIMessage(question), _aiOpen ? 0 : 350);
       };
       header.appendChild(btn);
@@ -4041,7 +4123,7 @@ function injectChartHints() {
     ['DAU / MAU',                  'What does my DAU/MAU stickiness mean and how can I improve it?'],
     ['Engagement Rate',            'Analyze my engagement rate and suggest improvements'],
     ['Channel Distribution',       'Which channel should I focus on to grow traffic?'],
-    ['Channel Trend',              'Analyze my channel trends — which is growing fastest?'],
+    ['Channel Trend',              'Analyze my channel trends -- which is growing fastest?'],
     ['Scroll Depth',               'What does my scroll depth tell me about my content quality?'],
     ['LCP',                        'Is my LCP score good? How can I improve page load speed?'],
     ['New vs Returning',           'What does my new vs returning visitor ratio tell me?'],
@@ -4088,7 +4170,7 @@ async function generateAIWeeklyReport() {
 async function recommendGoals() {
   const pv = state.events.filter(e => e.event_type === 'pageview');
   const pages = [...new Set(pv.map(e=>fmtUrl(e.url||'')))];
-  const q = `Based on these pages on my site: ${pages.slice(0,10).join(', ')} — what conversion goals should I set up? Give me 3-5 specific goal names with the data-kl-goal attribute values I should add to my HTML.`;
+  const q = `Based on these pages on my site: ${pages.slice(0,10).join(', ')} -- what conversion goals should I set up? Give me 3-5 specific goal names with the data-kl-goal attribute values I should add to my HTML.`;
   return callClaude(q);
 }
 
@@ -4169,7 +4251,7 @@ function promptForAPIKey() {
     alert('✅ API key saved! AI features are now active.');
     return key;
   } else if (key !== null) {
-    alert('Invalid key — must start with sk-ant-');
+    alert('Invalid key -- must start with sk-ant-');
   }
   return null;
 }
@@ -4188,7 +4270,7 @@ function saveAPIKey() {
   if (!input) return;
   const key = input.value.trim();
   if (!key) { localStorage.removeItem('_kl_anthropic_key'); alert('API key cleared.'); return; }
-  if (!key.startsWith('sk-ant-')) { alert('Invalid key — must start with sk-ant-'); return; }
+  if (!key.startsWith('sk-ant-')) { alert('Invalid key -- must start with sk-ant-'); return; }
   localStorage.setItem('_kl_anthropic_key', key);
   document.getElementById('ai-key-status').textContent = '✅ Active';
   document.getElementById('ai-key-status').style.color = 'var(--green)';
@@ -4221,6 +4303,45 @@ function testAPIKey() {
     document.getElementById('ai-key-status').textContent = '❌ ' + e.message.slice(0,40);
     document.getElementById('ai-key-status').style.color = 'var(--red)';
   });
+}
+
+
+/* ══ COMPARISON TABLE SORT ═══════════════════════════════════════ */
+let _compSort = { key: 'pv', dir: -1 }; // default: views desc
+let _compData = [];
+
+function sortComparison(key) {
+  if (_compSort.key === key) _compSort.dir *= -1;
+  else { _compSort.key = key; _compSort.dir = -1; }
+  renderComparisonRows(_compData);
+  // Update header arrows
+  document.querySelectorAll('#comparison-table th').forEach(th => {
+    th.textContent = th.textContent.replace(/[↑↓↕]/g,'↕');
+  });
+  const idx = ['site','pv','vis','sess','bounce','dur','goals'].indexOf(key);
+  const ths = document.querySelectorAll('#comparison-table th');
+  if(ths[idx]) ths[idx].textContent = ths[idx].textContent.replace('↕', _compSort.dir === 1 ? '↑' : '↓');
+}
+
+function renderComparisonRows(rows) {
+  const sorted = [...rows].sort((a,b) => {
+    const k = _compSort.key;
+    const av = k==='site'?a.site:k==='pv'?a.pv:k==='vis'?a.vis:k==='sess'?a.sess:k==='bounce'?a.bounce:k==='dur'?a.avgDur:a.goals;
+    const bv = k==='site'?b.site:k==='pv'?b.pv:k==='vis'?b.vis:k==='sess'?b.sess:k==='bounce'?b.bounce:k==='dur'?b.avgDur:b.goals;
+    if(typeof av==='string') return _compSort.dir*(av.localeCompare(bv));
+    return _compSort.dir*(av-bv);
+  });
+  const tbody = document.getElementById('comparison-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = sorted.map(r => `<tr style="border-bottom:1px solid var(--border);transition:background .15s" onmouseover="this.style.background='rgba(13,148,136,.05)'" onmouseout="this.style.background=''">
+    <td style="padding:9px 14px;font-weight:600">${r.site}</td>
+    <td style="padding:9px 14px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--teal)">${fmt(r.pv)}</td>
+    <td style="padding:9px 14px;text-align:right;font-family:'JetBrains Mono',monospace">${fmt(r.vis)}</td>
+    <td style="padding:9px 14px;text-align:right;font-family:'JetBrains Mono',monospace">${fmt(r.sess)}</td>
+    <td style="padding:9px 14px;text-align:right;font-family:'JetBrains Mono',monospace;color:${r.bounce>70?'var(--red)':r.bounce>40?'var(--amber)':'var(--green)'}">${r.bounce}%</td>
+    <td style="padding:9px 14px;text-align:right;font-family:'JetBrains Mono',monospace">${fmtD(r.avgDur)}</td>
+    <td style="padding:9px 14px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--purple)">${fmt(r.goals)}</td>
+  </tr>`).join('');
 }
 
 function startLivePoll(){updateLive();setInterval(updateLive,30000);}
