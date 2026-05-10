@@ -3425,7 +3425,7 @@ async function runAIInsights(){
   const focusPrompts={general:'Provide a comprehensive overview of all metrics.',growth:'Focus on growth opportunities, underperforming channels, and traffic expansion strategies.',anomalies:`Look for unusual patterns, traffic spikes or drops, geographic anomalies, and smart alert opportunities. Note that today shows ${days.length?days[days.length-1]:0} pageviews vs avg ${days.length>1?Math.round(days.slice(0,-1).reduce((a,b)=>a+b,0)/(days.length-1)):0}/day.`,seo:'Analyze SEO, organic search performance, referral sources, and acquisition quality.',conversion:'Focus on conversion rate optimization, goal performance, funnel drop-off, and revenue opportunities.',linkedin:`Specifically analyze the LinkedIn traffic (${liTraffic} visits) -- post timing, UTM campaigns, and content strategy.`,regions:'Analyze geographic distribution, identify high-potential regions, and flag any unusual regional traffic patterns.'};
   const prompt=`Analytics expert. ${focusPrompts[focus]||''}\n\nData (${state.days} days${state.siteId?' -- '+state.siteId:''}):\nViews: ${pv.length}, Visitors: ${visitors}, Sessions: ${sessions}, Bounce: ${bounce}%, Avg Duration: ${fmtD(avgDur)}, Trend: ${trend>0?'+':''}${trend}%\nGoals: ${goals.length}, CVR: ${sessions?Math.round(goals.length/sessions*100):0}%\nTop goals: ${countBy(goals,'goal_name').slice(0,3).map(([g,c])=>g+': '+c).join(', ')||'none'}\nTop pages: ${countBy(pv,'url').slice(0,5).map(([u,c])=>fmtUrl(u)+': '+c).join(', ')}\nChannels: ${Object.entries(channels).map(([k,v])=>k+': '+v).join(', ')}\nCountries: ${countBy(pv,'country').slice(0,5).map(([c,n])=>c+': '+n).join(', ')}\nErrors: ${errors.length}, LinkedIn: ${liTraffic} visits\n\nProvide: 1) Executive summary (2-3 sentences) 2) 3-4 key insights with data 3) 2-3 recommendations 4) Red flags\nFormat with ## headers and **bold**. Be specific and actionable.`;
   try{
-    const resp=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON_KEY,'x-kulan-token':KULAN_AI_SECRET},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const resp=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON_KEY,...(KULAN_AI_SECRET?{'x-kulan-token':KULAN_AI_SECRET}:{})},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
     const data=await resp.json();
     const text=data.content?.[0]?.text||'No response.';
     const html=text.replace(/## (.+)/g,'<h3 style="font-size:13px;font-weight:800;color:var(--teal);margin:16px 0 6px;text-transform:uppercase">$1</h3>').replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--text)">$1</strong>').replace(/\n\n/g,'</p><p style="margin-bottom:10px">').replace(/\n/g,'<br>').replace(/^/,'<p style="margin-bottom:10px">').replace(/$/,'</p>');
@@ -4052,7 +4052,7 @@ async function callClaude(userMsg) {
 
   const resp = await fetch(AI_ENDPOINT, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ANON_KEY, 'x-kulan-token': KULAN_AI_SECRET },
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ANON_KEY, ...(KULAN_AI_SECRET ? {'x-kulan-token': KULAN_AI_SECRET} : {}) },
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 600,
@@ -4286,7 +4286,7 @@ function testAPIKey() {
     headers: {
       'Content-Type':  'application/json',
       'Authorization': 'Bearer ' + ANON_KEY,
-      'x-kulan-token': KULAN_AI_SECRET,
+      ...(KULAN_AI_SECRET ? {'x-kulan-token': KULAN_AI_SECRET} : {}),
     },
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514', max_tokens: 10,
