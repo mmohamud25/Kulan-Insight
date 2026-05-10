@@ -530,6 +530,7 @@ main { padding: 14px 16px; max-width: 100%; }
       <div class="live-dot"></div>
       <span id="live-count">0</span> live
     </div>
+    <div id="data-freshness" style="font-size:9px;color:var(--text3);padding:0 8px;white-space:nowrap;display:none" title="Events loaded and last refresh time"></div>
 
     <div class="h-sep"></div>
 
@@ -1676,19 +1677,56 @@ async function initApp(){
 
 async function loadSites(){
   try{
-    const{data}=await sb.from('analytics_events').select('site_id').limit(10000);
+    // Try RPC first (faster), fall back to table scan
+    let data;
+    try {
+      const rpcResult = await sb.rpc('get_site_ids');
+      if(rpcResult.data) { data = rpcResult.data; }
+    } catch(_) {}
+    // Fallback: scan all events (slower but always works)
+    if(!data) {
+      const fallback = await sb.from('analytics_events')
+        .select('site_id')
+        .not('site_id','is',null)
+        .order('site_id',{ascending:true})
+        .limit(200000);
+      data = fallback.data;
+    }
     if(!data)return;
-    // Normalize known typos in site IDs for display
-    const SITE_LABELS={'porfolio':'Portfolio','soc-sentineliQ':'Soc-SentinelIQ'};
-    const sites=[...new Set(data.map(r=>r.site_id))].sort();
+    // Normalize known typos/capitalisation in site IDs for display
+    const SITE_LABELS={
+      'porfolio':'Portfolio',
+      'portfolio':'Portfolio',
+      'soc-sentineliQ':'Soc-SentinelIQ',
+      'Soc-SentinelIQ':'Soc-SentinelIQ',
+      'soc':'Soc',
+      'Analytics':'Analytics',
+      'Kulan-Insight':'Kulan-Insight',
+      'kulan-lms':'Kulan-LMS',
+      'meet':'Meet',
+    };
+    const sites=[...new Set(data.map(r=>r.site_id).filter(Boolean))].sort();
     const sel=document.getElementById('site-select');
+    // Clear existing options except "All Sites"
+    while(sel.options.length > 1) sel.remove(1);
     sites.forEach(s=>{
       const o=document.createElement('option');
-      o.value=s; // keep raw value for querying
-      o.textContent=SITE_LABELS[s]||s; // display cleaned label
+      o.value=s;
+      o.textContent=SITE_LABELS[s]||s;
       sel.appendChild(o);
     });
-    sel.addEventListener('change',()=>{state.siteId=sel.value;loadData();});
+    sel.addEventListener('change',()=>{
+      state.siteId=sel.value;
+      // Update active site display
+      const freshEl=document.getElementById('data-freshness');
+      if(freshEl)freshEl.style.display='none'; // hide until reload
+      loadData();
+    });
+    // Show site count in selector
+    if(sites.length>0){
+      const allOpt=sel.querySelector('option[value=""]');
+      if(allOpt)allOpt.textContent=`All Sites (${sites.length})`;
+    }
   }catch(e){console.error(e);}
 }
 
@@ -1698,8 +1736,9 @@ async function loadData(){
   try{
     const since=(state.startDate||new Date(Date.now()-state.days*86400000).toISOString().slice(0,10))+'T00:00:00Z';
     const until=(state.endDate||new Date().toISOString().slice(0,10))+'T23:59:59Z';
+    // Build query with cache busting (prevents stale data)
     let q=sb.from('analytics_events').select('*').gte('created_at',since).lte('created_at',until)
-      .order('created_at',{ascending:true}).limit(50000);
+      .order('created_at',{ascending:true}).limit(100000);
     if(state.siteId)q=q.eq('site_id',state.siteId);
     const{data:events,error}=await q;
     if(error)throw error;
@@ -1733,7 +1772,14 @@ async function loadData(){
     console.error('loadData full error:', JSON.stringify(e), e);
     const msg=[e.message,e.details,e.hint,e.code].filter(Boolean).join(' | ')||JSON.stringify(e);
     const eb=document.getElementById('data-error-banner');if(eb){eb.style.display='flex';const em=eb.querySelector('.err-msg');if(em)em.textContent=msg.slice(0,200);}
-  }finally{document.getElementById('loading').style.display='none';}
+  }finally{
+    document.getElementById('loading').style.display='none';
+    // Show data freshness indicator
+    const now = new Date().toLocaleTimeString();
+    const count = state.events.length;
+    const freshEl = document.getElementById('data-freshness');
+    if(freshEl){freshEl.textContent=`${count.toLocaleString()} events · updated ${now}`;freshEl.style.display='block';}
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════════
