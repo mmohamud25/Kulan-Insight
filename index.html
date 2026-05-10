@@ -457,6 +457,83 @@ main { padding: 14px 16px; max-width: 100%; }
 .kp-item-section{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px}
 .kp-section-header{padding:6px 20px 2px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3)}
 
+
+/* ══════════════════════════════════════════════════════════════════
+   KULAN AI ASSISTANT — FLOATING CHAT
+   ══════════════════════════════════════════════════════════════════ */
+#ai-bubble{position:fixed;bottom:24px;right:24px;z-index:300;
+  width:52px;height:52px;background:linear-gradient(135deg,var(--teal),#0ea5e9);
+  border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(13,148,136,.5);transition:transform .2s,box-shadow .2s;
+  border:none}
+#ai-bubble:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(13,148,136,.7)}
+#ai-bubble-badge{position:absolute;top:-3px;right:-3px;background:var(--red);
+  color:#fff;border-radius:50%;width:16px;height:16px;font-size:9px;
+  font-weight:700;display:none;align-items:center;justify-content:center}
+
+#ai-panel{position:fixed;bottom:88px;right:24px;width:380px;max-width:calc(100vw - 48px);
+  height:560px;max-height:calc(100vh - 120px);background:var(--card);
+  border:1px solid var(--border);border-radius:20px;z-index:299;
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 16px 48px rgba(0,0,0,.5);
+  transform:translateY(20px) scale(.95);opacity:0;
+  transition:transform .25s,opacity .25s;pointer-events:none}
+#ai-panel.open{transform:none;opacity:1;pointer-events:all}
+
+.ai-panel-header{padding:14px 16px;background:linear-gradient(135deg,rgba(13,148,136,.15),rgba(14,165,233,.1));
+  border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.ai-panel-avatar{width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--teal),#0ea5e9);
+  display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.ai-panel-title{font-size:13px;font-weight:700;color:var(--text)}
+.ai-panel-sub{font-size:10px;color:var(--teal)}
+.ai-panel-close{margin-left:auto;background:none;border:none;color:var(--text2);
+  cursor:pointer;font-size:18px;padding:0 2px;line-height:1}
+
+.ai-messages{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.ai-messages::-webkit-scrollbar{width:3px}
+.ai-messages::-webkit-scrollbar-thumb{background:var(--border)}
+
+.ai-msg{max-width:88%;font-size:12px;line-height:1.6;padding:10px 13px;border-radius:14px;animation:fadein .2s ease}
+.ai-msg.user{align-self:flex-end;background:linear-gradient(135deg,var(--teal),#0ea5e9);
+  color:#fff;border-bottom-right-radius:4px}
+.ai-msg.assistant{align-self:flex-start;background:var(--card2);
+  color:var(--text);border-bottom-left-radius:4px;border:1px solid var(--border)}
+.ai-msg.assistant strong{color:var(--teal)}
+.ai-msg.typing{background:var(--card2);border:1px solid var(--border);padding:10px 16px}
+.typing-dot{display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--text3);animation:typing-bounce .8s ease infinite}
+.typing-dot:nth-child(2){animation-delay:.15s}
+.typing-dot:nth-child(3){animation-delay:.3s}
+@keyframes typing-bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-6px)}}
+
+.ai-suggestions{display:flex;flex-wrap:wrap;gap:6px;padding:8px 14px;flex-shrink:0}
+.ai-suggestion{background:var(--bg2);border:1px solid var(--border);border-radius:20px;
+  font-size:10px;font-weight:600;color:var(--text2);padding:4px 11px;cursor:pointer;
+  transition:all .15s;white-space:nowrap}
+.ai-suggestion:hover{background:var(--teal-dim);color:var(--teal);border-color:rgba(13,148,136,.4)}
+
+.ai-input-row{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--border);flex-shrink:0}
+.ai-input{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  padding:9px 13px;color:var(--text);font-family:'Syne',sans-serif;font-size:12px;
+  outline:none;resize:none;transition:border-color .2s;max-height:80px}
+.ai-input:focus{border-color:var(--teal)}
+.ai-send{background:linear-gradient(135deg,var(--teal),#0ea5e9);border:none;border-radius:10px;
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;transition:opacity .2s}
+.ai-send:hover{opacity:.85}
+.ai-send:disabled{opacity:.4;cursor:not-allowed}
+
+/* Inline chart AI hint button */
+.ai-chart-hint{font-size:10px;padding:2px 8px;background:rgba(13,148,136,.1);
+  border:1px solid rgba(13,148,136,.2);border-radius:4px;color:var(--teal);
+  cursor:pointer;white-space:nowrap;font-family:'Syne',sans-serif;font-weight:600}
+.ai-chart-hint:hover{background:var(--teal-dim)}
+
+/* Prediction chart */
+.prediction-badge{font-size:10px;padding:3px 9px;background:rgba(14,165,233,.15);
+  color:#0ea5e9;border:1px solid rgba(14,165,233,.25);border-radius:4px;font-weight:700}
+
 </style>
 </head>
 <body>
@@ -960,6 +1037,35 @@ main { padding: 14px 16px; max-width: 100%; }
 
 &lt;!-- Track file downloads --&gt;
 &lt;a href="resume.pdf" data-kl-goal="resume_download"&gt;Download Resume&lt;/a&gt;</pre>
+      </div>
+
+      <!-- ── AI Settings ──────────────────────────────────────── -->
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)">🤖 AI Settings</div>
+      <div class="chart-card" style="padding:20px">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px">Anthropic API Key — via Supabase Edge Function</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:14px">Your API key lives securely in Supabase — never exposed in the browser. Get a key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--teal)">console.anthropic.com</a></div>
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;font-size:12px;margin-bottom:14px">
+          <div style="font-weight:700;color:var(--teal);margin-bottom:8px">One-time setup in your terminal:</div>
+          <pre style="margin:0;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2);white-space:pre-wrap">supabase functions deploy kulan-ai --no-verify-jwt
+supabase secrets set ANTHROPIC_API_KEY=sk-ant-YOUR-KEY-HERE</pre>
+        </div>
+        <!-- Shared secret for x-kulan-token header -->
+        <div style="margin-top:14px">
+          <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px">Kulan AI Secret <span style="font-weight:400;color:var(--text3);font-size:10px">(matches KULAN_AI_SECRET Supabase secret)</span></div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <input id="ai-secret-input" type="password"
+              placeholder="kulan2026analyticsAI32chars"
+              style="flex:1;min-width:200px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none">
+            <button class="btn-teal" onclick="saveAISecret()" style="padding:9px 18px;font-size:12px">Save</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:14px">
+          <button class="btn-secondary" onclick="testAPIKey()" style="padding:9px 14px;font-size:12px">Test Connection</button>
+          <span id="ai-key-status" style="font-size:11px;color:var(--text3)">Click Test to verify</span>
+        </div>
+        <div style="font-size:11px;color:var(--teal);margin-top:10px">
+          🔒 Edge Function: <code style="font-family:'JetBrains Mono',monospace;font-size:10px">https://xkadqvmqxdyqoddiypet.supabase.co/functions/v1/kulan-ai</code>
+        </div>
       </div>
     </main>
   </div>
@@ -1669,6 +1775,7 @@ async function initApp(){
     try{await loadGoalValues();}catch(_){}
     await loadData();
     startLivePoll();
+  initAI();
   }catch(e){
     console.error('initApp failed:',e);
     document.getElementById('loading').style.display='none';
@@ -2433,6 +2540,52 @@ th{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:#999;font-we
 </div>
 <div class="f">Kulan Analytics &mdash; <a href="https://mmohamud.me">mmohamud.me</a></div>
 </div>
+
+
+<!-- ══ KULAN AI ASSISTANT ══════════════════════════════════════ -->
+<div id="ai-panel">
+  <div class="ai-panel-header">
+    <div class="ai-panel-avatar">✨</div>
+    <div>
+      <div class="ai-panel-title">Kulan-Analytics AI</div>
+      <div class="ai-panel-sub" id="ai-status">Ask anything about your analytics</div>
+    </div>
+    <button class="ai-panel-close" onclick="toggleAIPanel()" aria-label="Close AI">×</button>
+  </div>
+  <div class="ai-messages" id="ai-messages">
+    <div class="ai-msg assistant">
+      👋 Hi! I'm your analytics assistant. I can answer questions about your traffic, explain trends, forecast growth, and recommend actions.<br><br>
+      Try asking: <em>"Why did traffic spike this week?"</em> or <em>"What's my best performing page?"</em>
+    </div>
+  </div>
+  <div class="ai-suggestions" id="ai-suggestions">
+    <div class="ai-suggestion" onclick="sendAIMessage('Summarize my traffic this month')">📊 Monthly summary</div>
+    <div class="ai-suggestion" onclick="sendAIMessage('Which channel drives the most engaged visitors?')">📡 Best channel</div>
+    <div class="ai-suggestion" onclick="sendAIMessage('Predict next week traffic')">🔮 Forecast</div>
+    <div class="ai-suggestion" onclick="sendAIMessage('What should I improve first?')">💡 Recommendations</div>
+    <div class="ai-suggestion" onclick="sendAIMessage('Explain my bounce rate')">📉 Bounce rate</div>
+    <div class="ai-suggestion" onclick="sendAIMessage('Which pages should I optimize?')">🎯 Optimize</div>
+  </div>
+  <div class="ai-input-row">
+    <textarea class="ai-input" id="ai-chat-input" placeholder="Ask about your analytics..." rows="1"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAIMessage()}"
+      oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px'"></textarea>
+    <button class="ai-send" id="ai-send-btn" onclick="sendAIMessage()" aria-label="Send">
+      <svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
+        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- Floating bubble -->
+<button id="ai-bubble" onclick="toggleAIPanel()" aria-label="Open AI Assistant">
+  <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    <line x1="9" y1="10" x2="9.01" y2="10"/><line x1="12" y1="10" x2="12.01" y2="10"/><line x1="15" y1="10" x2="15.01" y2="10"/>
+  </svg>
+  <span id="ai-bubble-badge">1</span>
+</button>
 
 </body></html>`;
   // Show safe text-only preview (never inject raw HTML into DOM)
@@ -3223,7 +3376,7 @@ async function runAIInsights(){
   const focusPrompts={general:'Provide a comprehensive overview of all metrics.',growth:'Focus on growth opportunities, underperforming channels, and traffic expansion strategies.',anomalies:`Look for unusual patterns, traffic spikes or drops, geographic anomalies, and smart alert opportunities. Note that today shows ${days.length?days[days.length-1]:0} pageviews vs avg ${days.length>1?Math.round(days.slice(0,-1).reduce((a,b)=>a+b,0)/(days.length-1)):0}/day.`,seo:'Analyze SEO, organic search performance, referral sources, and acquisition quality.',conversion:'Focus on conversion rate optimization, goal performance, funnel drop-off, and revenue opportunities.',linkedin:`Specifically analyze the LinkedIn traffic (${liTraffic} visits) — post timing, UTM campaigns, and content strategy.`,regions:'Analyze geographic distribution, identify high-potential regions, and flag any unusual regional traffic patterns.'};
   const prompt=`Analytics expert. ${focusPrompts[focus]||''}\n\nData (${state.days} days${state.siteId?' — '+state.siteId:''}):\nViews: ${pv.length}, Visitors: ${visitors}, Sessions: ${sessions}, Bounce: ${bounce}%, Avg Duration: ${fmtD(avgDur)}, Trend: ${trend>0?'+':''}${trend}%\nGoals: ${goals.length}, CVR: ${sessions?Math.round(goals.length/sessions*100):0}%\nTop goals: ${countBy(goals,'goal_name').slice(0,3).map(([g,c])=>g+': '+c).join(', ')||'none'}\nTop pages: ${countBy(pv,'url').slice(0,5).map(([u,c])=>fmtUrl(u)+': '+c).join(', ')}\nChannels: ${Object.entries(channels).map(([k,v])=>k+': '+v).join(', ')}\nCountries: ${countBy(pv,'country').slice(0,5).map(([c,n])=>c+': '+n).join(', ')}\nErrors: ${errors.length}, LinkedIn: ${liTraffic} visits\n\nProvide: 1) Executive summary (2-3 sentences) 2) 3-4 key insights with data 3) 2-3 recommendations 4) Red flags\nFormat with ## headers and **bold**. Be specific and actionable.`;
   try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    const resp=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON_KEY,'x-kulan-token':KULAN_AI_SECRET},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
     const data=await resp.json();
     const text=data.content?.[0]?.text||'No response.';
     const html=text.replace(/## (.+)/g,'<h3 style="font-size:13px;font-weight:800;color:var(--teal);margin:16px 0 6px;text-transform:uppercase">$1</h3>').replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--text)">$1</strong>').replace(/\n\n/g,'</p><p style="margin-bottom:10px">').replace(/\n/g,'<br>').replace(/^/,'<p style="margin-bottom:10px">').replace(/$/,'</p>');
@@ -3508,6 +3661,534 @@ function initSuggestedWidgets() {
     _pinnedWidgets = ['wg-pv', 'wg-visitors', 'wg-bounce'];
     savePinnedWidgets();
   }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   KULAN AI ASSISTANT — FULL SYSTEM
+   ══════════════════════════════════════════════════════════════════ */
+
+let _aiOpen = false;
+let _aiHistory = []; // conversation memory
+let _aiTyping = false;
+
+function toggleAIPanel() {
+  _aiOpen = !_aiOpen;
+  document.getElementById('ai-panel').classList.toggle('open', _aiOpen);
+  if (_aiOpen) {
+    document.getElementById('ai-chat-input').focus();
+    const badge = document.getElementById('ai-bubble-badge');
+    if(badge) badge.style.display = 'none';
+    localStorage.setItem('_kl_ai_welcomed','1');
+    loadAIHistory();
+  }
+}
+
+function loadAIHistory() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('_kl_ai_chat') || '[]');
+    if (saved.length && _aiHistory.length === 0) {
+      _aiHistory = saved;
+      const container = document.getElementById('ai-messages');
+      // Show last 10 messages
+      saved.slice(-10).forEach(m => {
+        appendAIMessage(m.role, m.content, false);
+      });
+    }
+  } catch(_) {}
+}
+
+function saveAIHistory() {
+  try {
+    // Keep last 50 messages
+    localStorage.setItem('_kl_ai_chat', JSON.stringify(_aiHistory.slice(-50)));
+  } catch(_) {}
+}
+
+function appendAIMessage(role, content, animate=true) {
+  const container = document.getElementById('ai-messages');
+  const div = document.createElement('div');
+  div.className = `ai-msg ${role}`;
+  // Render basic markdown
+  div.innerHTML = content
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>')
+    .replace(/^## (.+)/gm, '<div style="font-weight:800;color:var(--teal);margin:6px 0 2px;font-size:11px;text-transform:uppercase;letter-spacing:.5px">$1</div>')
+    .replace(/^• (.+)/gm, '&bull; $1<br>');
+  if (animate) div.style.animation = 'fadein .2s ease';
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+function showTyping() {
+  const container = document.getElementById('ai-messages');
+  const div = document.createElement('div');
+  div.className = 'ai-msg typing';
+  div.id = 'ai-typing';
+  div.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function hideTyping() {
+  const el = document.getElementById('ai-typing');
+  if (el) el.remove();
+}
+
+/* ── Build rich data context for Claude ─────────────────────────── */
+function buildAIContext() {
+  const ev = state.events;
+  const pv = ev.filter(e => e.event_type === 'pageview');
+  const goals = ev.filter(e => e.event_type === 'goal');
+  const errors = ev.filter(e => e.event_type === 'error');
+  const sessions = new Set(ev.map(e => e.session_id)).size;
+  const visitors = new Set(ev.map(e => e.visitor_id)).size;
+
+  // Bounce rate
+  const pvPS = {}; pv.forEach(e => { pvPS[e.session_id] = (pvPS[e.session_id]||0)+1; });
+  const sl = Object.values(pvPS);
+  const bounce = sl.length ? Math.round(sl.filter(c=>c===1).length/sl.length*100) : 0;
+
+  // Avg duration
+  const durs = ev.filter(e=>e.event_type==='session_end'&&e.duration).map(e=>e.duration);
+  const avgDur = durs.length ? Math.round(durs.reduce((a,b)=>a+b,0)/durs.length) : 0;
+
+  // Top pages
+  const pm = {}; pv.forEach(e=>{ const k=fmtUrl(e.url||''); pm[k]=(pm[k]||0)+1; });
+  const topPages = Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([p,c])=>`${p}: ${c}`).join(', ');
+
+  // Channels
+  const chMap = {}; pv.forEach(e=>{ const ch=e.channel||classifyChannel(e); chMap[ch]=(chMap[ch]||0)+1; });
+  const channels = Object.entries(chMap).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${k}: ${v}`).join(', ');
+
+  // Top countries
+  const countryMap = {}; pv.forEach(e=>{ if(e.country&&e.country!=='(unknown)') countryMap[e.country]=(countryMap[e.country]||0)+1; });
+  const topCountries = Object.entries(countryMap).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([c,n])=>`${c}: ${n}`).join(', ');
+
+  // Daily trend
+  const dayMap = {}; pv.forEach(e=>{ const d=e.created_at.slice(0,10); dayMap[d]=(dayMap[d]||0)+1; });
+  const days = Object.entries(dayMap).sort((a,b)=>a[0]<b[0]?-1:1);
+  const trend = days.length>=2 ? Math.round(((days[days.length-1][1]-days[0][1])/Math.max(days[0][1],1))*100) : 0;
+
+  // Performance
+  const perf = ev.filter(e=>e.event_type==='performance');
+  const avgLoad = perf.length ? Math.round(perf.reduce((s,e)=>s+(e.page_load||0),0)/perf.length) : null;
+
+  // Top devices
+  const devMap = {}; pv.forEach(e=>{ const d=e.device_type||'?'; devMap[d]=(devMap[d]||0)+1; });
+  const devices = Object.entries(devMap).sort((a,b)=>b[1]-a[1]).map(([d,n])=>`${d}: ${n}`).join(', ');
+
+  // LinkedIn traffic
+  const liTraffic = pv.filter(e=>e.channel==='LinkedIn'||e.utm_source==='linkedin').length;
+
+  // New vs returning
+  const newV = pv.filter(e=>e.is_returning===false).length;
+  const retV = pv.filter(e=>e.is_returning===true).length;
+
+  return `KULAN ANALYTICS DATA — Last ${state.days} days${state.siteId?' ('+state.siteId+')':' (All Sites)'}:
+
+TRAFFIC:
+- Pageviews: ${pv.length} | Visitors: ${visitors} | Sessions: ${sessions}
+- Bounce Rate: ${bounce}% | Avg Session: ${fmtD(avgDur)} | Trend: ${trend>0?'+':''}${trend}%
+- New visitors: ${newV} | Returning: ${retV}
+
+PAGES: ${topPages || 'no data'}
+CHANNELS: ${channels || 'no data'}
+COUNTRIES: ${topCountries || 'no data'}
+DEVICES: ${devices || 'no data'}
+
+CONVERSIONS:
+- Goals fired: ${goals.length} | CVR: ${sessions?Math.round(goals.length/sessions*100):0}%
+- Top goals: ${Object.entries((()=>{const m={};goals.forEach(g=>{m[g.goal_name]=(m[g.goal_name]||0)+1;});return m;})()).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([g,c])=>`${g}: ${c}`).join(', ')||'none'}
+
+PERFORMANCE: ${avgLoad?`Avg load ${avgLoad}ms`:'no perf data yet'}
+ERRORS: ${errors.length} JS errors
+LINKEDIN: ${liTraffic} visits`;
+}
+
+/* ── Main AI chat function ──────────────────────────────────────── */
+async function sendAIMessage(preset) {
+  if (_aiTyping) return;
+
+  const input = document.getElementById('ai-chat-input');
+  const userMsg = preset || (input ? input.value.trim() : '');
+  if (!userMsg) return;
+
+  // Clear input
+  if (input && !preset) { input.value = ''; input.style.height = 'auto'; }
+
+  // Hide suggestions after first message
+  const sugg = document.getElementById('ai-suggestions');
+  if (sugg) sugg.style.display = 'none';
+
+  // Show user message
+  appendAIMessage('user', userMsg);
+  _aiHistory.push({ role: 'user', content: userMsg });
+
+  // Show typing
+  _aiTyping = true;
+  showTyping();
+  document.getElementById('ai-send-btn').disabled = true;
+  document.getElementById('ai-status').textContent = 'Thinking...';
+
+  try {
+    // Detect intent for specialized handling
+    const intent = detectIntent(userMsg);
+    let aiResponse;
+
+    if (intent === 'forecast') {
+      aiResponse = await handleForecast(userMsg);
+    } else if (intent === 'query') {
+      aiResponse = await handleDataQuery(userMsg);
+    } else {
+      aiResponse = await callClaude(userMsg);
+    }
+
+    hideTyping();
+    appendAIMessage('assistant', aiResponse);
+    _aiHistory.push({ role: 'assistant', content: aiResponse });
+    saveAIHistory();
+
+  } catch(e) {
+    hideTyping();
+    appendAIMessage('assistant', `⚠️ ${e.message || 'Something went wrong. Please try again.'}`);
+  }
+
+  _aiTyping = false;
+  document.getElementById('ai-send-btn').disabled = false;
+  document.getElementById('ai-status').textContent = 'Ask anything about your analytics';
+}
+
+/* ── Intent detection ───────────────────────────────────────────── */
+function detectIntent(msg) {
+  const m = msg.toLowerCase();
+  if (/forecast|predict|next week|next month|will|expect/.test(m)) return 'forecast';
+  if (/how many|count|total|show me|what is|which page|top|list|number/.test(m)) return 'query';
+  return 'general';
+}
+
+/* ── Direct data query (no API needed) ─────────────────────────── */
+async function handleDataQuery(msg) {
+  const ev = state.events;
+  const pv = ev.filter(e => e.event_type === 'pageview');
+  const m = msg.toLowerCase();
+
+  // Answer common queries directly from state.events
+  if (/top page|best page|most visited/.test(m)) {
+    const pm = {}; pv.forEach(e=>{ const k=fmtUrl(e.url||''); pm[k]=(pm[k]||0)+1; });
+    const top = Object.entries(pm).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    if (!top.length) return 'No page data yet.';
+    return `**Top pages (${state.days} days):**\n\n${top.map(([p,c],i)=>`${i+1}. ${p} — **${c} views**`).join('\n')}`;
+  }
+
+  if (/bounce rate|bouncing/.test(m)) {
+    const pvPS={}; pv.forEach(e=>{pvPS[e.session_id]=(pvPS[e.session_id]||0)+1;});
+    const sl=Object.values(pvPS);
+    const bounce=sl.length?Math.round(sl.filter(c=>c===1).length/sl.length*100):0;
+    const bench = bounce > 70 ? 'above average — consider improving page content or load speed' : bounce > 50 ? 'average for content sites' : 'excellent — users are exploring multiple pages';
+    return `Your bounce rate is **${bounce}%** — ${bench}.\n\nIndustry benchmarks: 20-40% for apps, 40-60% for content sites, 60-80% for blogs.`;
+  }
+
+  if (/how many visitor|total visitor|unique visitor/.test(m)) {
+    const v = new Set(ev.map(e=>e.visitor_id)).size;
+    return `You had **${fmt(v)} unique visitors** in the last ${state.days} days.`;
+  }
+
+  if (/which country|top country|where.*visitor|where.*traffic/.test(m)) {
+    const cm={}; pv.forEach(e=>{if(e.country&&e.country!=='(unknown)')cm[e.country]=(cm[e.country]||0)+1;});
+    const top=Object.entries(cm).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    return `**Top countries:**\n\n${top.map(([c,n],i)=>`${i+1}. ${c} — **${n} visits**`).join('\n')}`;
+  }
+
+  if (/goal|conversion|convert/.test(m)) {
+    const goals = ev.filter(e=>e.event_type==='goal');
+    const sess = new Set(ev.map(e=>e.session_id)).size;
+    const cvr = sess ? Math.round(goals.length/sess*100) : 0;
+    const gm={}; goals.forEach(g=>{gm[g.goal_name]=(gm[g.goal_name]||0)+1;});
+    const topG=Object.entries(gm).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    return `**${goals.length} conversions** (${cvr}% CVR) in ${state.days} days.\n\nTop goals:\n${topG.map(([g,c])=>`• ${g}: ${c}`).join('\n')||'None recorded yet'}`;
+  }
+
+  // Fall through to Claude for complex queries
+  return callClaude(msg);
+}
+
+/* ── Predictive analytics ───────────────────────────────────────── */
+async function handleForecast(msg) {
+  const pv = state.events.filter(e => e.event_type === 'pageview');
+  if (pv.length < 7) return "I need at least 7 days of data to make a reliable forecast. Keep your tracker running!";
+
+  const dayMap = {};
+  pv.forEach(e => { const d=e.created_at.slice(0,10); dayMap[d]=(dayMap[d]||0)+1; });
+  const days = Object.entries(dayMap).sort((a,b)=>a[0]<b[0]?-1:1);
+  const values = days.map(d=>d[1]);
+
+  // Simple linear regression
+  const n = values.length;
+  const xBar = (n-1)/2;
+  const yBar = values.reduce((a,b)=>a+b,0)/n;
+  let num=0, den=0;
+  values.forEach((y,x) => { num+=(x-xBar)*(y-yBar); den+=(x-xBar)**2; });
+  const slope = den ? num/den : 0;
+  const intercept = yBar - slope*xBar;
+
+  // Forecast next 7 days
+  const forecasted = [];
+  for (let i=1; i<=7; i++) {
+    const predicted = Math.max(0, Math.round(intercept + slope*(n-1+i)));
+    const date = new Date(Date.now() + i*86400000).toISOString().slice(0,10);
+    forecasted.push({ date, predicted });
+  }
+
+  const totalForecast = forecasted.reduce((s,d)=>s+d.predicted,0);
+  const currentAvg = Math.round(yBar);
+  const trend = slope > 0.5 ? '📈 growing' : slope < -0.5 ? '📉 declining' : '➡️ stable';
+
+  const forecastText = `**7-Day Traffic Forecast** ${trend}\n\n` +
+    `Current avg: **${currentAvg}/day** → Predicted next 7 days: **${fmt(totalForecast)} total**\n\n` +
+    forecasted.map(d=>`• ${d.date}: ~${d.predicted} views`).join('\n') +
+    `\n\n_Based on linear trend from ${n} days of data. Actual results vary._`;
+
+  // Store forecast data for chart rendering
+  window._lastForecast = { days, forecasted, slope };
+
+  return forecastText;
+}
+
+/* ── Call Claude API ────────────────────────────────────────────── */
+async function callClaude(userMsg) {
+  const context = buildAIContext();
+
+  // Build conversation history for Claude (last 6 turns)
+  const messages = [];
+  const recentHistory = _aiHistory.slice(-12); // last 6 exchanges
+  recentHistory.forEach(m => { if(m.role!=='system') messages.push({role:m.role,content:m.content}); });
+
+  // Ensure last message is user
+  if (!messages.length || messages[messages.length-1].role !== 'user') {
+    messages.push({ role: 'user', content: userMsg });
+  }
+
+  const resp = await fetch(AI_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ANON_KEY, 'x-kulan-token': KULAN_AI_SECRET },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 600,
+      system: `You are Kulan-Analytics AI, an expert analytics assistant built into the Kulan Analytics dashboard. You help Mohamud (the dashboard owner) understand his traffic, identify opportunities, and take action.
+
+${context}
+
+RESPONSE RULES:
+- Be conversational and direct — no long preambles
+- Use **bold** for key numbers and insights
+- Keep responses under 200 words unless asked for detail
+- Use bullet points sparingly — prefer flowing sentences
+- Always end with ONE specific actionable recommendation
+- If asked about something not in the data, say so honestly
+- Format numbers clearly (e.g. "47 pageviews", "87% bounce rate")`,
+      messages,
+    }),
+  });
+
+  const data = await resp.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.content?.[0]?.text || 'No response received.';
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   INLINE CHART AI HINTS
+   ══════════════════════════════════════════════════════════════════ */
+function addChartHint(chartTitle, question) {
+  // Find chart headers and inject AI hint buttons
+  document.querySelectorAll('.chart-header').forEach(header => {
+    const title = header.querySelector('.chart-title');
+    if (title && title.textContent.trim() === chartTitle && !header.querySelector('.ai-chart-hint')) {
+      const btn = document.createElement('button');
+      btn.className = 'ai-chart-hint';
+      btn.textContent = '✨ Explain';
+      btn.onclick = () => {
+        if (!_aiOpen) toggleAIPanel();
+        setTimeout(() => sendAIMessage(question), 300);
+      };
+      header.appendChild(btn);
+    }
+  });
+}
+
+function injectChartHints() {
+  const hints = [
+    ['Pageviews Over Time',   'Explain my pageview trend and what might be causing it'],
+    ['DAU / MAU Stickiness',  'What does my DAU/MAU stickiness mean and how can I improve it?'],
+    ['Engagement Rate',       'Analyze my engagement rate and suggest improvements'],
+    ['Channel Distribution',  'Which channel should I focus on to grow traffic?'],
+    ['Scroll Depth Funnel',   'What does my scroll depth tell me about my content quality?'],
+    ['LCP — Largest Contentful Paint', 'Is my LCP score good? How can I improve it?'],
+    ['New vs Returning',      'What does my new vs returning visitor ratio tell me?'],
+    ['Errors Over Time',      'What should I do about these JavaScript errors?'],
+  ];
+  hints.forEach(([title, q]) => addChartHint(title, q));
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   SMART CONTENT RECOMMENDATIONS
+   ══════════════════════════════════════════════════════════════════ */
+async function getContentRecommendations() {
+  const pv = state.events.filter(e => e.event_type === 'pageview');
+  const pm = {}; pv.forEach(e=>{ const k=fmtUrl(e.url||''); pm[k]=(pm[k]||0)+1; });
+  const topPage = Object.entries(pm).sort((a,b)=>b[1]-a[1])[0];
+  const topChannel = (() => {
+    const chMap={}; pv.forEach(e=>{const ch=e.channel||classifyChannel(e);chMap[ch]=(chMap[ch]||0)+1;});
+    return Object.entries(chMap).sort((a,b)=>b[1]-a[1])[0];
+  })();
+
+  const q = `Based on my analytics data, give me 3 specific content recommendations to increase traffic. My top page is "${topPage?.[0]||'/'}" and most traffic comes from "${topChannel?.[0]||'Direct'}". Be very specific about what type of content to create and where to publish it.`;
+  return callClaude(q);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   AUTOMATED WEEKLY REPORT (AI-written)
+   ══════════════════════════════════════════════════════════════════ */
+async function generateAIWeeklyReport() {
+  const q = `Write a concise weekly analytics report for Mohamud. Use the data provided and write it as a professional but friendly email summary. Include: what went well, what needs attention, and 2 specific actions for next week. Keep it under 250 words.`;
+  return callClaude(q);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   GOAL RECOMMENDER
+   ══════════════════════════════════════════════════════════════════ */
+async function recommendGoals() {
+  const pv = state.events.filter(e => e.event_type === 'pageview');
+  const pages = [...new Set(pv.map(e=>fmtUrl(e.url||'')))];
+  const q = `Based on these pages on my site: ${pages.slice(0,10).join(', ')} — what conversion goals should I set up? Give me 3-5 specific goal names with the data-kl-goal attribute values I should add to my HTML.`;
+  return callClaude(q);
+}
+
+/* ── Upgrade the existing AI Insights tab with new capabilities ─── */
+function upgradeAIInsightsTab() {
+  const actionsEl = document.querySelector('#tab-ai .chart-header > div:last-child');
+  if (!actionsEl || actionsEl.querySelector('.ai-extra-btns')) return;
+
+  const extraBtns = document.createElement('div');
+  extraBtns.className = 'ai-extra-btns';
+  extraBtns.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;padding:0 4px';
+  extraBtns.innerHTML = `
+    <button class="btn-secondary" style="font-size:11px;padding:5px 12px" onclick="runAIAction('content')">📝 Content Ideas</button>
+    <button class="btn-secondary" style="font-size:11px;padding:5px 12px" onclick="runAIAction('goals')">🎯 Goal Recommendations</button>
+    <button class="btn-secondary" style="font-size:11px;padding:5px 12px" onclick="runAIAction('report')">📧 Weekly Report</button>
+    <button class="btn-secondary" style="font-size:11px;padding:5px 12px" onclick="runAIAction('forecast')">🔮 7-Day Forecast</button>
+  `;
+
+  const chartCard = document.querySelector('#tab-ai .chart-card');
+  if (chartCard) chartCard.appendChild(extraBtns);
+}
+
+async function runAIAction(action) {
+  if (!_aiOpen) toggleAIPanel();
+  await new Promise(r => setTimeout(r, 300));
+  const msgs = {
+    content: 'Give me 3 specific content recommendations to grow my traffic',
+    goals: 'What conversion goals should I set up based on my current pages?',
+    report: 'Write me a brief weekly analytics report with key insights and 2 actions for next week',
+    forecast: 'Predict my traffic for the next 7 days based on current trends',
+  };
+  sendAIMessage(msgs[action]);
+}
+
+/* ── Boot AI system ─────────────────────────────────────────────── */
+function initAI() {
+  // Show greeting badge on bubble after 3 seconds if not yet opened
+  setTimeout(() => {
+    if (!_aiOpen && !localStorage.getItem('_kl_ai_welcomed')) {
+      const badge = document.getElementById('ai-bubble-badge');
+      if (badge) { badge.textContent = '1'; badge.style.display = 'flex'; }
+    }
+  }, 3000);
+
+  // Inject chart hints when tabs render
+  document.addEventListener('click', e => {
+    if (e.target.closest('.sb-item')) {
+      setTimeout(injectChartHints, 500);
+    }
+  });
+  setTimeout(injectChartHints, 1500);
+
+  // Upgrade AI Insights tab
+  setTimeout(upgradeAIInsightsTab, 1000);
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   API KEY MANAGEMENT
+   ══════════════════════════════════════════════════════════════════ */
+function promptForAPIKey() {
+  const existing = localStorage.getItem('_kl_anthropic_key') || '';
+  const key = window.prompt(
+    'Enter your Anthropic API key to enable AI features:\n(Get one at console.anthropic.com)',
+    existing
+  );
+  if (key && key.startsWith('sk-ant-')) {
+    localStorage.setItem('_kl_anthropic_key', key);
+    // Update the input in settings if open
+    const input = document.getElementById('ai-key-input');
+    if (input) input.value = key;
+    alert('✅ API key saved! AI features are now active.');
+    return key;
+  } else if (key !== null) {
+    alert('Invalid key — must start with sk-ant-');
+  }
+  return null;
+}
+
+function saveAISecret() {
+  const input = document.getElementById('ai-secret-input');
+  if (!input) return;
+  const secret = input.value.trim();
+  if (!secret) { localStorage.removeItem('_kl_ai_secret'); alert('Secret cleared.'); return; }
+  localStorage.setItem('_kl_ai_secret', secret);
+  alert('✅ Secret saved!');
+}
+
+function saveAPIKey() {
+  const input = document.getElementById('ai-key-input');
+  if (!input) return;
+  const key = input.value.trim();
+  if (!key) { localStorage.removeItem('_kl_anthropic_key'); alert('API key cleared.'); return; }
+  if (!key.startsWith('sk-ant-')) { alert('Invalid key — must start with sk-ant-'); return; }
+  localStorage.setItem('_kl_anthropic_key', key);
+  document.getElementById('ai-key-status').textContent = '✅ Active';
+  document.getElementById('ai-key-status').style.color = 'var(--green)';
+  alert('✅ API key saved! AI features are now active.');
+}
+
+function testAPIKey() {
+  const key = localStorage.getItem('_kl_anthropic_key');
+  if (!key) { alert('No API key saved yet.'); return; }
+  document.getElementById('ai-key-status').textContent = 'Testing...';
+  fetch(AI_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Content-Type':  'application/json',
+      'Authorization': 'Bearer ' + ANON_KEY,
+      'x-kulan-token': KULAN_AI_SECRET,
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514', max_tokens: 10,
+      messages: [{ role: 'user', content: 'ping' }]
+    })
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (d.error) throw new Error(d.error.message);
+    document.getElementById('ai-key-status').textContent = '✅ Connected';
+    document.getElementById('ai-key-status').style.color = 'var(--green)';
+  })
+  .catch(e => {
+    document.getElementById('ai-key-status').textContent = '❌ ' + e.message.slice(0,40);
+    document.getElementById('ai-key-status').style.color = 'var(--red)';
+  });
 }
 
 function startLivePoll(){updateLive();setInterval(updateLive,30000);}
