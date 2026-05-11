@@ -1081,6 +1081,17 @@ main { padding: 14px 16px; max-width: 100%; }
             </tr>
           </table>
         </div>
+        <!-- Supabase publishable key (new format) -->
+        <div style="margin-top:14px">
+          <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px">Supabase API Key <span style="font-weight:400;color:var(--text3);font-size:10px">(if 401 errors — update with your sb_publishable_... key)</span></div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <input id="anon-key-input" type="password"
+              placeholder="sb_publishable_... or eyJ..."
+              style="flex:1;min-width:200px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none">
+            <button class="btn-teal" onclick="saveAnonKey()" style="padding:9px 18px;font-size:12px">Save</button>
+          </div>
+          <div style="font-size:11px;color:var(--text3);margin-top:6px">Find this in Supabase → Settings → API → Publishable keys → <strong>kulaninstitute</strong></div>
+        </div>
         <!-- Shared secret for x-kulan-token header -->
         <div style="margin-top:14px">
           <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px">Kulan AI Secret <span style="font-weight:400;color:var(--text3);font-size:10px">(matches KULAN_AI_SECRET Supabase secret)</span></div>
@@ -1642,7 +1653,7 @@ main { padding: 14px 16px; max-width: 100%; }
    ════════════════════════════════════════════════════════════════════ */
 const CFG = {
   SUPABASE_URL: 'https://xkadqvmqxdyqoddiypet.supabase.co',
-  ANON_KEY:     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrYWRxdm1xeGR5cW9kZGl5cGV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNzI5NDMsImV4cCI6MjA4ODk0ODk0M30.FPBEXOx62vaTcLom7IkVRKRLda1xKk09slhQZ9yuRWc',
+  ANON_KEY:     localStorage.getItem('_kl_anon_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhrYWRxdm1xeGR5cW9kZGl5cGV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNzI5NDMsImV4cCI6MjA4ODk0ODk0M30.FPBEXOx62vaTcLom7IkVRKRLda1xKk09slhQZ9yuRWc',
   PASSWORD:     'kulanAdmin2025',
   AI_ENDPOINT:    'https://xkadqvmqxdyqoddiypet.supabase.co/functions/v1/Kulan-Analytics-AI',
 };
@@ -3434,7 +3445,8 @@ async function runAIInsights(){
     output.innerHTML=htmlResult;
     try{localStorage.setItem('_kl_ai_cache',JSON.stringify({html:htmlResult,focus,days:state.days,ts:new Date().toISOString()}));}catch(_){}
     const cb=document.getElementById('ai-cached-badge');if(cb)cb.style.display='none';
-    addNotification('info','AI analysis complete',focus+' analysis done for '+state.days+'-day period.');
+    // Only notify on actual success (not empty/error responses)
+    if(htmlResult && htmlResult.length > 50) addNotification('info','AI analysis complete',focus+' analysis done for '+state.days+'-day period.');
   }catch(e){
     loading.style.display='none';
     let msg=e.message||'Unknown error';
@@ -4074,7 +4086,9 @@ RESPONSE RULES:
 
   const data = await resp.json();
   if (data.error) throw new Error(data.error.message);
-  return data.content?.[0]?.text || 'No response received.';
+  const text = data.content?.[0]?.text;
+  if (!text) throw new Error('Empty response from AI — the Edge Function may have an issue. Check Supabase logs.');
+  return text;
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -4254,6 +4268,17 @@ function promptForAPIKey() {
     alert('Invalid key -- must start with sk-ant-');
   }
   return null;
+}
+
+function saveAnonKey() {
+  const input = document.getElementById('anon-key-input');
+  if (!input) return;
+  const key = input.value.trim();
+  if (!key) { localStorage.removeItem('_kl_anon_key'); alert('Key cleared — using default.'); return; }
+  localStorage.setItem('_kl_anon_key', key);
+  // Update in-memory CFG
+  CFG.ANON_KEY = key;
+  alert('✅ Supabase key saved! Try the AI again.');
 }
 
 function saveAISecret() {
